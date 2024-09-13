@@ -1,10 +1,15 @@
 [package]
-name = "rexegy-sys"
+name = "not-xcapi-sys"
 version.workspace = true
 authors.workspace = true
+description = "Unofficial Exegy FFI Bindings"
 edition.workspace = true
 license.workspace = true
+license-file.workspace = true
+links = "xcapi64"
+readme.workspace = true
 repository.workspace = true
 rust-version.workspace = true
 
-[dependencies]
+[build-dependencies]
+bindgen = "0.70.1"

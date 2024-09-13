@@ -1,25 +1,28 @@
-
-[package]
-name = "rexegy"
-version = "0.1.0"
-authors = ["James Cape <jamescape777@gmail.com"]
-edition = "2021"
-license = "Apache-2.0"
-repository = "https://github.com/jcape/rexegy"
-rust-version = "1.85"
-
-[dependencies]
-
 [workspace]
 resolver = "2"
-members = [
-    "sys",
-]
+members = [".", "sys"]
 
 [workspace.package]
 version = "0.1.0"
 authors = ["James Cape <jamescape777@gmail.com"]
 edition = "2021"
 license = "Apache-2.0"
+license-file = "LICENSE"
+readme = "README.md"
 repository = "https://github.com/jcape/rexegy"
-rust-version = "1.85"
+rust-version = "1.80.1"
+
+[package]
+name = "rexegy"
+version.workspace = true
+authors.workspace = true
+description = "Unofficial Exegy XCAPI in Rust"
+edition.workspace = true
+license.workspace = true
+license-file.workspace = true
+readme.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+not-xcapi-sys = { path = "./sys", version = "0.1.0" }
