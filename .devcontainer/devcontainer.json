@@ -1,0 +1,33 @@
+{
+    "build": {
+        "context": "..",
+        "dockerfile": "Dockerfile"
+    },
+    "capAdd": ["SYS_PTRACE"],
+    "containerEnv": {
+        "CARGO_PROFILE_DEV_BUILD_OVERRIDE_DEBUG": "true",
+        "HOME": "/home/devcontainer"
+    },
+    "containerUser": "devcontainer",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "github.copilot",
+                "ms-azuretools.vscode-docker",
+                "ms-vscode.cpptools-extension-pack",
+                "ms-vscode.makefile-tools",
+                "panicbit.cargo",
+                "rust-lang.rust-analyzer"
+            ]
+        }
+    },
+    "name": "not-xcapi",
+    "privileged": true,
+    "remoteUser": "devcontainer",
+    "runArgs": [
+        "--userns=keep-id"
+    ],
+    "securityOpt": [ "seccomp=unconfined" ],
+    "updateRemoteUserUID": true,
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/not-xcapi,type=bind,consistency=cached"
+}

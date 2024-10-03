@@ -5,7 +5,7 @@ use bindgen::Builder;
 fn main() {
     // Generate the bindings
     let bindings = Builder::default()
-        .header("path/to/wrapper.h")
+        .header("wrapper.h")
         .generate()
         .expect("Failed to generate bindings");
 

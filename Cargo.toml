@@ -7,19 +7,17 @@ version = "0.1.0"
 authors = ["James Cape <jamescape777@gmail.com"]
 edition = "2021"
 license = "Apache-2.0"
-license-file = "LICENSE"
 readme = "README.md"
 repository = "https://github.com/jcape/rexegy"
 rust-version = "1.80.1"
 
 [package]
-name = "rexegy"
+name = "not-xcapi"
 version.workspace = true
 authors.workspace = true
 description = "Unofficial Exegy XCAPI in Rust"
 edition.workspace = true
 license.workspace = true
-license-file.workspace = true
 readme.workspace = true
 repository.workspace = true
 rust-version.workspace = true

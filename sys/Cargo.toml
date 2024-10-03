@@ -2,10 +2,9 @@
 name = "not-xcapi-sys"
 version.workspace = true
 authors.workspace = true
-description = "Unofficial Exegy FFI Bindings"
+description = "Unofficial Exegy XCAPI FFI for Rust"
 edition.workspace = true
 license.workspace = true
-license-file.workspace = true
 links = "xcapi64"
 readme.workspace = true
 repository.workspace = true
