@@ -21,6 +21,9 @@
             ]
         }
     },
+    "mounts": [
+        "source=/usr/local/exegy,target=/usr/local/exegy,type=bind,consistency=cached"
+    ],
     "name": "not-xcapi",
     "privileged": true,
     "remoteUser": "devcontainer",

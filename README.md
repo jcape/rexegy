@@ -1,4 +1,4 @@
-# Unofficial Rust Libraries for Exegy
+# Unofficial Rust Libraries for Exegy XCAPI
 
 [![License][license-image][license-link]]<!--
 -->[![Dependency Status][deps-image]][deps-link]<!--
@@ -7,6 +7,10 @@
 -->[![Contributor Covenant][conduct-image]][conduct-link]
 
 This is a simple project to support accessing the Exegy XCAPI API.
+
+## Getting Started
+
+In order to build this project, you'll need to have access to the Exegy XCAPI RPMs for RHEL 8---which means you'll need access to the Exegy support site. These should be downloaded and placed into the RPMS directory before starting the container.
 
 [license-image]: https://img.shields.io/crates/l/rexegy?style=flat-square
 [license-link]: LICENSE
