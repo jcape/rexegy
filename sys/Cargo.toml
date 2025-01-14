@@ -5,7 +5,6 @@ authors.workspace = true
 description = "Unofficial Exegy XCAPI FFI for Rust"
 edition.workspace = true
 license.workspace = true
-links = "xcapi64"
 readme.workspace = true
 repository.workspace = true
 rust-version.workspace = true
