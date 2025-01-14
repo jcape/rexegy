@@ -6,6 +6,7 @@ fn main() {
     // Generate the bindings
     let bindings = Builder::default()
         .header("wrapper.h")
+        .clang_arg("-I/usr/local/exegy/include")
         .generate()
         .expect("Failed to generate bindings");
 

@@ -18,7 +18,10 @@
                 "ms-vscode.makefile-tools",
                 "panicbit.cargo",
                 "rust-lang.rust-analyzer"
-            ]
+            ],
+            "settings": {
+                
+            }
         }
     },
     "mounts": [

@@ -1,2 +1,2 @@
-/// Unofficial Exegy Rust Binding
+//! Unofficial Exegy Rust Binding
 

@@ -37,6 +37,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
     && mkdir -p ~/.config/fish/completions \
     && rustup completions fish > ~/.config/fish/completions/rustup.fish \
     && rustup component add clippy rls rust-analyzer rust-src rustfmt \
-    && rustup install stable
+    && rustup install 1.84.0 \
+    && rustup default 1.84.0
 
 ENTRYPOINT [ "sleep", "infinity" ]
