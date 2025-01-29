@@ -1,6 +1,6 @@
 FROM registry.access.redhat.com/ubi8/ubi:latest
 
-ARG USERNAME=devcontainer
+ARG USERNAME=rexegy
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 

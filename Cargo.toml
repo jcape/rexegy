@@ -12,7 +12,7 @@ repository = "https://github.com/jcape/rexegy"
 rust-version = "1.84.0"
 
 [package]
-name = "not-xcapi"
+name = "rexegy"
 version.workspace = true
 authors.workspace = true
 description = "Unofficial Exegy XCAPI in Rust"
@@ -23,4 +23,4 @@ repository.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-not-xcapi-sys = { path = "./sys", version = "0.1.0" }
+rexegy-sys = { path = "./sys", version = "0.1.0" }

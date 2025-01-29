@@ -6,9 +6,9 @@
     "capAdd": ["SYS_PTRACE"],
     "containerEnv": {
         "CARGO_PROFILE_DEV_BUILD_OVERRIDE_DEBUG": "true",
-        "HOME": "/home/devcontainer"
+        "HOME": "/home/rexegy"
     },
-    "containerUser": "devcontainer",
+    "containerUser": "rexegy",
     "customizations": {
         "vscode": {
             "extensions": [
@@ -27,13 +27,13 @@
     "mounts": [
         "source=/usr/local/exegy,target=/usr/local/exegy,type=bind,consistency=cached"
     ],
-    "name": "not-xcapi",
+    "name": "rexegy",
     "privileged": true,
-    "remoteUser": "devcontainer",
+    "remoteUser": "rexegy",
     "runArgs": [
         "--userns=keep-id"
     ],
     "securityOpt": [ "seccomp=unconfined" ],
     "updateRemoteUserUID": true,
-    "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/not-xcapi,type=bind,consistency=cached"
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/rexegy,type=bind,consistency=cached"
 }
