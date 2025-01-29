@@ -40,4 +40,8 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
     && rustup install 1.84.0 \
     && rustup default 1.84.0
 
+# Install starship
+RUN source "$HOME/.cargo/env" \
+    && cargo install starship
+
 ENTRYPOINT [ "sleep", "infinity" ]
