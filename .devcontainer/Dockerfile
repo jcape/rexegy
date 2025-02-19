@@ -1,11 +1,11 @@
-FROM registry.access.redhat.com/ubi8/ubi:latest
+FROM registry.access.redhat.com/ubi9/ubi:latest
 
 ARG USERNAME=rexegy
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
 RUN dnf config-manager \
-    --add-repo https://download.opensuse.org/repositories/shells:/fish:/release:/3/CentOS_8/shells:fish:release:3.repo
+    --add-repo https://download.opensuse.org/repositories/shells:/fish:/release:/3/CentOS_9_Stream/shells:fish:release:3.repo
 
 RUN yum -y install \
     clang-devel \
