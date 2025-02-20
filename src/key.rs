@@ -1,6 +1,7 @@
 //! Exegy key support
 
 use ref_cast::RefCast;
+use crate::feed::Id as FeedId;
 
 /// A wrapper for an Exegy key
 #[derive(Clone, Eq, Hash, PartialEq, PartialOrd, Ord, RefCast)]
@@ -9,8 +10,8 @@ pub struct Key(rexegy_sys::XC_KEY);
 
 impl Key {
     /// Retrieve a reference to the exchange ID in this key
-    pub fn exchange_id(&self) -> &ExchangeId {
-        ExchangeId::ref_cast(&self.0.xk_exchange)
+    pub fn feed_id(&self) -> &FeedId {
+        FeedId::ref_cast(&self.0.xk_exchange)
     }
 
     /// Retrieve a reference to the country code in this key
@@ -23,11 +24,6 @@ impl Key {
         Symbol::ref_cast(&self.0.xk_symbol)
     }
 }
-
-/// Exegy "exchange" (feed) code
-#[derive(Clone, Eq, Hash, PartialEq, PartialOrd, Ord, RefCast)]
-#[repr(transparent)]
-pub struct ExchangeId(rexegy_sys::XC_EXCHANGE_ID);
 
 /// Exegy "country" code
 #[derive(Clone, Eq, Hash, PartialEq, PartialOrd, Ord, RefCast)]

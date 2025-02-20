@@ -300,4 +300,4 @@ impl TryFrom<u32> for Success {
 }
 
 /// A local result type used to encapsulate a result and an FFI error.
-pub type Result<T: ?Sized> = std::result::Result<T, Error>;
+pub type Result<T> = std::result::Result<T, Error>;

@@ -1,6 +1,6 @@
 //! Exegy object support
 
-//// An enumeration of Exegy object types
+/// An enumeration of Exegy object types
 #[derive(Copy, Clone, Eq, Hash, PartialEq, PartialOrd, Ord)]
 #[repr(u16)]
 #[non_exhaustive]
