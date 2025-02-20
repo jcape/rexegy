@@ -1,26 +1,40 @@
 //! Exegy key support
 
+use ref_cast::RefCast;
+
 /// A wrapper for an Exegy key
+#[derive(Clone, Eq, Hash, PartialEq, PartialOrd, Ord, RefCast)]
 #[repr(transparent)]
 pub struct Key(rexegy_sys::XC_KEY);
 
 impl Key {
-    pub fn exchange_id(&self) -> ExchangeId {
-        ExchangeId::new(self.0.xk_exchange)
+    /// Retrieve a reference to the exchange ID in this key
+    pub fn exchange_id(&self) -> &ExchangeId {
+        ExchangeId::ref_cast(&self.0.xk_exchange)
+    }
+
+    /// Retrieve a reference to the country code in this key
+    pub fn country_id(&self) -> &CountryId {
+        CountryId::ref_cast(&self.0.xk_country)
+    }
+
+    /// Retrieve a reference to the symbol in this key
+    pub fn symbol(&self) -> &Symbol {
+        Symbol::ref_cast(&self.0.xk_symbol)
     }
 }
 
-/// A wrapper for an Exegy exchange ID
+/// Exegy "exchange" (feed) code
+#[derive(Clone, Eq, Hash, PartialEq, PartialOrd, Ord, RefCast)]
+#[repr(transparent)]
 pub struct ExchangeId(rexegy_sys::XC_EXCHANGE_ID);
 
-impl ExchangeId {
-    pub fn new(inner: rexegy_sys::XC_EXCHANGE_ID) -> ExchangeId {
-        ExchangeId(inner)
-    }
-}
+/// Exegy "country" code
+#[derive(Clone, Eq, Hash, PartialEq, PartialOrd, Ord, RefCast)]
+#[repr(transparent)]
+pub struct CountryId(rexegy_sys::XC_COUNTRY_ID);
 
-/// A wrapper for an Exegy country ID
-pub struct CountryIdView<'a>(&'a rexegy_sys::XC_COUNTRY_ID);
-
-/// A wrapper for an Exegy symbol
-pub struct ExegySymbolView<'a>(&'a rexegy_sys::XC_SYMBOL);
+/// Exegy symbol data.
+#[derive(Clone, Eq, Hash, PartialEq, PartialOrd, Ord, RefCast)]
+#[repr(transparent)]
+pub struct Symbol(rexegy_sys::XC_SYMBOL);

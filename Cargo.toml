@@ -23,4 +23,5 @@ repository.workspace = true
 rust-version.workspace = true
 
 [dependencies]
+ref-cast = "1.0"
 rexegy-sys = { path = "./sys", version = "0.1.0" }

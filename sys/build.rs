@@ -1,14 +1,31 @@
 use std::{env, path::PathBuf, str::FromStr};
 
 use bindgen::{
-    callbacks::{IntKind, ParseCallbacks},
+    callbacks::{DeriveInfo, IntKind, ParseCallbacks},
     Formatter,
 };
 
 #[derive(Debug)]
 struct Callbacks;
 
+const DERIVE_COMMON: [&str; 4] = ["XC_KEY", "XC_COUNTRY_ID", "XC_EXCHANGE_ID", "XC_SYMBOL"];
+
 impl ParseCallbacks for Callbacks {
+    fn add_derives(&self, info: &DeriveInfo<'_>) -> Vec<String> {
+        let mut retval = Vec::default();
+        if DERIVE_COMMON.contains(&info.name) {
+            retval.push("Eq");
+            retval.push("Hash");
+            retval.push("PartialEq");
+            retval.push("PartialOrd");
+            retval.push("Ord");
+        }
+
+        retval.iter()
+            .map(ToString::to_string)
+            .collect::<Vec<_>>()
+    }
+
     fn int_macro(&self, name: &str, _value: i64) -> Option<IntKind> {
         if name.ends_with("_XINT8") {
             Some(IntKind::I8)

@@ -1,12 +1,6 @@
 //! Unofficial Exegy Rust Binding
 
-mod error;
-mod key;
-mod object;
-mod session;
-
-pub use crate::{
-    object::Kind,
-    error::{Error, Result},
-    session::Session,
-};
+pub mod error;
+pub mod key;
+pub mod object;
+pub mod session;
