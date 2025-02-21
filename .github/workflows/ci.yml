@@ -39,8 +39,6 @@ jobs:
           - advisories
           - bans licenses sources
     runs-on: ubuntu-22.04
-    needs:
-      - "lint"
     steps:
       - uses: actions/checkout@v4
       - uses: Swatinem/rust-cache@v2
@@ -52,8 +50,6 @@ jobs:
 
   clippy:
     runs-on: ubuntu-22.04
-    needs:
-      - "lint"
     strategy:
       matrix:
         rust:
@@ -76,8 +72,6 @@ jobs:
 
   build:
     runs-on: ubuntu-22.04
-    needs:
-      - "lint"
     strategy:
       matrix:
         rust:
