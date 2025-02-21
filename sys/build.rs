@@ -89,6 +89,7 @@ pub fn main() -> Result<(), Box<dyn Error>> {
     path.push("gen.inc.rs");
     let path = path;
 
+    // If you want to re-generate rust files, delete the ones in src/gen
     if xerr_path.exists() && path.exists() {
         return Ok(());
     }

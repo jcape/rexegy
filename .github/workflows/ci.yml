@@ -9,7 +9,6 @@ name: ci
 
 env:
   CARGO_INCREMENTAL: 0
-  CARGO_UNSTABLE_SPARSE_REGISTRY: true
 
 jobs:
   lint:
@@ -50,3 +49,56 @@ jobs:
       - uses: EmbarkStudios/cargo-deny-action@v1
         with:
           command: check ${{ matrix.check }}
+
+  sort:
+    runs-on: ubuntu-22.04
+    needs:
+      - "lint"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-sort
+      - run: cargo sort --workspace --check >/dev/null
+
+  clippy:
+    runs-on: ubuntu-22.04
+    needs:
+      - "lint"
+    strategy:
+      matrix:
+        rust:
+          - stable
+          - beta
+    # Prevent beta warnings from causing CI failure
+    continue-on-error: ${{ matrix.rust == 'beta' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.rust }}
+          components: clippy
+      - uses: r7kamura/rust-problem-matchers@v1
+      - run: |
+          cargo +${{ matrix.rust }} clippy \
+            --all \
+            --all-features \
+            -- -D warnings
+
+  build:
+    runs-on: ubuntu-22.04
+    needs:
+      - "lint"
+    strategy:
+      matrix:
+        rust:
+          - stable
+          - beta
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.rust }}
+      - uses: r7kamura/rust-problem-matchers@v1
+      - run: cargo +${{ matrix.rust }} build --release --locked

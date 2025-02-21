@@ -16,6 +16,10 @@ RUN yum -y install \
     gcc-c++ \
     git \
     make \
+    perl-FindBin \
+    perl-File-Compare \
+    perl-File-Copy \
+    perl-IPC-Cmd \
     python3-pip \
     sudo \
     && yum clean all
