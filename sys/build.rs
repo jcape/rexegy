@@ -1,9 +1,8 @@
-use std::{env, path::PathBuf, str::FromStr};
-
 use bindgen::{
     callbacks::{DeriveInfo, IntKind, ParseCallbacks},
     Formatter,
 };
+use std::{env, error::Error, path::PathBuf, str::FromStr};
 
 #[derive(Debug)]
 struct Callbacks;
@@ -21,9 +20,7 @@ impl ParseCallbacks for Callbacks {
             retval.push("Ord");
         }
 
-        retval.iter()
-            .map(ToString::to_string)
-            .collect::<Vec<_>>()
+        retval.iter().map(ToString::to_string).collect::<Vec<_>>()
     }
 
     fn int_macro(&self, name: &str, _value: i64) -> Option<IntKind> {
@@ -69,7 +66,7 @@ impl ParseCallbacks for XerrCallbacks {
     }
 }
 
-pub fn main() {
+pub fn main() -> Result<(), Box<dyn Error>> {
     match env::var("CARGO_CFG_TARGET_ARCH")
         .expect("Missing build architecture")
         .as_str()
@@ -79,9 +76,10 @@ pub fn main() {
         _ => panic!("Invalid build architecture"),
     }
 
+    cargo_emit::rustc_link_search!("/usr/local/exegy/lib");
+
     let manifest_dir = env::var("CARGO_MANIFEST_DIR").expect("Could not retrieve manifest dir.");
-    let mut path =
-        PathBuf::from_str(&manifest_dir).expect("Could not construct manifest directory path");
+    let mut path = PathBuf::from_str(&manifest_dir)?;
     path.push("src");
 
     let mut xerr_path = path.clone();
@@ -90,6 +88,10 @@ pub fn main() {
 
     path.push("gen.inc.rs");
     let path = path;
+
+    if xerr_path.exists() && path.exists() {
+        return Ok(());
+    }
 
     bindgen::builder()
         .parse_callbacks(Box::new(XerrCallbacks))
@@ -101,11 +103,8 @@ pub fn main() {
         .generate_cstr(true)
         .impl_debug(true)
         .sort_semantically(true)
-        .generate()
-        .expect("Unable to generate bindings")
-        .write_to_file(&xerr_path)
-        .map_err(|_err| format!("Unable to write generated xerr to {}", xerr_path.display()))
-        .expect("Unable to write generated xerr");
+        .generate()?
+        .write_to_file(&xerr_path)?;
 
     bindgen::builder()
         .parse_callbacks(Box::new(Callbacks))
@@ -116,9 +115,8 @@ pub fn main() {
         .formatter(Formatter::Rustfmt)
         .generate_cstr(true)
         .sort_semantically(true)
-        .generate()
-        .expect("Unable to generate bindings")
-        .write_to_file(&path)
-        .map_err(|_err| format!("Unable to write generated code to {}", path.display()))
-        .expect("Unable to write generated code");
+        .generate()?
+        .write_to_file(&path)?;
+
+    Ok(())
 }

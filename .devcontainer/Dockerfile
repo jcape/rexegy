@@ -10,22 +10,28 @@ RUN dnf config-manager \
 RUN yum -y install \
     clang-devel \
     cmake \
+    dbus-tools \
     fish \
     gcc \
     gcc-c++ \
     git \
     make \
-    sudo
+    python3-pip \
+    sudo \
+    && yum clean all
 
 # Setup Username
 # Create the user
 RUN set -x \
     && groupadd --gid "${USER_GID}" "${USERNAME}" \
     && useradd --uid "${USER_UID}" --gid "${USER_GID}" -m "${USERNAME}" \
-    && echo "${USERNAME} ALL=\(root\) NOPASSWD:ALL" > "/etc/sudoers.d/${USERNAME}" \
+    && echo "${USERNAME} ALL=(root) NOPASSWD:ALL" > "/etc/sudoers.d/${USERNAME}" \
     && chmod 0440 "/etc/sudoers.d/${USERNAME}" \
     && mkdir /workspaces \
     && chown -R "${USERNAME}:${USERNAME}" /workspaces
+
+# Install pre-commit
+RUN pip3 install pipx
 
 ENV HOME "/home/${USERNAME}"
 USER "${USERNAME}"
@@ -39,6 +45,9 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
     && rustup component add clippy rls rust-analyzer rust-src rustfmt \
     && rustup install 1.85.0 \
     && rustup default 1.85.0
+
+# Install pre-commit
+RUN pipx install pre-commit
 
 # Install starship
 RUN source "$HOME/.cargo/env" \

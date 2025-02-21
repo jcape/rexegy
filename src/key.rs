@@ -1,7 +1,7 @@
 //! Exegy key support
 
-use ref_cast::RefCast;
 use crate::feed::Id as FeedId;
+use ref_cast::RefCast;
 
 /// A wrapper for an Exegy key
 #[derive(Clone, Eq, Hash, PartialEq, PartialOrd, Ord, RefCast)]

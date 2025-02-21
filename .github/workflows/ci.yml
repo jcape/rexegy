@@ -25,6 +25,13 @@ jobs:
       - uses: DavidAnson/markdownlint-cli2-action@v14
         with:
           globs: "**/*.md"
+      - uses: karancode/yamllint-github-action@2
+        with:
+          yamllint_file_or_dir: '.'
+          yamllint_strict: false
+          yamllint_comment: true
+        env:
+          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   deny:
     strategy:
