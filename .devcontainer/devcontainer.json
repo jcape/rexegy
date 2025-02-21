@@ -13,7 +13,9 @@
             "extensions": [
                 "barbosshack.crates-io",
                 "flydreame.docblocker",
+                "github.vscode-github-actions",
                 "github.vscode-pull-request-github",
+                "graphite.gti-vscode",
                 "ms-azuretools.vscode-docker",
                 "ms-vscode.cpptools-extension-pack",
                 "ms-vscode.makefile-tools",

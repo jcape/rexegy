@@ -1,0 +1,45 @@
+---
+name: ci
+
+"on":
+  push:
+    branches:
+      - 'main'
+  pull_request:
+
+env:
+  CARGO_INCREMENTAL: 0
+  CARGO_UNSTABLE_SPARSE_REGISTRY: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+      - uses: r7kamura/rust-problem-matchers@v1
+      - run: cargo fmt --all -- --check
+      - uses: xt0rted/markdownlint-problem-matcher@v2
+      - uses: DavidAnson/markdownlint-cli2-action@v14
+        with:
+          globs: "**/*.md"
+
+  deny:
+    strategy:
+      matrix:
+        check:
+          - advisories
+          - bans licenses sources
+    runs-on: ubuntu-22.04
+    needs:
+      - "lint"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: "true"
+      - uses: EmbarkStudios/cargo-deny-action@v1
+        with:
+          command: check ${{ matrix.check }}
