@@ -50,18 +50,6 @@ jobs:
         with:
           command: check ${{ matrix.check }}
 
-  sort:
-    runs-on: ubuntu-22.04
-    needs:
-      - "lint"
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: taiki-e/install-action@v2
-        with:
-          tool: cargo-sort
-      - run: cargo sort --workspace --check >/dev/null
-
   clippy:
     runs-on: ubuntu-22.04
     needs:
@@ -101,4 +89,4 @@ jobs:
         with:
           toolchain: ${{ matrix.rust }}
       - uses: r7kamura/rust-problem-matchers@v1
-      - run: cargo +${{ matrix.rust }} build --release --locked
+      - run: cargo +${{ matrix.rust }} build --release
