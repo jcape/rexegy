@@ -5,7 +5,8 @@
     },
     "capAdd": ["SYS_PTRACE"],
     "containerEnv": {
-        "CARGO_PROFILE_DEV_BUILD_OVERRIDE_DEBUG": "true"
+        "CARGO_PROFILE_DEV_BUILD_OVERRIDE_DEBUG": "true",
+        "EDITOR": "code --reuse-window --wait"
     },
     "containerUser": "rexegy",
     "customizations": {
