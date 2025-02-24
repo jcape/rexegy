@@ -16,10 +16,6 @@ RUN yum -y install \
     gcc-c++ \
     git \
     make \
-    perl-FindBin \
-    perl-File-Compare \
-    perl-File-Copy \
-    perl-IPC-Cmd \
     python3-pip \
     sudo \
     && yum clean all
@@ -55,6 +51,7 @@ RUN pipx install pre-commit
 
 # Install starship
 RUN source "$HOME/.cargo/env" \
-    && cargo install starship
+    && cargo install cargo-binstall \
+    && cargo binstall starship
 
 ENTRYPOINT [ "sleep", "infinity" ]

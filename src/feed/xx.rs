@@ -27,3 +27,32 @@ pub enum Feed {
     /// (User-defined Composite (Level 1 - Exegy generate)
     Composite = i16::from_le_bytes([b'\\', b'U']),
 }
+
+impl TryFrom<i16> for Feed {
+    type Error = ();
+
+    fn try_from(value: i16) -> Result<Self, Self::Error> {
+        Self::try_from(value.to_le_bytes())
+    }
+}
+
+impl TryFrom<[u8; 2]> for Feed {
+    type Error = ();
+
+    fn try_from(value: [u8; 2]) -> Result<Self, Self::Error> {
+        match value {
+            [b'B', b'X'] => Ok(Feed::Baskets),
+            [b'E', b'X'] => Ok(Feed::FilteredExchangeKeylists),
+            [b'I', b'X'] => Ok(Feed::UserKeylists),
+            [b'O', b'X'] => Ok(Feed::OptionsChainKeylists),
+            [b'P', b'X'] => Ok(Feed::Passthrough),
+            [b'R', b'X'] => Ok(Feed::FilteredKeylists),
+            [b'S', b'X'] => Ok(Feed::FilteredSubscribedKeylists),
+            [b'U', b'X'] => Ok(Feed::Keylists),
+            [b'\\', b'B'] => Ok(Feed::Broadcast),
+            [b'\\', b'N'] => Ok(Feed::Montage),
+            [b'\\', b'U'] => Ok(Feed::Composite),
+            _ => Err(()),
+        }
+    }
+}
