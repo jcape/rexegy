@@ -3,7 +3,7 @@ resolver = "2"
 members = [".", "sys"]
 
 [workspace.package]
-version = "0.1.0"
+version = "0.0.1"
 authors = ["James Cape <jamescape777@gmail.com>"]
 edition = "2021"
 license = "Apache-2.0"
@@ -25,4 +25,15 @@ rust-version.workspace = true
 [dependencies]
 displaydoc = "0.2.1"
 ref-cast = "1.0"
-rxegy-sys = { path = "./sys", version = "0.1.0" }
+rxegy-sys = { path = "./sys", version = "0.0.1" }
+
+[profile.release]
+lto = true
+
+[workspace.metadata.release]
+shared-version = true
+consolidate-commits = true
+tag-name = "v{{version}}"
+pre-release-replacements = [
+    {file="README.md", search="rexegy[a-z-]+/[0-9.]+", replace="{{crate_name}}/{{version}}"},
+]
