@@ -45,9 +45,6 @@
     "name": "rexegy",
     "privileged": true,
     "remoteUser": "rexegy",
-    "runArgs": [
-        "--userns=keep-id"
-    ],
     "postAttachCommand": "/workspaces/rexegy/.devcontainer/post-attach.sh",
     "securityOpt": [ "seccomp=unconfined" ],
     "updateRemoteUserUID": true,
