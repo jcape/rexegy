@@ -10,7 +10,7 @@ use ref_cast::RefCast;
 /// A wrapper for an Exegy key
 #[derive(Clone, Eq, Hash, PartialEq, PartialOrd, Ord, RefCast)]
 #[repr(transparent)]
-pub struct Key(rexegy_sys::XC_KEY);
+pub struct Key(rxegy_sys::XC_KEY);
 
 impl Key {
     /// Retrieve a reference to the exchange ID in this key
@@ -37,4 +37,4 @@ impl Key {
 /// Exegy symbol data.
 #[derive(Clone, Eq, Hash, PartialEq, PartialOrd, Ord, RefCast)]
 #[repr(transparent)]
-pub struct Symbol(rexegy_sys::XC_SYMBOL);
+pub struct Symbol(rxegy_sys::XC_SYMBOL);

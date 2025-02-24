@@ -8,7 +8,7 @@
         "CARGO_PROFILE_DEV_BUILD_OVERRIDE_DEBUG": "true",
         "EDITOR": "code --reuse-window --wait"
     },
-    "containerUser": "rexegy",
+    "containerUser": "rxegy",
     "customizations": {
         "vscode": {
             "extensions": [
@@ -39,14 +39,14 @@
     },
     "mounts": [
         "source=/usr/local/exegy,target=/usr/local/exegy,type=bind,consistency=cached",
-        "source=${localEnv:HOME}/.config,target=/home/rexegy/.config,type=bind,consistency=cached",
-        "source=${localEnv:HOME}/dotfiles,target=/home/rexegy/dotfiles,type=bind,consistency=cached"
+        "source=${localEnv:HOME}/.config,target=/home/rxegy/.config,type=bind,consistency=cached",
+        "source=${localEnv:HOME}/dotfiles,target=/home/rxegy/dotfiles,type=bind,consistency=cached"
     ],
-    "name": "rexegy",
+    "name": "rxegy",
     "privileged": true,
-    "remoteUser": "rexegy",
-    "postAttachCommand": "/workspaces/rexegy/.devcontainer/post-attach.sh",
+    "remoteUser": "rxegy",
+    "postAttachCommand": "/workspaces/rxegy/.devcontainer/post-attach.sh",
     "securityOpt": [ "seccomp=unconfined" ],
     "updateRemoteUserUID": true,
-    "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/rexegy,type=bind,consistency=cached"
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/rxegy,type=bind,consistency=cached"
 }

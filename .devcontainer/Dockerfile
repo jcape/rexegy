@@ -1,6 +1,6 @@
 FROM registry.access.redhat.com/ubi9/ubi:latest
 
-ARG USERNAME=rexegy
+ARG USERNAME=rxegy
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 

@@ -1,5 +1,5 @@
 [package]
-name = "rexegy-sys"
+name = "rxegy-sys"
 version.workspace = true
 authors.workspace = true
 description = "Unofficial Exegy XCAPI FFI for Rust"

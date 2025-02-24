@@ -9,7 +9,7 @@ pub mod xx;
 /// Exegy Feed ID
 #[derive(Clone, Eq, Hash, PartialEq, PartialOrd, Ord, RefCast)]
 #[repr(transparent)]
-pub struct Id(rexegy_sys::XC_EXCHANGE_ID);
+pub struct Id(rxegy_sys::XC_EXCHANGE_ID);
 
 /// A trait for group-specific feeds to retrieve
 pub trait Feed {

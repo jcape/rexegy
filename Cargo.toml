@@ -8,11 +8,11 @@ authors = ["James Cape <jamescape777@gmail.com>"]
 edition = "2021"
 license = "Apache-2.0"
 readme = "README.md"
-repository = "https://github.com/jcape/rexegy"
+repository = "https://github.com/jcape/rxegy"
 rust-version = "1.85.0"
 
 [package]
-name = "rexegy"
+name = "rxegy"
 version.workspace = true
 authors.workspace = true
 description = "Unofficial Exegy XCAPI in Rust"
@@ -25,4 +25,4 @@ rust-version.workspace = true
 [dependencies]
 displaydoc = "0.2.1"
 ref-cast = "1.0"
-rexegy-sys = { path = "./sys", version = "0.1.0" }
+rxegy-sys = { path = "./sys", version = "0.1.0" }

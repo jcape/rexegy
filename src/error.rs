@@ -21,161 +21,161 @@ pub type Result<T> = std::result::Result<T, Error>;
 #[non_exhaustive]
 pub enum ExegyError {
     /// Operation not permitted
-    NotPermitted = rexegy_sys::XPERM,
+    NotPermitted = rxegy_sys::XPERM,
     /// No entry found
-    NoEntry = rexegy_sys::XNOENT,
+    NoEntry = rxegy_sys::XNOENT,
     /// I/O error
-    Io = rexegy_sys::XIO,
+    Io = rxegy_sys::XIO,
     /// Operation would block
-    WouldBlock = rexegy_sys::XWOULDBLOCK,
+    WouldBlock = rxegy_sys::XWOULDBLOCK,
     /// Permission denied
-    Access = rexegy_sys::XACCESS,
+    Access = rxegy_sys::XACCESS,
     /// Bad address
-    BadAddress = rexegy_sys::XADDR,
+    BadAddress = rxegy_sys::XADDR,
     /// Device or resource busy
-    Busy = rexegy_sys::XBUSY,
+    Busy = rxegy_sys::XBUSY,
     /// (WARNING) Queuing delay detected
-    QueueDelay = rexegy_sys::XQUEUEDELAY,
+    QueueDelay = rxegy_sys::XQUEUEDELAY,
     /// Item already exists
-    Exist = rexegy_sys::XEXIST,
+    Exist = rxegy_sys::XEXIST,
     /// No such device
-    NoDevice = rexegy_sys::XNODEV,
+    NoDevice = rxegy_sys::XNODEV,
     /// Not a directory
-    NotDir = rexegy_sys::XNOTDIR,
+    NotDir = rxegy_sys::XNOTDIR,
     /// Is a directory
-    IsDir = rexegy_sys::XISDIR,
+    IsDir = rxegy_sys::XISDIR,
     /// Invalid argument
-    InvalidArgument = rexegy_sys::XINVAL,
+    InvalidArgument = rxegy_sys::XINVAL,
     /// Not enough memory
-    NoMemory = rexegy_sys::XNOMEM,
+    NoMemory = rxegy_sys::XNOMEM,
     /// Function not implemented
-    NotImplemented = rexegy_sys::XIMPL,
+    NotImplemented = rxegy_sys::XIMPL,
     /// No data available
-    NoData = rexegy_sys::XNODATA,
+    NoData = rxegy_sys::XNODATA,
     /// Timer expired
-    Time = rexegy_sys::XTIME,
+    Time = rxegy_sys::XTIME,
     /// Link has been severed
-    NoLink = rexegy_sys::XNOLINK,
+    NoLink = rxegy_sys::XNOLINK,
     /// Communication error
-    Communication = rexegy_sys::XCOMM,
+    Communication = rxegy_sys::XCOMM,
     /// Protocol error
-    Protocol = rexegy_sys::XPROTO,
+    Protocol = rxegy_sys::XPROTO,
     /// Address in use
-    AddressInUse = rexegy_sys::XADDRINUSE,
+    AddressInUse = rxegy_sys::XADDRINUSE,
     /// Connection reset by peer
-    ConnectionReset = rexegy_sys::XCONNRESET,
+    ConnectionReset = rxegy_sys::XCONNRESET,
     /// Connection refused
-    ConnectionRefused = rexegy_sys::XCONNREFUSED,
+    ConnectionRefused = rxegy_sys::XCONNREFUSED,
     /// Operation interrupted
-    Interrupted = rexegy_sys::XINTR,
+    Interrupted = rxegy_sys::XINTR,
     /// End of results
-    End = rexegy_sys::XEND,
+    End = rxegy_sys::XEND,
     /// No available cards
-    NoCard = rexegy_sys::XNOCARD,
+    NoCard = rxegy_sys::XNOCARD,
     /// Invalid operation chain
-    BadChain = rexegy_sys::XBADCHAIN,
+    BadChain = rxegy_sys::XBADCHAIN,
     /// Capacity exceeded
-    Capacity = rexegy_sys::XCAPACITY,
+    Capacity = rxegy_sys::XCAPACITY,
     /// Hardware not loaded
-    HardwareNotLoaded = rexegy_sys::XHWNOTLOADED,
+    HardwareNotLoaded = rxegy_sys::XHWNOTLOADED,
     /// Socket error
-    Socket = rexegy_sys::XSOCKET,
+    Socket = rxegy_sys::XSOCKET,
     /// Version mismatch
-    Version = rexegy_sys::XVERSION,
+    Version = rxegy_sys::XVERSION,
     /// Inconsistent or bad state
-    BadState = rexegy_sys::XBADSTATE,
+    BadState = rxegy_sys::XBADSTATE,
     /// Client was disconnected because it's a slow consumer
-    SlowConsumer = rexegy_sys::XSLOWCONSUMER,
+    SlowConsumer = rxegy_sys::XSLOWCONSUMER,
     /// Invalid symbol
-    BadSymbol = rexegy_sys::XBADSYMBOL,
+    BadSymbol = rxegy_sys::XBADSYMBOL,
     /// Overflow
-    Overflow = rexegy_sys::XOVERFLOW,
+    Overflow = rxegy_sys::XOVERFLOW,
     /// Socket not connected
-    NotConnected = rexegy_sys::XNOTCONNECTED,
+    NotConnected = rxegy_sys::XNOTCONNECTED,
     /// Duplicate item
-    Duplicate = rexegy_sys::XDUPLICATE,
+    Duplicate = rxegy_sys::XDUPLICATE,
     /// Ignored
-    Ignore = rexegy_sys::XIGNORE,
+    Ignore = rxegy_sys::XIGNORE,
     /// Invalid handle
-    BadHandle = rexegy_sys::XBADHANDLE,
+    BadHandle = rxegy_sys::XBADHANDLE,
     /// Invalid field
-    BadField = rexegy_sys::XBADFIELD,
+    BadField = rxegy_sys::XBADFIELD,
     /// Invalid slot
-    BadSlot = rexegy_sys::XBADSLOT,
+    BadSlot = rxegy_sys::XBADSLOT,
     /// Login failed
-    LoginFailed = rexegy_sys::XLOGINFAILED,
+    LoginFailed = rxegy_sys::XLOGINFAILED,
     /// Pending
-    Pending = rexegy_sys::XPENDING,
+    Pending = rxegy_sys::XPENDING,
     /// Data is stale
-    Stale = rexegy_sys::XSTALE,
+    Stale = rxegy_sys::XSTALE,
     /// Subsystem uninitialized
-    Uninitialized = rexegy_sys::XUNINIT,
+    Uninitialized = rxegy_sys::XUNINIT,
     /// Connection timed out
-    Timeout = rexegy_sys::XTIMEOUT,
+    Timeout = rxegy_sys::XTIMEOUT,
     /// Not supported
-    NotSupported = rexegy_sys::XNOTSUP,
+    NotSupported = rxegy_sys::XNOTSUP,
     /// Type not supported for specified field
-    Type = rexegy_sys::XTYPE,
+    Type = rxegy_sys::XTYPE,
     /// Already connected
-    Already = rexegy_sys::XALREADY,
+    Already = rxegy_sys::XALREADY,
     /// Exceeded maximum number of retries
-    Retry = rexegy_sys::XRETRY,
+    Retry = rxegy_sys::XRETRY,
     /// Internal error
-    Internal = rexegy_sys::XINTERR,
+    Internal = rxegy_sys::XINTERR,
     /// Item is missing, but shouldn't be
-    Missing = rexegy_sys::XMISSING,
+    Missing = rxegy_sys::XMISSING,
     /// Operation was or should be aborted
-    Abort = rexegy_sys::XABORT,
+    Abort = rxegy_sys::XABORT,
     /// Bad data encountered
-    BadData = rexegy_sys::XBADDATA,
+    BadData = rxegy_sys::XBADDATA,
     /// Ambiguous data or command
-    Ambiguous = rexegy_sys::XAMBIG,
+    Ambiguous = rxegy_sys::XAMBIG,
     /// No search terms
-    NoSearchTerms = rexegy_sys::XNOTERMS,
+    NoSearchTerms = rxegy_sys::XNOTERMS,
     /// Configuration data is missing or invalid
-    Config = rexegy_sys::XCONFIG,
+    Config = rxegy_sys::XCONFIG,
     /// Nonsensical command or request received
-    Nonsense = rexegy_sys::XNONSENSE,
+    Nonsense = rxegy_sys::XNONSENSE,
     /// Bad depth
-    BadDepth = rexegy_sys::XBADDEPTH,
+    BadDepth = rxegy_sys::XBADDEPTH,
     /// Bad size
-    BadSize = rexegy_sys::XBADSIZE,
+    BadSize = rxegy_sys::XBADSIZE,
     /// Wrong thread for function
-    Thread = rexegy_sys::XTHREAD,
+    Thread = rxegy_sys::XTHREAD,
     /// Regional exists
-    HasRegional = rexegy_sys::XHASREGIONAL,
+    HasRegional = rxegy_sys::XHASREGIONAL,
     /// Server down for maintenance
-    Down = rexegy_sys::XDOWN,
+    Down = rxegy_sys::XDOWN,
     /// General error condition
-    Error = rexegy_sys::XERROR,
+    Error = rxegy_sys::XERROR,
     /// Unsupported HCA firmware revision
-    BadFirmware = rexegy_sys::XBADFIRMWARE,
+    BadFirmware = rxegy_sys::XBADFIRMWARE,
     /// Unrecoverable loss detected in transport session
-    UnrecoverableLoss = rexegy_sys::XUNRECOVERABLELOSS,
+    UnrecoverableLoss = rxegy_sys::XUNRECOVERABLELOSS,
     /// Symbol quota has been reached
-    SymbolQuota = rexegy_sys::XSYMBOLQUOTA,
+    SymbolQuota = rxegy_sys::XSYMBOLQUOTA,
     /// Connection limit reached
-    ConnnectionLimit = rexegy_sys::XCONNLIMIT,
+    ConnnectionLimit = rxegy_sys::XCONNLIMIT,
     /// Invalid call for a read-only field or container
-    ReadOnly = rexegy_sys::XREADONLY,
+    ReadOnly = rxegy_sys::XREADONLY,
     /// Invalid hardware address
-    InvalidAddress = rexegy_sys::XINVALIDADDR,
+    InvalidAddress = rxegy_sys::XINVALIDADDR,
     /// Expired symbol
-    Expired = rexegy_sys::XEXPIRED,
+    Expired = rxegy_sys::XEXPIRED,
     /// The session is already in use
-    SessionInUse = rexegy_sys::XSESSIONINUSE,
+    SessionInUse = rxegy_sys::XSESSIONINUSE,
     /// The client has hit its session limit
-    SessionLimit = rexegy_sys::XSESSIONLIMIT,
+    SessionLimit = rxegy_sys::XSESSIONLIMIT,
     /// Invalid session id
-    InvalidSession = rexegy_sys::XINVALIDSESSION,
+    InvalidSession = rxegy_sys::XINVALIDSESSION,
     /// Target is disabled
-    Disabled = rexegy_sys::XDISABLED,
+    Disabled = rxegy_sys::XDISABLED,
     /// Target should be deleted
-    Delete = rexegy_sys::XDELETE,
+    Delete = rxegy_sys::XDELETE,
     /// Deauthorized for content
-    Deauthorize = rexegy_sys::XDEAUTHORIZE,
+    Deauthorize = rxegy_sys::XDEAUTHORIZE,
     /// Force disconnect
-    ForceOff = rexegy_sys::XFORCEOFF,
+    ForceOff = rxegy_sys::XFORCEOFF,
 }
 
 impl TryFrom<u32> for ExegyError {
@@ -183,84 +183,84 @@ impl TryFrom<u32> for ExegyError {
 
     fn try_from(value: u32) -> StdResult<Self, <Self as TryFrom<u32>>::Error> {
         match value {
-            rexegy_sys::XPERM => Ok(ExegyError::NotPermitted),
-            rexegy_sys::XNOENT => Ok(ExegyError::NoEntry),
-            rexegy_sys::XIO => Ok(ExegyError::Io),
-            rexegy_sys::XWOULDBLOCK => Ok(ExegyError::WouldBlock),
-            rexegy_sys::XACCESS => Ok(ExegyError::Access),
-            rexegy_sys::XADDR => Ok(ExegyError::BadAddress),
-            rexegy_sys::XBUSY => Ok(ExegyError::Busy),
-            rexegy_sys::XQUEUEDELAY => Ok(ExegyError::QueueDelay),
-            rexegy_sys::XEXIST => Ok(ExegyError::Exist),
-            rexegy_sys::XNODEV => Ok(ExegyError::NoDevice),
-            rexegy_sys::XNOTDIR => Ok(ExegyError::NotDir),
-            rexegy_sys::XISDIR => Ok(ExegyError::IsDir),
-            rexegy_sys::XINVAL => Ok(ExegyError::InvalidArgument),
-            rexegy_sys::XNOMEM => Ok(ExegyError::NoMemory),
-            rexegy_sys::XIMPL => Ok(ExegyError::NotImplemented),
-            rexegy_sys::XNODATA => Ok(ExegyError::NoData),
-            rexegy_sys::XTIME => Ok(ExegyError::Time),
-            rexegy_sys::XNOLINK => Ok(ExegyError::NoLink),
-            rexegy_sys::XCOMM => Ok(ExegyError::Communication),
-            rexegy_sys::XPROTO => Ok(ExegyError::Protocol),
-            rexegy_sys::XADDRINUSE => Ok(ExegyError::AddressInUse),
-            rexegy_sys::XCONNRESET => Ok(ExegyError::ConnectionReset),
-            rexegy_sys::XCONNREFUSED => Ok(ExegyError::ConnectionRefused),
-            rexegy_sys::XINTR => Ok(ExegyError::Interrupted),
-            rexegy_sys::XEND => Ok(ExegyError::End),
-            rexegy_sys::XNOCARD => Ok(ExegyError::NoCard),
-            rexegy_sys::XBADCHAIN => Ok(ExegyError::BadChain),
-            rexegy_sys::XCAPACITY => Ok(ExegyError::Capacity),
-            rexegy_sys::XHWNOTLOADED => Ok(ExegyError::HardwareNotLoaded),
-            rexegy_sys::XSOCKET => Ok(ExegyError::Socket),
-            rexegy_sys::XVERSION => Ok(ExegyError::Version),
-            rexegy_sys::XBADSTATE => Ok(ExegyError::BadState),
-            rexegy_sys::XSLOWCONSUMER => Ok(ExegyError::SlowConsumer),
-            rexegy_sys::XBADSYMBOL => Ok(ExegyError::BadSymbol),
-            rexegy_sys::XOVERFLOW => Ok(ExegyError::Overflow),
-            rexegy_sys::XNOTCONNECTED => Ok(ExegyError::NotConnected),
-            rexegy_sys::XDUPLICATE => Ok(ExegyError::Duplicate),
-            rexegy_sys::XIGNORE => Ok(ExegyError::Ignore),
-            rexegy_sys::XBADHANDLE => Ok(ExegyError::BadHandle),
-            rexegy_sys::XBADFIELD => Ok(ExegyError::BadField),
-            rexegy_sys::XBADSLOT => Ok(ExegyError::BadSlot),
-            rexegy_sys::XLOGINFAILED => Ok(ExegyError::LoginFailed),
-            rexegy_sys::XPENDING => Ok(ExegyError::Pending),
-            rexegy_sys::XSTALE => Ok(ExegyError::Stale),
-            rexegy_sys::XUNINIT => Ok(ExegyError::Uninitialized),
-            rexegy_sys::XTIMEOUT => Ok(ExegyError::Timeout),
-            rexegy_sys::XNOTSUP => Ok(ExegyError::NotSupported),
-            rexegy_sys::XTYPE => Ok(ExegyError::Type),
-            rexegy_sys::XALREADY => Ok(ExegyError::Already),
-            rexegy_sys::XRETRY => Ok(ExegyError::Retry),
-            rexegy_sys::XINTERR => Ok(ExegyError::Interrupted),
-            rexegy_sys::XMISSING => Ok(ExegyError::Missing),
-            rexegy_sys::XABORT => Ok(ExegyError::Abort),
-            rexegy_sys::XBADDATA => Ok(ExegyError::BadData),
-            rexegy_sys::XAMBIG => Ok(ExegyError::Ambiguous),
-            rexegy_sys::XNOTERMS => Ok(ExegyError::NoSearchTerms),
-            rexegy_sys::XCONFIG => Ok(ExegyError::Config),
-            rexegy_sys::XNONSENSE => Ok(ExegyError::Nonsense),
-            rexegy_sys::XBADDEPTH => Ok(ExegyError::BadDepth),
-            rexegy_sys::XBADSIZE => Ok(ExegyError::BadSize),
-            rexegy_sys::XTHREAD => Ok(ExegyError::Thread),
-            rexegy_sys::XHASREGIONAL => Ok(ExegyError::HasRegional),
-            rexegy_sys::XDOWN => Ok(ExegyError::Down),
-            rexegy_sys::XERROR => Ok(ExegyError::Error),
-            rexegy_sys::XBADFIRMWARE => Ok(ExegyError::BadFirmware),
-            rexegy_sys::XUNRECOVERABLELOSS => Ok(ExegyError::UnrecoverableLoss),
-            rexegy_sys::XSYMBOLQUOTA => Ok(ExegyError::SymbolQuota),
-            rexegy_sys::XCONNLIMIT => Ok(ExegyError::ConnnectionLimit),
-            rexegy_sys::XREADONLY => Ok(ExegyError::ReadOnly),
-            rexegy_sys::XINVALIDADDR => Ok(ExegyError::InvalidAddress),
-            rexegy_sys::XEXPIRED => Ok(ExegyError::Expired),
-            rexegy_sys::XSESSIONINUSE => Ok(ExegyError::SessionInUse),
-            rexegy_sys::XSESSIONLIMIT => Ok(ExegyError::SessionLimit),
-            rexegy_sys::XINVALIDSESSION => Ok(ExegyError::InvalidSession),
-            rexegy_sys::XDISABLED => Ok(ExegyError::Disabled),
-            rexegy_sys::XDELETE => Ok(ExegyError::Delete),
-            rexegy_sys::XDEAUTHORIZE => Ok(ExegyError::Deauthorize),
-            rexegy_sys::XFORCEOFF => Ok(ExegyError::ForceOff),
+            rxegy_sys::XPERM => Ok(ExegyError::NotPermitted),
+            rxegy_sys::XNOENT => Ok(ExegyError::NoEntry),
+            rxegy_sys::XIO => Ok(ExegyError::Io),
+            rxegy_sys::XWOULDBLOCK => Ok(ExegyError::WouldBlock),
+            rxegy_sys::XACCESS => Ok(ExegyError::Access),
+            rxegy_sys::XADDR => Ok(ExegyError::BadAddress),
+            rxegy_sys::XBUSY => Ok(ExegyError::Busy),
+            rxegy_sys::XQUEUEDELAY => Ok(ExegyError::QueueDelay),
+            rxegy_sys::XEXIST => Ok(ExegyError::Exist),
+            rxegy_sys::XNODEV => Ok(ExegyError::NoDevice),
+            rxegy_sys::XNOTDIR => Ok(ExegyError::NotDir),
+            rxegy_sys::XISDIR => Ok(ExegyError::IsDir),
+            rxegy_sys::XINVAL => Ok(ExegyError::InvalidArgument),
+            rxegy_sys::XNOMEM => Ok(ExegyError::NoMemory),
+            rxegy_sys::XIMPL => Ok(ExegyError::NotImplemented),
+            rxegy_sys::XNODATA => Ok(ExegyError::NoData),
+            rxegy_sys::XTIME => Ok(ExegyError::Time),
+            rxegy_sys::XNOLINK => Ok(ExegyError::NoLink),
+            rxegy_sys::XCOMM => Ok(ExegyError::Communication),
+            rxegy_sys::XPROTO => Ok(ExegyError::Protocol),
+            rxegy_sys::XADDRINUSE => Ok(ExegyError::AddressInUse),
+            rxegy_sys::XCONNRESET => Ok(ExegyError::ConnectionReset),
+            rxegy_sys::XCONNREFUSED => Ok(ExegyError::ConnectionRefused),
+            rxegy_sys::XINTR => Ok(ExegyError::Interrupted),
+            rxegy_sys::XEND => Ok(ExegyError::End),
+            rxegy_sys::XNOCARD => Ok(ExegyError::NoCard),
+            rxegy_sys::XBADCHAIN => Ok(ExegyError::BadChain),
+            rxegy_sys::XCAPACITY => Ok(ExegyError::Capacity),
+            rxegy_sys::XHWNOTLOADED => Ok(ExegyError::HardwareNotLoaded),
+            rxegy_sys::XSOCKET => Ok(ExegyError::Socket),
+            rxegy_sys::XVERSION => Ok(ExegyError::Version),
+            rxegy_sys::XBADSTATE => Ok(ExegyError::BadState),
+            rxegy_sys::XSLOWCONSUMER => Ok(ExegyError::SlowConsumer),
+            rxegy_sys::XBADSYMBOL => Ok(ExegyError::BadSymbol),
+            rxegy_sys::XOVERFLOW => Ok(ExegyError::Overflow),
+            rxegy_sys::XNOTCONNECTED => Ok(ExegyError::NotConnected),
+            rxegy_sys::XDUPLICATE => Ok(ExegyError::Duplicate),
+            rxegy_sys::XIGNORE => Ok(ExegyError::Ignore),
+            rxegy_sys::XBADHANDLE => Ok(ExegyError::BadHandle),
+            rxegy_sys::XBADFIELD => Ok(ExegyError::BadField),
+            rxegy_sys::XBADSLOT => Ok(ExegyError::BadSlot),
+            rxegy_sys::XLOGINFAILED => Ok(ExegyError::LoginFailed),
+            rxegy_sys::XPENDING => Ok(ExegyError::Pending),
+            rxegy_sys::XSTALE => Ok(ExegyError::Stale),
+            rxegy_sys::XUNINIT => Ok(ExegyError::Uninitialized),
+            rxegy_sys::XTIMEOUT => Ok(ExegyError::Timeout),
+            rxegy_sys::XNOTSUP => Ok(ExegyError::NotSupported),
+            rxegy_sys::XTYPE => Ok(ExegyError::Type),
+            rxegy_sys::XALREADY => Ok(ExegyError::Already),
+            rxegy_sys::XRETRY => Ok(ExegyError::Retry),
+            rxegy_sys::XINTERR => Ok(ExegyError::Interrupted),
+            rxegy_sys::XMISSING => Ok(ExegyError::Missing),
+            rxegy_sys::XABORT => Ok(ExegyError::Abort),
+            rxegy_sys::XBADDATA => Ok(ExegyError::BadData),
+            rxegy_sys::XAMBIG => Ok(ExegyError::Ambiguous),
+            rxegy_sys::XNOTERMS => Ok(ExegyError::NoSearchTerms),
+            rxegy_sys::XCONFIG => Ok(ExegyError::Config),
+            rxegy_sys::XNONSENSE => Ok(ExegyError::Nonsense),
+            rxegy_sys::XBADDEPTH => Ok(ExegyError::BadDepth),
+            rxegy_sys::XBADSIZE => Ok(ExegyError::BadSize),
+            rxegy_sys::XTHREAD => Ok(ExegyError::Thread),
+            rxegy_sys::XHASREGIONAL => Ok(ExegyError::HasRegional),
+            rxegy_sys::XDOWN => Ok(ExegyError::Down),
+            rxegy_sys::XERROR => Ok(ExegyError::Error),
+            rxegy_sys::XBADFIRMWARE => Ok(ExegyError::BadFirmware),
+            rxegy_sys::XUNRECOVERABLELOSS => Ok(ExegyError::UnrecoverableLoss),
+            rxegy_sys::XSYMBOLQUOTA => Ok(ExegyError::SymbolQuota),
+            rxegy_sys::XCONNLIMIT => Ok(ExegyError::ConnnectionLimit),
+            rxegy_sys::XREADONLY => Ok(ExegyError::ReadOnly),
+            rxegy_sys::XINVALIDADDR => Ok(ExegyError::InvalidAddress),
+            rxegy_sys::XEXPIRED => Ok(ExegyError::Expired),
+            rxegy_sys::XSESSIONINUSE => Ok(ExegyError::SessionInUse),
+            rxegy_sys::XSESSIONLIMIT => Ok(ExegyError::SessionLimit),
+            rxegy_sys::XINVALIDSESSION => Ok(ExegyError::InvalidSession),
+            rxegy_sys::XDISABLED => Ok(ExegyError::Disabled),
+            rxegy_sys::XDELETE => Ok(ExegyError::Delete),
+            rxegy_sys::XDEAUTHORIZE => Ok(ExegyError::Deauthorize),
+            rxegy_sys::XFORCEOFF => Ok(ExegyError::ForceOff),
             _ => Err(()),
         }
     }
@@ -272,25 +272,25 @@ impl TryFrom<u32> for ExegyError {
 #[non_exhaustive]
 pub enum Success {
     // Generic success
-    Success = rexegy_sys::XSUCCESS,
+    Success = rxegy_sys::XSUCCESS,
     /// Item Found
-    Found = rexegy_sys::XFOUND,
+    Found = rxegy_sys::XFOUND,
     /// Search completed, item not found
-    Complete = rexegy_sys::XCOMPLETE,
+    Complete = rxegy_sys::XCOMPLETE,
     /// Some data returned, more data available
-    MoreData = rexegy_sys::XMOREDATA,
+    MoreData = rxegy_sys::XMOREDATA,
     /// Result returned, but is only approximate
-    Approximate = rexegy_sys::XAPPROXIMATE,
+    Approximate = rxegy_sys::XAPPROXIMATE,
     /// Result returned, but (other) data was modified
-    Modified = rexegy_sys::XMODIFIED,
+    Modified = rxegy_sys::XMODIFIED,
     /// Some aspects of operation were successful, but others were not
-    PartialSuccess = rexegy_sys::XPARTIALSUCCESS,
+    PartialSuccess = rxegy_sys::XPARTIALSUCCESS,
     /// Data returned is in between boundary events
-    InterBoundary = rexegy_sys::XINTERBOUNDARY,
+    InterBoundary = rxegy_sys::XINTERBOUNDARY,
     /// Normal processing has resumed
-    Resumed = rexegy_sys::XRESUMED,
+    Resumed = rxegy_sys::XRESUMED,
     /// Operation ignored, would do nothing
-    NoChange = rexegy_sys::XNOCHANGE,
+    NoChange = rxegy_sys::XNOCHANGE,
 }
 
 impl TryFrom<u32> for Success {
@@ -298,15 +298,15 @@ impl TryFrom<u32> for Success {
 
     fn try_from(value: u32) -> std::result::Result<Self, Self::Error> {
         match value {
-            rexegy_sys::XFOUND => Ok(Success::Found),
-            rexegy_sys::XCOMPLETE => Ok(Success::Complete),
-            rexegy_sys::XMOREDATA => Ok(Success::MoreData),
-            rexegy_sys::XAPPROXIMATE => Ok(Success::Approximate),
-            rexegy_sys::XMODIFIED => Ok(Success::Modified),
-            rexegy_sys::XPARTIALSUCCESS => Ok(Success::PartialSuccess),
-            rexegy_sys::XINTERBOUNDARY => Ok(Success::InterBoundary),
-            rexegy_sys::XRESUMED => Ok(Success::Resumed),
-            rexegy_sys::XNOCHANGE => Ok(Success::NoChange),
+            rxegy_sys::XFOUND => Ok(Success::Found),
+            rxegy_sys::XCOMPLETE => Ok(Success::Complete),
+            rxegy_sys::XMOREDATA => Ok(Success::MoreData),
+            rxegy_sys::XAPPROXIMATE => Ok(Success::Approximate),
+            rxegy_sys::XMODIFIED => Ok(Success::Modified),
+            rxegy_sys::XPARTIALSUCCESS => Ok(Success::PartialSuccess),
+            rxegy_sys::XINTERBOUNDARY => Ok(Success::InterBoundary),
+            rxegy_sys::XRESUMED => Ok(Success::Resumed),
+            rxegy_sys::XNOCHANGE => Ok(Success::NoChange),
             _ => Err(ExegyError::try_from(value).unwrap_or(ExegyError::Error)),
         }
     }
