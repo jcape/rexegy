@@ -17,7 +17,7 @@ The headers are required to rebuild the generated code in `rxegy-sys`, but the l
 [license-link]: LICENSE
 [deps-image]: https://deps.rs/repo/github/rxegy/status.svg?style=flat-square
 [deps-link]: https://deps.rs/repo/github/rxegy
-[gha-image]: https://img.shields.io/github/actions/workflow/status/jcape/rxegy/ci.yaml?branch=main&style=flat-square
-[gha-link]: https://github.com/jcape/rxegy/actions/workflows/ci.yaml?query=branch%3Amain
+[gha-image]: https://img.shields.io/github/actions/workflow/status/jcape/rxegy/ci.yml?branch=main&style=flat-square
+[gha-link]: https://github.com/jcape/rxegy/actions/workflows/ci.yml?query=branch%3Amain
 [conduct-image]: https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg?style=flat-square
 [conduct-link]: CODE_OF_CONDUCT.md
