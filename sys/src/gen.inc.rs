@@ -5337,11 +5337,13 @@ pub const __GLIBC_USE_DEPRECATED_GETS: u32 = 0;
 pub const __GLIBC_USE_DEPRECATED_SCANF: u32 = 0;
 pub const _STDC_PREDEF_H: u32 = 1;
 pub const __STDC_IEC_559__: u32 = 1;
+pub const __STDC_IEC_60559_BFP__: u32 = 201404;
 pub const __STDC_IEC_559_COMPLEX__: u32 = 1;
+pub const __STDC_IEC_60559_COMPLEX__: u32 = 201404;
 pub const __STDC_ISO_10646__: u32 = 201706;
 pub const __GNU_LIBRARY__: u32 = 6;
 pub const __GLIBC__: u32 = 2;
-pub const __GLIBC_MINOR__: u32 = 34;
+pub const __GLIBC_MINOR__: u32 = 36;
 pub const _SYS_CDEFS_H: u32 = 1;
 pub const __glibc_c99_flexarr_available: u32 = 1;
 pub const __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI: u32 = 0;
@@ -24288,7 +24290,12 @@ const _: () = {
         xpbu_quals
     )
         - 8usize];
-    ["Offset of field: XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL::xpbu_instrument_status"] [:: std :: mem :: offset_of ! (XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL , xpbu_instrument_status) - 12usize] ;
+    [
+        "Offset of field: XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL::xpbu_instrument_status",
+    ][::std::mem::offset_of!(
+        XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL,
+        xpbu_instrument_status
+    ) - 12usize];
     ["Offset of field: XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL::xpbu_market_status"][::std::mem::offset_of!(
         XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL,
         xpbu_market_status
@@ -24299,8 +24306,16 @@ const _: () = {
         XPBU_RESERVED_02
     )
         - 15usize];
-    ["Offset of field: XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL::xpbu_exchange_hitime"] [:: std :: mem :: offset_of ! (XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL , xpbu_exchange_hitime) - 16usize] ;
-    ["Offset of field: XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL::xpbu_receive_hitime"] [:: std :: mem :: offset_of ! (XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL , xpbu_receive_hitime) - 24usize] ;
+    ["Offset of field: XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL::xpbu_exchange_hitime"]
+        [::std::mem::offset_of!(
+            XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL,
+            xpbu_exchange_hitime
+        ) - 16usize];
+    ["Offset of field: XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL::xpbu_receive_hitime"]
+        [::std::mem::offset_of!(
+            XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL,
+            xpbu_receive_hitime
+        ) - 24usize];
     ["Offset of field: XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL::xpbu_sequence"][::std::mem::offset_of!(
         XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL,
         xpbu_sequence
@@ -24336,9 +24351,23 @@ const _: () = {
         XPBU_RESERVED_05
     )
         - 62usize];
-    ["Offset of field: XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL::xpbu_customer_volume"] [:: std :: mem :: offset_of ! (XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL , xpbu_customer_volume) - 64usize] ;
-    ["Offset of field: XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL::xpbu_professional_volume"] [:: std :: mem :: offset_of ! (XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL , xpbu_professional_volume) - 68usize] ;
-    ["Offset of field: XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL::xpbu_market_maker_volume"] [:: std :: mem :: offset_of ! (XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL , xpbu_market_maker_volume) - 72usize] ;
+    ["Offset of field: XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL::xpbu_customer_volume"]
+        [::std::mem::offset_of!(
+            XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL,
+            xpbu_customer_volume
+        ) - 64usize];
+    [
+        "Offset of field: XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL::xpbu_professional_volume",
+    ][::std::mem::offset_of!(
+        XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL,
+        xpbu_professional_volume
+    ) - 68usize];
+    [
+        "Offset of field: XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL::xpbu_market_maker_volume",
+    ][::std::mem::offset_of!(
+        XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL,
+        xpbu_market_maker_volume
+    ) - 72usize];
     ["Offset of field: XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL::XPBU_RESERVED_06"][::std::mem::offset_of!(
         XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL,
         XPBU_RESERVED_06
@@ -25015,14 +25044,29 @@ const _: () = {
         xoimb_imbalance_sequence
     )
         - 8usize];
-    ["Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_receive_hitime"] [:: std :: mem :: offset_of ! (XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED , xoimb_imbalance_receive_hitime) - 16usize] ;
+    [
+        "Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_receive_hitime",
+    ][::std::mem::offset_of!(
+        XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED,
+        xoimb_imbalance_receive_hitime
+    ) - 16usize];
     ["Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_type"][::std::mem::offset_of!(
         XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED,
         xoimb_imbalance_type
     )
         - 24usize];
-    ["Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_unpaired_type"] [:: std :: mem :: offset_of ! (XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED , xoimb_imbalance_unpaired_type) - 25usize] ;
-    ["Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_auction_type"] [:: std :: mem :: offset_of ! (XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED , xoimb_imbalance_auction_type) - 26usize] ;
+    [
+        "Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_unpaired_type",
+    ][::std::mem::offset_of!(
+        XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED,
+        xoimb_imbalance_unpaired_type
+    ) - 25usize];
+    [
+        "Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_auction_type",
+    ][::std::mem::offset_of!(
+        XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED,
+        xoimb_imbalance_auction_type
+    ) - 26usize];
     ["Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::XOIMB_RESERVED_01"][::std::mem::offset_of!(
         XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED,
         XOIMB_RESERVED_01
@@ -25033,16 +25077,63 @@ const _: () = {
         xoimb_imbalance_volume
     )
         - 28usize];
-    ["Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_paired_volume"] [:: std :: mem :: offset_of ! (XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED , xoimb_imbalance_paired_volume) - 32usize] ;
-    ["Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_unpaired_volume"] [:: std :: mem :: offset_of ! (XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED , xoimb_imbalance_unpaired_volume) - 36usize] ;
-    ["Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_reference_price"] [:: std :: mem :: offset_of ! (XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED , xoimb_imbalance_reference_price) - 40usize] ;
-    ["Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_nominal_reference_price"] [:: std :: mem :: offset_of ! (XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED , xoimb_imbalance_nominal_reference_price) - 44usize] ;
-    ["Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_near_price"] [:: std :: mem :: offset_of ! (XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED , xoimb_imbalance_near_price) - 48usize] ;
-    ["Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_far_price"] [:: std :: mem :: offset_of ! (XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED , xoimb_imbalance_far_price) - 52usize] ;
-    ["Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_auction_id"] [:: std :: mem :: offset_of ! (XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED , xoimb_imbalance_auction_id) - 56usize] ;
-    ["Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_auction_start_hitime"] [:: std :: mem :: offset_of ! (XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED , xoimb_imbalance_auction_start_hitime) - 88usize] ;
-    ["Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_auction_end_hitime"] [:: std :: mem :: offset_of ! (XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED , xoimb_imbalance_auction_end_hitime) - 96usize] ;
-    ["Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_auction_owner"] [:: std :: mem :: offset_of ! (XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED , xoimb_imbalance_auction_owner) - 104usize] ;
+    [
+        "Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_paired_volume",
+    ][::std::mem::offset_of!(
+        XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED,
+        xoimb_imbalance_paired_volume
+    ) - 32usize];
+    [
+        "Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_unpaired_volume",
+    ][::std::mem::offset_of!(
+        XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED,
+        xoimb_imbalance_unpaired_volume
+    ) - 36usize];
+    [
+        "Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_reference_price",
+    ][::std::mem::offset_of!(
+        XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED,
+        xoimb_imbalance_reference_price
+    ) - 40usize];
+    [
+        "Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_nominal_reference_price",
+    ][::std::mem::offset_of!(
+        XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED,
+        xoimb_imbalance_nominal_reference_price
+    ) - 44usize];
+    ["Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_near_price"]
+        [::std::mem::offset_of!(
+            XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED,
+            xoimb_imbalance_near_price
+        ) - 48usize];
+    ["Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_far_price"]
+        [::std::mem::offset_of!(
+            XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED,
+            xoimb_imbalance_far_price
+        ) - 52usize];
+    ["Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_auction_id"]
+        [::std::mem::offset_of!(
+            XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED,
+            xoimb_imbalance_auction_id
+        ) - 56usize];
+    [
+        "Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_auction_start_hitime",
+    ][::std::mem::offset_of!(
+        XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED,
+        xoimb_imbalance_auction_start_hitime
+    ) - 88usize];
+    [
+        "Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_auction_end_hitime",
+    ][::std::mem::offset_of!(
+        XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED,
+        xoimb_imbalance_auction_end_hitime
+    ) - 96usize];
+    [
+        "Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED::xoimb_imbalance_auction_owner",
+    ][::std::mem::offset_of!(
+        XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED,
+        xoimb_imbalance_auction_owner
+    ) - 104usize];
 };
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
@@ -25078,8 +25169,18 @@ const _: () = {
         xoimb_imbalance_reg_unpaired_volume
     )
         - 16usize];
-    ["Offset of field: XC_GROUP_ORDER_IMBALANCE_REGULATORY::xoimb_imbalance_reg_nominal_reference_price"] [:: std :: mem :: offset_of ! (XC_GROUP_ORDER_IMBALANCE_REGULATORY , xoimb_imbalance_reg_nominal_reference_price) - 20usize] ;
-    ["Offset of field: XC_GROUP_ORDER_IMBALANCE_REGULATORY::xoimb_imbalance_reg_auction_start_hitime"] [:: std :: mem :: offset_of ! (XC_GROUP_ORDER_IMBALANCE_REGULATORY , xoimb_imbalance_reg_auction_start_hitime) - 24usize] ;
+    [
+        "Offset of field: XC_GROUP_ORDER_IMBALANCE_REGULATORY::xoimb_imbalance_reg_nominal_reference_price",
+    ][::std::mem::offset_of!(
+        XC_GROUP_ORDER_IMBALANCE_REGULATORY,
+        xoimb_imbalance_reg_nominal_reference_price
+    ) - 20usize];
+    [
+        "Offset of field: XC_GROUP_ORDER_IMBALANCE_REGULATORY::xoimb_imbalance_reg_auction_start_hitime",
+    ][::std::mem::offset_of!(
+        XC_GROUP_ORDER_IMBALANCE_REGULATORY,
+        xoimb_imbalance_reg_auction_start_hitime
+    ) - 24usize];
 };
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
@@ -25114,9 +25215,24 @@ const _: () = {
         [::std::mem::size_of::<XC_GROUP_ORDER_IMBALANCE_AUCTION_CLEARING>() - 24usize];
     ["Alignment of XC_GROUP_ORDER_IMBALANCE_AUCTION_CLEARING"]
         [::std::mem::align_of::<XC_GROUP_ORDER_IMBALANCE_AUCTION_CLEARING>() - 1usize];
-    ["Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_CLEARING::xoimb_imbalance_auction_clearing_leg_security_id"] [:: std :: mem :: offset_of ! (XC_GROUP_ORDER_IMBALANCE_AUCTION_CLEARING , xoimb_imbalance_auction_clearing_leg_security_id) - 0usize] ;
-    ["Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_CLEARING::xoimb_imbalance_auction_clearing_firm"] [:: std :: mem :: offset_of ! (XC_GROUP_ORDER_IMBALANCE_AUCTION_CLEARING , xoimb_imbalance_auction_clearing_firm) - 8usize] ;
-    ["Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_CLEARING::xoimb_imbalance_auction_clearing_account"] [:: std :: mem :: offset_of ! (XC_GROUP_ORDER_IMBALANCE_AUCTION_CLEARING , xoimb_imbalance_auction_clearing_account) - 16usize] ;
+    [
+        "Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_CLEARING::xoimb_imbalance_auction_clearing_leg_security_id",
+    ][::std::mem::offset_of!(
+        XC_GROUP_ORDER_IMBALANCE_AUCTION_CLEARING,
+        xoimb_imbalance_auction_clearing_leg_security_id
+    ) - 0usize];
+    [
+        "Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_CLEARING::xoimb_imbalance_auction_clearing_firm",
+    ][::std::mem::offset_of!(
+        XC_GROUP_ORDER_IMBALANCE_AUCTION_CLEARING,
+        xoimb_imbalance_auction_clearing_firm
+    ) - 8usize];
+    [
+        "Offset of field: XC_GROUP_ORDER_IMBALANCE_AUCTION_CLEARING::xoimb_imbalance_auction_clearing_account",
+    ][::std::mem::offset_of!(
+        XC_GROUP_ORDER_IMBALANCE_AUCTION_CLEARING,
+        xoimb_imbalance_auction_clearing_account
+    ) - 16usize];
 };
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
@@ -25876,7 +25992,12 @@ const _: () = {
         XC_GROUP_DERIVATIVE_REFERENCE_INSTRUMENT,
         DRI_RESERVED_02
     ) - 50usize];
-    ["Offset of field: XC_GROUP_DERIVATIVE_REFERENCE_INSTRUMENT::dri_instrument_market_identifier_code"] [:: std :: mem :: offset_of ! (XC_GROUP_DERIVATIVE_REFERENCE_INSTRUMENT , dri_instrument_market_identifier_code) - 56usize] ;
+    [
+        "Offset of field: XC_GROUP_DERIVATIVE_REFERENCE_INSTRUMENT::dri_instrument_market_identifier_code",
+    ][::std::mem::offset_of!(
+        XC_GROUP_DERIVATIVE_REFERENCE_INSTRUMENT,
+        dri_instrument_market_identifier_code
+    ) - 56usize];
     ["Offset of field: XC_GROUP_DERIVATIVE_REFERENCE_INSTRUMENT::dri_display_factor"][::std::mem::offset_of!(
         XC_GROUP_DERIVATIVE_REFERENCE_INSTRUMENT,
         dri_display_factor
@@ -25968,7 +26089,11 @@ const _: () = {
         XC_GROUP_DERIVATIVE_REFERENCE_PRODUCT,
         drp_security_group
     ) - 64usize];
-    ["Offset of field: XC_GROUP_DERIVATIVE_REFERENCE_PRODUCT::drp_product_market_identifier_code"] [:: std :: mem :: offset_of ! (XC_GROUP_DERIVATIVE_REFERENCE_PRODUCT , drp_product_market_identifier_code) - 72usize] ;
+    ["Offset of field: XC_GROUP_DERIVATIVE_REFERENCE_PRODUCT::drp_product_market_identifier_code"]
+        [::std::mem::offset_of!(
+            XC_GROUP_DERIVATIVE_REFERENCE_PRODUCT,
+            drp_product_market_identifier_code
+        ) - 72usize];
     ["Offset of field: XC_GROUP_DERIVATIVE_REFERENCE_PRODUCT::drp_isin"]
         [::std::mem::offset_of!(XC_GROUP_DERIVATIVE_REFERENCE_PRODUCT, drp_isin) - 76usize];
     ["Offset of field: XC_GROUP_DERIVATIVE_REFERENCE_PRODUCT::drp_asset_class"]
@@ -26450,15 +26575,35 @@ const _: () = {
         tpsr_pre_arb_peak_message_hirate
     )
         - 160usize];
-    ["Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_pre_arb_packet_hirate_at_message_peak"] [:: std :: mem :: offset_of ! (XC_GROUP_TICKER_PLANT_SUMMARY_RATES , tpsr_pre_arb_packet_hirate_at_message_peak) - 168usize] ;
-    ["Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_pre_arb_byte_hirate_at_message_peak"] [:: std :: mem :: offset_of ! (XC_GROUP_TICKER_PLANT_SUMMARY_RATES , tpsr_pre_arb_byte_hirate_at_message_peak) - 176usize] ;
+    [
+        "Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_pre_arb_packet_hirate_at_message_peak",
+    ][::std::mem::offset_of!(
+        XC_GROUP_TICKER_PLANT_SUMMARY_RATES,
+        tpsr_pre_arb_packet_hirate_at_message_peak
+    ) - 168usize];
+    [
+        "Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_pre_arb_byte_hirate_at_message_peak",
+    ][::std::mem::offset_of!(
+        XC_GROUP_TICKER_PLANT_SUMMARY_RATES,
+        tpsr_pre_arb_byte_hirate_at_message_peak
+    ) - 176usize];
     ["Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_pre_arb_peak_message_burstrate"][::std::mem::offset_of!(
         XC_GROUP_TICKER_PLANT_SUMMARY_RATES,
         tpsr_pre_arb_peak_message_burstrate
     )
         - 184usize];
-    ["Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_pre_arb_packet_burstrate_at_message_peak"] [:: std :: mem :: offset_of ! (XC_GROUP_TICKER_PLANT_SUMMARY_RATES , tpsr_pre_arb_packet_burstrate_at_message_peak) - 192usize] ;
-    ["Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_pre_arb_byte_burstrate_at_message_peak"] [:: std :: mem :: offset_of ! (XC_GROUP_TICKER_PLANT_SUMMARY_RATES , tpsr_pre_arb_byte_burstrate_at_message_peak) - 200usize] ;
+    [
+        "Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_pre_arb_packet_burstrate_at_message_peak",
+    ][::std::mem::offset_of!(
+        XC_GROUP_TICKER_PLANT_SUMMARY_RATES,
+        tpsr_pre_arb_packet_burstrate_at_message_peak
+    ) - 192usize];
+    [
+        "Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_pre_arb_byte_burstrate_at_message_peak",
+    ][::std::mem::offset_of!(
+        XC_GROUP_TICKER_PLANT_SUMMARY_RATES,
+        tpsr_pre_arb_byte_burstrate_at_message_peak
+    ) - 200usize];
     ["Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_post_arb_peak_message_rate"][::std::mem::offset_of!(
         XC_GROUP_TICKER_PLANT_SUMMARY_RATES,
         tpsr_post_arb_peak_message_rate
@@ -26469,7 +26614,12 @@ const _: () = {
         tpsr_post_arb_peak_quote_rate
     )
         - 216usize];
-    ["Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_post_arb_peak_quote_filtered_rate"] [:: std :: mem :: offset_of ! (XC_GROUP_TICKER_PLANT_SUMMARY_RATES , tpsr_post_arb_peak_quote_filtered_rate) - 224usize] ;
+    [
+        "Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_post_arb_peak_quote_filtered_rate",
+    ][::std::mem::offset_of!(
+        XC_GROUP_TICKER_PLANT_SUMMARY_RATES,
+        tpsr_post_arb_peak_quote_filtered_rate
+    ) - 224usize];
     ["Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_post_arb_peak_trade_rate"][::std::mem::offset_of!(
         XC_GROUP_TICKER_PLANT_SUMMARY_RATES,
         tpsr_post_arb_peak_trade_rate
@@ -26490,11 +26640,35 @@ const _: () = {
         tpsr_post_arb_peak_message_hirate
     )
         - 256usize];
-    ["Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_post_arb_packet_hirate_at_message_peak"] [:: std :: mem :: offset_of ! (XC_GROUP_TICKER_PLANT_SUMMARY_RATES , tpsr_post_arb_packet_hirate_at_message_peak) - 264usize] ;
-    ["Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_post_arb_byte_hirate_at_message_peak"] [:: std :: mem :: offset_of ! (XC_GROUP_TICKER_PLANT_SUMMARY_RATES , tpsr_post_arb_byte_hirate_at_message_peak) - 272usize] ;
-    ["Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_post_arb_peak_message_burstrate"] [:: std :: mem :: offset_of ! (XC_GROUP_TICKER_PLANT_SUMMARY_RATES , tpsr_post_arb_peak_message_burstrate) - 280usize] ;
-    ["Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_post_arb_packet_burstrate_at_message_peak"] [:: std :: mem :: offset_of ! (XC_GROUP_TICKER_PLANT_SUMMARY_RATES , tpsr_post_arb_packet_burstrate_at_message_peak) - 288usize] ;
-    ["Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_post_arb_byte_burstrate_at_message_peak"] [:: std :: mem :: offset_of ! (XC_GROUP_TICKER_PLANT_SUMMARY_RATES , tpsr_post_arb_byte_burstrate_at_message_peak) - 296usize] ;
+    [
+        "Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_post_arb_packet_hirate_at_message_peak",
+    ][::std::mem::offset_of!(
+        XC_GROUP_TICKER_PLANT_SUMMARY_RATES,
+        tpsr_post_arb_packet_hirate_at_message_peak
+    ) - 264usize];
+    [
+        "Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_post_arb_byte_hirate_at_message_peak",
+    ][::std::mem::offset_of!(
+        XC_GROUP_TICKER_PLANT_SUMMARY_RATES,
+        tpsr_post_arb_byte_hirate_at_message_peak
+    ) - 272usize];
+    ["Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_post_arb_peak_message_burstrate"]
+        [::std::mem::offset_of!(
+            XC_GROUP_TICKER_PLANT_SUMMARY_RATES,
+            tpsr_post_arb_peak_message_burstrate
+        ) - 280usize];
+    [
+        "Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_post_arb_packet_burstrate_at_message_peak",
+    ][::std::mem::offset_of!(
+        XC_GROUP_TICKER_PLANT_SUMMARY_RATES,
+        tpsr_post_arb_packet_burstrate_at_message_peak
+    ) - 288usize];
+    [
+        "Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_post_arb_byte_burstrate_at_message_peak",
+    ][::std::mem::offset_of!(
+        XC_GROUP_TICKER_PLANT_SUMMARY_RATES,
+        tpsr_post_arb_byte_burstrate_at_message_peak
+    ) - 296usize];
     ["Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_output_peak_message_rate"][::std::mem::offset_of!(
         XC_GROUP_TICKER_PLANT_SUMMARY_RATES,
         tpsr_output_peak_message_rate
@@ -26525,15 +26699,35 @@ const _: () = {
         tpsr_output_peak_message_hirate
     )
         - 344usize];
-    ["Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_output_packet_hirate_at_message_peak"] [:: std :: mem :: offset_of ! (XC_GROUP_TICKER_PLANT_SUMMARY_RATES , tpsr_output_packet_hirate_at_message_peak) - 352usize] ;
-    ["Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_output_byte_hirate_at_message_peak"] [:: std :: mem :: offset_of ! (XC_GROUP_TICKER_PLANT_SUMMARY_RATES , tpsr_output_byte_hirate_at_message_peak) - 360usize] ;
+    [
+        "Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_output_packet_hirate_at_message_peak",
+    ][::std::mem::offset_of!(
+        XC_GROUP_TICKER_PLANT_SUMMARY_RATES,
+        tpsr_output_packet_hirate_at_message_peak
+    ) - 352usize];
+    [
+        "Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_output_byte_hirate_at_message_peak",
+    ][::std::mem::offset_of!(
+        XC_GROUP_TICKER_PLANT_SUMMARY_RATES,
+        tpsr_output_byte_hirate_at_message_peak
+    ) - 360usize];
     ["Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_output_peak_message_burstrate"][::std::mem::offset_of!(
         XC_GROUP_TICKER_PLANT_SUMMARY_RATES,
         tpsr_output_peak_message_burstrate
     )
         - 368usize];
-    ["Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_output_packet_burstrate_at_message_peak"] [:: std :: mem :: offset_of ! (XC_GROUP_TICKER_PLANT_SUMMARY_RATES , tpsr_output_packet_burstrate_at_message_peak) - 376usize] ;
-    ["Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_output_byte_burstrate_at_message_peak"] [:: std :: mem :: offset_of ! (XC_GROUP_TICKER_PLANT_SUMMARY_RATES , tpsr_output_byte_burstrate_at_message_peak) - 384usize] ;
+    [
+        "Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_output_packet_burstrate_at_message_peak",
+    ][::std::mem::offset_of!(
+        XC_GROUP_TICKER_PLANT_SUMMARY_RATES,
+        tpsr_output_packet_burstrate_at_message_peak
+    ) - 376usize];
+    [
+        "Offset of field: XC_GROUP_TICKER_PLANT_SUMMARY_RATES::tpsr_output_byte_burstrate_at_message_peak",
+    ][::std::mem::offset_of!(
+        XC_GROUP_TICKER_PLANT_SUMMARY_RATES,
+        tpsr_output_byte_burstrate_at_message_peak
+    ) - 384usize];
 };
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
@@ -27500,11 +27694,7 @@ where
             index % 8
         };
         let mask = 1 << bit_index;
-        if val {
-            byte | mask
-        } else {
-            byte & !mask
-        }
+        if val { byte | mask } else { byte & !mask }
     }
     #[inline]
     pub fn set_bit(&mut self, index: usize, val: bool) {
