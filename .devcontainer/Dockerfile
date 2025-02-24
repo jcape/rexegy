@@ -16,6 +16,7 @@ RUN yum -y install \
     gcc-c++ \
     git \
     make \
+    openssl-devel \
     python3-pip \
     sudo \
     && yum clean all

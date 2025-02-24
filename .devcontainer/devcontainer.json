@@ -37,6 +37,9 @@
             }
         }
     },
+    "features": {
+        "ghcr.io/devcontainers-extra/features/gh-cli:1": {}
+    },
     "mounts": [
         "source=/usr/local/exegy,target=/usr/local/exegy,type=bind,consistency=cached",
         "source=${localEnv:HOME}/.config,target=/home/rxegy/.config,type=bind,consistency=cached",
