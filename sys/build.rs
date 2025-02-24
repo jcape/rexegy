@@ -1,6 +1,6 @@
 use bindgen::{
-    callbacks::{DeriveInfo, IntKind, ParseCallbacks},
     Formatter,
+    callbacks::{DeriveInfo, IntKind, ParseCallbacks},
 };
 use std::{env, error::Error, path::PathBuf, str::FromStr};
 

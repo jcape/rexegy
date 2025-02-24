@@ -11,12 +11,12 @@
     clippy::unnecessary_cast,
     clippy::too_many_arguments
 )]
-mod gen {
+mod generated {
     include!("xerr.inc.rs");
     include!("gen.inc.rs");
 }
 
-pub use gen::*;
+pub use generated::*;
 
 /// Check whether a code is good or not
 pub fn xerr_is_good(code: xerr) -> bool {
