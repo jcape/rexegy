@@ -34,6 +34,3 @@ lto = true
 shared-version = true
 consolidate-commits = true
 tag-name = "v{{version}}"
-pre-release-replacements = [
-    {file="README.md", search="rexegy[a-z-]+/[0-9.]+", replace="{{crate_name}}/{{version}}"},
-]
