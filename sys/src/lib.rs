@@ -2,6 +2,7 @@
 
 /// A module for the generated stubs.
 #[allow(
+    unsafe_op_in_unsafe_fn, // FIXME: remove when bindgen has been fixed
     non_camel_case_types,
     non_snake_case,
     non_upper_case_globals,
@@ -10,6 +11,7 @@
     clippy::useless_transmute,
     clippy::unnecessary_cast,
     clippy::too_many_arguments
+
 )]
 mod generated {
     include!("xerr.inc.rs");
