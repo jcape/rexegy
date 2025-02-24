@@ -1,6 +1,6 @@
 # Unofficial Rust Libraries for Exegy XCAPI
 
-[![License][license-image][license-link]]<!--
+[![License][license-image]][license-link]<!--
 -->[![Dependency Status][deps-image]][deps-link]<!--
 -->[![GitHub Workflow Status][gha-image]][gha-link]<!--
 -->[![Contributor Covenant][conduct-image]][conduct-link]
@@ -15,8 +15,8 @@ The headers are required to rebuild the generated code in `rxegy-sys`, but the l
 
 [license-image]: https://img.shields.io/crates/l/rxegy?style=flat-square
 [license-link]: LICENSE
-[deps-image]: https://deps.rs/repo/github/rxegy/status.svg?style=flat-square
-[deps-link]: https://deps.rs/repo/github/rxegy
+[deps-image]: https://deps.rs/repo/github/jcape/rxegy/status.svg?style=flat-square
+[deps-link]: https://deps.rs/repo/github/jcape/rxegy
 [gha-image]: https://img.shields.io/github/actions/workflow/status/jcape/rxegy/ci.yml?branch=main&style=flat-square
 [gha-link]: https://github.com/jcape/rxegy/actions/workflows/ci.yml?query=branch%3Amain
 [conduct-image]: https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg?style=flat-square
