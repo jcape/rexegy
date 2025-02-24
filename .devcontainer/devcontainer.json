@@ -43,6 +43,7 @@
         },
         "ghcr.io/devcontainers-extra/features/pre-commit:2": {},
         "ghcr.io/devcontainers-extra/features/starship:1": {},
+        "ghcr.io/lee-orr/rusty-dev-containers/cargo-binstall:0": {},
         "ghcr.io/meaningful-ooo/devcontainer-features/fish:1": {}
     },
     "mounts": [
