@@ -33,6 +33,9 @@ thiserror = "2.0.11"
 [profile.release]
 lto = true
 
+[profile.dev]
+rpath = true
+
 [workspace.metadata.release]
 shared-version = true
 consolidate-commits = true
