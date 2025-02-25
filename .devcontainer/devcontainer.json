@@ -2,7 +2,8 @@
     "capAdd": ["SYS_PTRACE"],
     "containerEnv": {
         "CARGO_PROFILE_DEV_BUILD_OVERRIDE_DEBUG": "true",
-        "EDITOR": "code --reuse-window --wait"
+        "EDITOR": "code --reuse-window --wait",
+        "CARGO_HOME": "/workspaces/rxegy/.cargo/cache"
     },
     "containerUser": "vscode",
     "customizations": {
@@ -43,7 +44,6 @@
         },
         "ghcr.io/devcontainers-extra/features/pre-commit:2": {},
         "ghcr.io/devcontainers-extra/features/starship:1": {},
-        "ghcr.io/lee-orr/rusty-dev-containers/cargo-binstall:0": {},
         "ghcr.io/meaningful-ooo/devcontainer-features/fish:1": {}
     },
     "mounts": [
