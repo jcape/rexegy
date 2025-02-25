@@ -1,7 +1,6 @@
 //! Errors used within this crate
 
-use crate::session::Session;
-use std::{ffi::NulError, io::Error as IoError, result::Result as StdResult, sync::PoisonError};
+use std::{ffi::NulError, io::Error as IoError, result::Result as StdResult};
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
@@ -31,7 +30,11 @@ pub enum Error {
 
     /// A thread paniced while holding the lock to a session.
     #[error("The mutex locking a session was poisoned")]
-    SessionPanic(#[from] PoisonError<&'static mut Session>),
+    SessionPanic,
+
+    /// Attempted to create a session or container without a callback object.
+    #[error("Attempted to create a session or container without a callback object")]
+    NoCallbacksSet,
 }
 
 /// A local result type used to encapsulate a result and an FFI error.

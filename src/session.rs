@@ -1,16 +1,18 @@
 //! Session Objects
 
 use crate::{
-    error::{Error, Result, Success},
+    error::{Error, ExegyError, Result, Success},
     object::Kind as ObjectKind,
 };
-use rxegy_sys::{xcCreateSession, xhandle};
+use rxegy_sys::{XFLD_EVT_OBUPD_ORDER_REF, xcCreateSession, xcGetField, xerr, xhandle};
 use secrecy::{ExposeSecret, SecretString};
 use std::{
     any::{Any, TypeId},
-    ffi::CString,
+    ffi::{self, CString},
+    mem,
     net::{SocketAddr, ToSocketAddrs},
     path::{Path, PathBuf},
+    pin::Pin,
     ptr,
     result::Result as StdResult,
     sync::{Arc, Mutex},
@@ -54,6 +56,39 @@ impl TryFrom<u16> for EventKind {
     }
 }
 
+#[repr(u64)]
+pub enum Field {
+    Turnkey = rxegy_sys::XFLD_SESS_TURNKEY,
+    SessionType = rxegy_sys::XFLD_SESS_SESSION_TYPE,
+    Status = rxegy_sys::XFLD_SESS_STATUS,
+    ClientVersionString = rxegy_sys::XFLD_SESS_CLIENT_VERSION_STRING,
+    ClientMajorVersion = rxegy_sys::XFLD_SESS_CLIENT_MAJOR_VERSION,
+    ClientMinorVersion = rxegy_sys::XFLD_SESS_CLIENT_MINOR_VERSION,
+    ClientRevision = rxegy_sys::XFLD_SESS_CLIENT_REVISION,
+    ClientBuild = rxegy_sys::XFLD_SESS_CLIENT_BUILD,
+    ClientCpuCount = rxegy_sys::XFLD_SESS_CLIENT_CPU_COUNT,
+    ClientAffinityMask = rxegy_sys::XFLD_SESS_CLIENT_AFFINITY_MASK,
+    ClientBgThreadAffinityMask = rxegy_sys::XFLD_SESS_CLIENT_BG_THREAD_AFFINITY_MASK,
+    ClientHbThreadAffinityMask = rxegy_sys::XFLD_SESS_CLIENT_HB_THREAD_AFFINITY_MASK,
+    ClientThreadPriority = rxegy_sys::XFLD_SESS_CLIENT_THREAD_PRIORITY,
+    ClientBgThreadPriority = rxegy_sys::XFLD_SESS_CLIENT_BG_THREAD_PRIORITY,
+    ClientHbThreadPriority = rxegy_sys::XFLD_SESS_CLIENT_HB_THREAD_PRIORITY,
+    ServerName = rxegy_sys::XFLD_SESS_SERVER_NAME,
+    ServerVersionString = rxegy_sys::XFLD_SESS_SERVER_VERSION_STRING,
+    ServerMajorVersion = rxegy_sys::XFLD_SESS_SERVER_MAJOR_VERSION,
+    ServerMinorVersion = rxegy_sys::XFLD_SESS_SERVER_MINOR_VERSION,
+    ServerRevision = rxegy_sys::XFLD_SESS_SERVER_REVISION,
+    ServerBuild = rxegy_sys::XFLD_SESS_SERVER_BUILD,
+    DisableReconnect = rxegy_sys::XFLD_SESS_DISABLE_RECONNECT,
+    ReplayStart = rxegy_sys::XFLD_SESS_REPLAY_START,
+    ReplayQuoteMontage = rxegy_sys::XFLD_SESS_REPLAY_QUOTE_MONTAGE,
+    ReplayL2Composite = rxegy_sys::XFLD_SESS_REPLAY_L2_COMPOSITE,
+    ReplayUbbo = rxegy_sys::XFLD_SESS_REPLAY_UBBO,
+    TkrMaxPriceBookDepth = rxegy_sys::XFLD_SESS_TKR_MAX_PRICE_BOOK_DEPTH,
+    TkrMarketStatusCallbacks = rxegy_sys::XFLD_SESS_TKR_MARKET_STATUS_CALLBACKS,
+    TkrMaxPbRowLevel = rxegy_sys::XFLD_SESS_TKR_MAX_PB_ROW_LEVEL,
+}
+
 #[derive(Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[repr(transparent)]
 pub struct StatusEvent(xhandle);
@@ -70,12 +105,61 @@ pub struct Session {
     callbacks: Box<dyn SessionCallbacks>,
 }
 
+impl Session {
+    /// Retrieve the object type of this session.
+    pub fn kind(&self) -> Result<Kind> {
+        let mut obuf = 0u16.to_le_bytes();
+        unsafe {
+            let status = xcGetField(
+                self.handle,
+                0,
+                Field::SessionType as u64,
+                obuf.as_mut_ptr() as *mut ffi::c_void,
+                8,
+            );
+            Success::try_from(status)?;
+        }
+        let retval = Kind::try_from(u16::from_le_bytes(obuf))?;
+        Ok(retval)
+    }
+
+    /// Retrieve the status of this session.
+    ///
+    /// The result is built in the following way:
+    ///
+    /// ```ignored
+    /// Result<
+    ///     Result<
+    ///         Success,    // This will be set if the status is set to a success code
+    ///         ExegyError  // This error will be set if the returned status is set to an error code
+    ///     >,
+    ///     Error  // This error will be set if the status could not be read from the session object
+    /// >
+    /// ```
+    pub fn status(&self) -> Result<StdResult<Success, ExegyError>> {
+        let mut obuf = 0u32.to_le_bytes();
+        unsafe {
+            let status = xcGetField(
+                self.handle,
+                0,
+                Field::Status as u64,
+                obuf.as_mut_ptr() as *mut ffi::c_void,
+                mem::size_of_val(&obuf) as u32,
+            );
+            // if there was an error retrieving the status
+            Success::try_from(status)?;
+        }
+        Ok(Success::try_from(u32::from_le_bytes(obuf)))
+    }
+}
+
 /// A session builder
+#[derive(Default)]
 pub struct Builder {
     server_list: Vec<Server>,
     username: String,
     password: SecretString,
-    callbacks: Box<dyn SessionCallbacks>,
+    callbacks: Option<Box<dyn SessionCallbacks>>,
 }
 
 impl Builder {
@@ -119,12 +203,12 @@ impl Builder {
 
     /// Set the object which will handle session callbacks
     pub fn callbacks(&mut self, callbacks: Box<dyn SessionCallbacks>) -> &mut Self {
-        self.callbacks = callbacks;
+        self.callbacks = Some(callbacks);
         self
     }
 
     /// Connect to the Exegy appliance and return the session object.
-    pub fn build(self) -> Result<Arc<Mutex<Session>>> {
+    pub fn build(self) -> Result<Pin<Arc<Mutex<Session>>>> {
         // Build our parameters
         let server_list = CString::new(
             self.server_list
@@ -136,11 +220,11 @@ impl Builder {
         let username = CString::new(self.username)?;
         let password = CString::new(self.password.expose_secret())?;
 
-        // Make our session object in an Arc mutex
-        let mut retval = Arc::new(Mutex::new(Session {
+        // Make our session object in a Pin'd Arc Mutex (probably overkill, but prevents some backdoors into the session)
+        let mut retval = Pin::new(Arc::new(Mutex::new(Session {
             handle: ptr::null_mut(),
-            callbacks: self.callbacks,
-        }));
+            callbacks: self.callbacks.ok_or(Error::NoCallbacksSet)?,
+        })));
 
         // Next, we create a trait object around a reference to our arc mutex
         let anyref = &mut retval as &mut dyn Any;
@@ -151,19 +235,18 @@ impl Builder {
         let turnkey = Box::into_raw(boxed) as u64;
 
         unsafe {
-            let status = xcCreateSession(
-                Kind::Ticker as u16,
-                // FIXME: don't just panic, maybe hold a lock throughout create session?
-                &mut retval
-                    .lock()
-                    .expect("Could not acquire lock on just-created mutex?")
-                    .handle,
-                Some(_rxegy_session_callback),
-                turnkey,
-                server_list.as_ptr(),
-                username.as_ptr(),
-                password.as_ptr(),
-            );
+            let status = {
+                let mut session = retval.lock().or_else(|_e| Err(Error::SessionPanic))?;
+                xcCreateSession(
+                    Kind::Ticker as u16,
+                    &mut session.handle,
+                    Some(_rxegy_session_callback),
+                    turnkey,
+                    server_list.as_ptr(),
+                    username.as_ptr(),
+                    password.as_ptr(),
+                )
+            };
             Success::try_from(status)?;
         }
 
@@ -178,7 +261,7 @@ unsafe extern "C" fn _rxegy_session_callback(
     event_handle: xhandle,
     event_type: u16,
     turnkey: u64,
-    status: rxegy_sys::xerr,
+    status: xerr,
 ) {
     let _ = std::panic::catch_unwind(|| {
         // Check the status
@@ -198,14 +281,14 @@ unsafe extern "C" fn _rxegy_session_callback(
             boxed = Box::from_raw(ptr);
         }
 
-        if boxed.type_id() != TypeId::of::<Arc<Mutex<Session>>>() {
+        if boxed.type_id() != TypeId::of::<Pin<Arc<Mutex<Session>>>>() {
             // FIXME: don't just panic.
             panic!("Got something other than an Arc<Mutex<Session>> in _rxegy_session_callback");
         }
 
         // FIXME: don't panic here either (requires logging framework integration)
         let mutex = (*boxed)
-            .downcast_ref::<Arc<Mutex<Session>>>()
+            .downcast_ref::<Pin<Arc<Mutex<Session>>>>()
             .expect("Couldn't downcast turnkey to an Arc<Session>")
             .clone();
 
