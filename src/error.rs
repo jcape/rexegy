@@ -1,180 +1,357 @@
 //! Errors used within this crate
 
-use std::result::Result as StdResult;
+use crate::session::Session;
+use std::{ffi::NulError, io::Error as IoError, result::Result as StdResult, sync::PoisonError};
 
-#[derive(Copy, Clone, displaydoc::Display, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Debug, thiserror::Error)]
 pub enum Error {
     /// An error created by the XCAPI library
-    Exegy(ExegyError),
+    #[error("XCAPI library error: {0}")]
+    Exegy(#[from] ExegyError),
+
     /// The group ID does not match one we're expecting
+    #[error("The group ID provided is not known")]
     GroupUnknown,
+
     /// The feed ID does not match one we're expecting
+    #[error("The feed ID provided is unknown or unexpected")]
     FeedUnknown,
+
+    /// The object kind is unknown or unexpected
+    #[error("The object kind is unknown or unexpected")]
+    ObjectUnknown,
+
+    /// An I/O error occurred
+    #[error("There was an IO error: {0:?}")]
+    Io(#[from] IoError),
+
+    /// The source of the C string in question contains an embedded nul already.
+    #[error("The string in question contains an embedded nul character: {0:?}")]
+    CString(#[from] NulError),
+
+    /// A thread paniced while holding the lock to a session.
+    #[error("The mutex locking a session was poisoned")]
+    SessionPanic(#[from] PoisonError<&'static mut Session>),
 }
 
 /// A local result type used to encapsulate a result and an FFI error.
 pub type Result<T> = std::result::Result<T, Error>;
 
 /// An enumeration of errors which can be encountered in this crate.
-#[derive(Copy, Clone, displaydoc::Display, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Debug, thiserror::Error)]
 #[repr(u32)]
 #[non_exhaustive]
 pub enum ExegyError {
     /// Operation not permitted
+    #[error("Operation not permitted")]
     NotPermitted = rxegy_sys::XPERM,
+
     /// No entry found
+    #[error("No entry found")]
     NoEntry = rxegy_sys::XNOENT,
+
     /// I/O error
+    #[error("I/O error")]
     Io = rxegy_sys::XIO,
+
     /// Operation would block
+    #[error("Operation would block")]
     WouldBlock = rxegy_sys::XWOULDBLOCK,
+
     /// Permission denied
+    #[error("Permission denied")]
     Access = rxegy_sys::XACCESS,
+
     /// Bad address
+    #[error("Bad address")]
     BadAddress = rxegy_sys::XADDR,
+
     /// Device or resource busy
+    #[error("Device or resource busy")]
     Busy = rxegy_sys::XBUSY,
+
     /// (WARNING) Queuing delay detected
+    #[error("WARNING) Queuing delay detected")]
     QueueDelay = rxegy_sys::XQUEUEDELAY,
+
     /// Item already exists
+    #[error("Item already exists")]
     Exist = rxegy_sys::XEXIST,
+
     /// No such device
+    #[error("No such device")]
     NoDevice = rxegy_sys::XNODEV,
+
     /// Not a directory
+    #[error("Not a directory")]
     NotDir = rxegy_sys::XNOTDIR,
+
     /// Is a directory
+    #[error("Is a directory")]
     IsDir = rxegy_sys::XISDIR,
+
     /// Invalid argument
+    #[error("Invalid argument")]
     InvalidArgument = rxegy_sys::XINVAL,
+
     /// Not enough memory
+    #[error("Not enough memory")]
     NoMemory = rxegy_sys::XNOMEM,
+
     /// Function not implemented
+    #[error("Function not implemented")]
     NotImplemented = rxegy_sys::XIMPL,
+
     /// No data available
+    #[error("No data available")]
     NoData = rxegy_sys::XNODATA,
+
     /// Timer expired
+    #[error("Timer expired")]
     Time = rxegy_sys::XTIME,
+
     /// Link has been severed
+    #[error("Link has been severed")]
     NoLink = rxegy_sys::XNOLINK,
+
     /// Communication error
+    #[error("Communication error")]
     Communication = rxegy_sys::XCOMM,
+
     /// Protocol error
+    #[error("Protocol error")]
     Protocol = rxegy_sys::XPROTO,
+
     /// Address in use
+    #[error("Address in use")]
     AddressInUse = rxegy_sys::XADDRINUSE,
+
     /// Connection reset by peer
+    #[error("Connection reset by peer")]
     ConnectionReset = rxegy_sys::XCONNRESET,
+
     /// Connection refused
+    #[error("Connection refused")]
     ConnectionRefused = rxegy_sys::XCONNREFUSED,
+
     /// Operation interrupted
+    #[error("Operation interrupted")]
     Interrupted = rxegy_sys::XINTR,
+
     /// End of results
+    #[error("End of results")]
     End = rxegy_sys::XEND,
+
     /// No available cards
+    #[error("No available cards")]
     NoCard = rxegy_sys::XNOCARD,
+
     /// Invalid operation chain
+    #[error("Invalid operation chain")]
     BadChain = rxegy_sys::XBADCHAIN,
+
     /// Capacity exceeded
+    #[error("Capacity exceeded")]
     Capacity = rxegy_sys::XCAPACITY,
+
     /// Hardware not loaded
+    #[error("Hardware not loaded")]
     HardwareNotLoaded = rxegy_sys::XHWNOTLOADED,
+
     /// Socket error
+    #[error("Socket error")]
     Socket = rxegy_sys::XSOCKET,
+
     /// Version mismatch
+    #[error("Version mismatch")]
     Version = rxegy_sys::XVERSION,
+
     /// Inconsistent or bad state
+    #[error("Inconsistent or bad state")]
     BadState = rxegy_sys::XBADSTATE,
+
     /// Client was disconnected because it's a slow consumer
+    #[error("Client was disconnected because it's a slow consumer")]
     SlowConsumer = rxegy_sys::XSLOWCONSUMER,
+
     /// Invalid symbol
+    #[error("Invalid symbol")]
     BadSymbol = rxegy_sys::XBADSYMBOL,
+
     /// Overflow
+    #[error("Overflow")]
     Overflow = rxegy_sys::XOVERFLOW,
+
     /// Socket not connected
+    #[error("Socket not connected")]
     NotConnected = rxegy_sys::XNOTCONNECTED,
+
     /// Duplicate item
+    #[error("Duplicate item")]
     Duplicate = rxegy_sys::XDUPLICATE,
+
     /// Ignored
+    #[error("Ignored")]
     Ignore = rxegy_sys::XIGNORE,
+
     /// Invalid handle
+    #[error("Invalid handle")]
     BadHandle = rxegy_sys::XBADHANDLE,
+
     /// Invalid field
+    #[error("Invalid field")]
     BadField = rxegy_sys::XBADFIELD,
+
     /// Invalid slot
+    #[error("Invalid slot")]
     BadSlot = rxegy_sys::XBADSLOT,
+
     /// Login failed
+    #[error("Login failed")]
     LoginFailed = rxegy_sys::XLOGINFAILED,
+
     /// Pending
+    #[error("Pending")]
     Pending = rxegy_sys::XPENDING,
+
     /// Data is stale
+    #[error("Data is stale")]
     Stale = rxegy_sys::XSTALE,
+
     /// Subsystem uninitialized
+    #[error("Subsystem uninitialized")]
     Uninitialized = rxegy_sys::XUNINIT,
+
     /// Connection timed out
+    #[error("Connection timed out")]
     Timeout = rxegy_sys::XTIMEOUT,
+
     /// Not supported
+    #[error("Not supported")]
     NotSupported = rxegy_sys::XNOTSUP,
+
     /// Type not supported for specified field
+    #[error("Type not supported for specified field")]
     Type = rxegy_sys::XTYPE,
+
     /// Already connected
+    #[error("Already connected")]
     Already = rxegy_sys::XALREADY,
+
     /// Exceeded maximum number of retries
+    #[error("Exceeded maximum number of retries")]
     Retry = rxegy_sys::XRETRY,
+
     /// Internal error
+    #[error("Internal error")]
     Internal = rxegy_sys::XINTERR,
+
     /// Item is missing, but shouldn't be
+    #[error("Item is missing, but shouldn't be")]
     Missing = rxegy_sys::XMISSING,
+
     /// Operation was or should be aborted
+    #[error("Operation was or should be aborted")]
     Abort = rxegy_sys::XABORT,
+
     /// Bad data encountered
+    #[error("Bad data encountered")]
     BadData = rxegy_sys::XBADDATA,
+
     /// Ambiguous data or command
+    #[error("Ambiguous data or command")]
     Ambiguous = rxegy_sys::XAMBIG,
+
     /// No search terms
+    #[error("No search terms")]
     NoSearchTerms = rxegy_sys::XNOTERMS,
+
     /// Configuration data is missing or invalid
+    #[error("Configuration data is missing or invalid")]
     Config = rxegy_sys::XCONFIG,
+
     /// Nonsensical command or request received
+    #[error("Nonsensical command or request received")]
     Nonsense = rxegy_sys::XNONSENSE,
+
     /// Bad depth
+    #[error("Bad depth")]
     BadDepth = rxegy_sys::XBADDEPTH,
+
     /// Bad size
+    #[error("Bad size")]
     BadSize = rxegy_sys::XBADSIZE,
+
     /// Wrong thread for function
+    #[error("Wrong thread for function")]
     Thread = rxegy_sys::XTHREAD,
+
     /// Regional exists
+    #[error("Regional exists")]
     HasRegional = rxegy_sys::XHASREGIONAL,
+
     /// Server down for maintenance
+    #[error("Server down for maintenance")]
     Down = rxegy_sys::XDOWN,
+
     /// General error condition
+    #[error("General error condition")]
     Error = rxegy_sys::XERROR,
+
     /// Unsupported HCA firmware revision
+    #[error("Unsupported HCA firmware revision")]
     BadFirmware = rxegy_sys::XBADFIRMWARE,
+
     /// Unrecoverable loss detected in transport session
+    #[error("Unrecoverable loss detected in transport session")]
     UnrecoverableLoss = rxegy_sys::XUNRECOVERABLELOSS,
+
     /// Symbol quota has been reached
+    #[error("Symbol quota has been reached")]
     SymbolQuota = rxegy_sys::XSYMBOLQUOTA,
+
     /// Connection limit reached
+    #[error("Connection limit reached")]
     ConnnectionLimit = rxegy_sys::XCONNLIMIT,
+
     /// Invalid call for a read-only field or container
+    #[error("Invalid call for a read-only field or container")]
     ReadOnly = rxegy_sys::XREADONLY,
+
     /// Invalid hardware address
+    #[error("Invalid hardware address")]
     InvalidAddress = rxegy_sys::XINVALIDADDR,
+
     /// Expired symbol
+    #[error("Expired symbol")]
     Expired = rxegy_sys::XEXPIRED,
+
     /// The session is already in use
+    #[error("The session is already in use")]
     SessionInUse = rxegy_sys::XSESSIONINUSE,
+
     /// The client has hit its session limit
+    #[error("The client has hit its session limit")]
     SessionLimit = rxegy_sys::XSESSIONLIMIT,
+
     /// Invalid session id
+    #[error("Invalid session id")]
     InvalidSession = rxegy_sys::XINVALIDSESSION,
+
     /// Target is disabled
+    #[error("Target is disabled")]
     Disabled = rxegy_sys::XDISABLED,
+
     /// Target should be deleted
+    #[error("Target should be deleted")]
     Delete = rxegy_sys::XDELETE,
+
     /// Deauthorized for content
+    #[error("Deauthorized for content")]
     Deauthorize = rxegy_sys::XDEAUTHORIZE,
+
     /// Force disconnect
+    #[error("Force disconnect")]
     ForceOff = rxegy_sys::XFORCEOFF,
 }
 
@@ -266,7 +443,7 @@ impl TryFrom<u32> for ExegyError {
     }
 }
 
-/// An enumeration of status codes which are considered "success".
+/// An enumeration of status codes which are considered a "success".
 #[derive(Copy, Clone, Hash, Eq, PartialEq, PartialOrd, Ord)]
 #[repr(u32)]
 #[non_exhaustive]
