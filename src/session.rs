@@ -4,16 +4,17 @@ use crate::{
     error::{Error, ExegyError, Result, Success},
     object::Kind as ObjectKind,
 };
-use rxegy_sys::{XFLD_EVT_OBUPD_ORDER_REF, xcCreateSession, xcGetField, xerr, xhandle};
+use rxegy_sys::{xcCreateSession, xcGetField, xcSetField, xerr, xhandle};
 use secrecy::{ExposeSecret, SecretString};
 use std::{
     any::{Any, TypeId},
     ffi::{self, CString},
     mem,
     net::{SocketAddr, ToSocketAddrs},
+    os::raw::c_void,
     path::{Path, PathBuf},
     pin::Pin,
-    ptr,
+    ptr::{self, NonNull},
     result::Result as StdResult,
     sync::{Arc, Mutex},
 };
@@ -101,26 +102,34 @@ pub trait SessionCallbacks {
 
 /// A session object
 pub struct Session {
-    handle: xhandle,
+    handle: Box<xhandle>,
     callbacks: Box<dyn SessionCallbacks>,
+    cb_affinity_mask: Option<u64>,
+    cb_priority: Option<u8>,
 }
 
 impl Session {
     /// Retrieve the object type of this session.
     pub fn kind(&self) -> Result<Kind> {
+        if (*self.handle).is_null() {
+            return Err(Error::SessionNotInitialized);
+        }
+
         let mut obuf = 0u16.to_le_bytes();
-        unsafe {
-            let status = xcGetField(
-                self.handle,
+        let status = unsafe {
+            xcGetField(
+                *self.handle,
                 0,
                 Field::SessionType as u64,
                 obuf.as_mut_ptr() as *mut ffi::c_void,
                 8,
-            );
-            Success::try_from(status)?;
-        }
-        let retval = Kind::try_from(u16::from_le_bytes(obuf))?;
-        Ok(retval)
+            )
+        };
+
+        // if there was an error retrieving the status
+        Success::try_from(status)?;
+
+        Kind::try_from(u16::from_le_bytes(obuf))
     }
 
     /// Retrieve the status of this session.
@@ -137,19 +146,320 @@ impl Session {
     /// >
     /// ```
     pub fn status(&self) -> Result<StdResult<Success, ExegyError>> {
+        if (*self.handle).is_null() {
+            return Err(Error::SessionNotInitialized);
+        }
+
         let mut obuf = 0u32.to_le_bytes();
-        unsafe {
-            let status = xcGetField(
-                self.handle,
+        let status = unsafe {
+            xcGetField(
+                *self.handle,
                 0,
                 Field::Status as u64,
                 obuf.as_mut_ptr() as *mut ffi::c_void,
                 mem::size_of_val(&obuf) as u32,
-            );
-            // if there was an error retrieving the status
-            Success::try_from(status)?;
-        }
+            )
+        };
+
+        // if there was an error retrieving the status
+        Success::try_from(status)?;
+
         Ok(Success::try_from(u32::from_le_bytes(obuf)))
+    }
+
+    /// Retrieve the client version string
+    pub fn client_version_string(&self) -> Result<String> {
+        if (*self.handle).is_null() {
+            return Err(Error::SessionNotInitialized);
+        }
+
+        let mut obuf = vec![0u8; 512];
+        let status = unsafe {
+            xcGetField(
+                *self.handle,
+                0,
+                Field::ClientVersionString as u64,
+                obuf.as_mut_ptr() as *mut ffi::c_void,
+                obuf.len() as u32,
+            )
+        };
+        // if there was an error retrieving the status
+        Success::try_from(status)?;
+        let cstr = CString::from_vec_with_nul(obuf)?;
+        Ok(cstr.to_str()?.to_owned())
+    }
+
+    /// Retrieve the client major version
+    pub fn client_major_version(&self) -> Result<u32> {
+        if (*self.handle).is_null() {
+            return Err(Error::SessionNotInitialized);
+        }
+
+        let mut obuf = 0u32.to_le_bytes();
+        let status = unsafe {
+            xcGetField(
+                *self.handle,
+                0,
+                Field::ClientMajorVersion as u64,
+                obuf.as_mut_ptr() as *mut ffi::c_void,
+                obuf.len() as u32,
+            )
+        };
+
+        // if there was an error retrieving the status
+        Success::try_from(status)?;
+
+        Ok(u32::from_le_bytes(obuf))
+    }
+
+    /// Retrieve the client minor version
+    pub fn client_minor_version(&self) -> Result<u32> {
+        if (*self.handle).is_null() {
+            return Err(Error::SessionNotInitialized);
+        }
+
+        let mut obuf = 0u32.to_le_bytes();
+        let status = unsafe {
+            xcGetField(
+                *self.handle,
+                0,
+                Field::ClientMinorVersion as u64,
+                obuf.as_mut_ptr() as *mut ffi::c_void,
+                obuf.len() as u32,
+            )
+        };
+
+        // if there was an error retrieving the status
+        Success::try_from(status)?;
+
+        Ok(u32::from_le_bytes(obuf))
+    }
+
+    /// Retrieve the client version revision
+    pub fn client_revision(&self) -> Result<u32> {
+        if (*self.handle).is_null() {
+            return Err(Error::SessionNotInitialized);
+        }
+
+        let mut obuf = 0u32.to_le_bytes();
+        let status = unsafe {
+            xcGetField(
+                *self.handle,
+                0,
+                Field::ClientRevision as u64,
+                obuf.as_mut_ptr() as *mut ffi::c_void,
+                obuf.len() as u32,
+            )
+        };
+
+        // if there was an error retrieving the status
+        Success::try_from(status)?;
+
+        Ok(u32::from_le_bytes(obuf))
+    }
+
+    /// Retrieve the client version build
+    pub fn client_build(&self) -> Result<u32> {
+        if (*self.handle).is_null() {
+            return Err(Error::SessionNotInitialized);
+        }
+
+        let mut obuf = 0u32.to_le_bytes();
+        let status = unsafe {
+            xcGetField(
+                *self.handle,
+                0,
+                Field::ClientBuild as u64,
+                obuf.as_mut_ptr() as *mut ffi::c_void,
+                obuf.len() as u32,
+            )
+        };
+
+        // if there was an error retrieving the status
+        Success::try_from(status)?;
+
+        Ok(u32::from_le_bytes(obuf))
+    }
+
+    /// Retrieve the client CPU count.
+    pub fn client_cpu_count(&self) -> Result<u32> {
+        if (*self.handle).is_null() {
+            return Err(Error::SessionNotInitialized);
+        }
+
+        let mut obuf = 0u32.to_le_bytes();
+        let status = unsafe {
+            xcGetField(
+                *self.handle,
+                0,
+                Field::ClientCpuCount as u64,
+                obuf.as_mut_ptr() as *mut ffi::c_void,
+                obuf.len() as u32,
+            )
+        };
+
+        // if there was an error retrieving the status
+        Success::try_from(status)?;
+
+        Ok(u32::from_le_bytes(obuf))
+    }
+
+    /// Retrieve the affinity mask for the callback thread on this session
+    pub fn client_affinity_mask(&self) -> Result<u64> {
+        if (*self.handle).is_null() {
+            return Err(Error::SessionNotInitialized);
+        }
+
+        let mut obuf = 0u64.to_le_bytes();
+        let status = unsafe {
+            xcGetField(
+                *self.handle,
+                0,
+                Field::ClientAffinityMask as u64,
+                obuf.as_mut_ptr() as *mut ffi::c_void,
+                obuf.len() as u32,
+            )
+        };
+        // if there was an error retrieving the status
+        Success::try_from(status)?;
+        Ok(u64::from_le_bytes(obuf))
+    }
+
+    /// Sets the affinity mask for the callback thread on this session.
+    ///
+    /// The affinity will be set the next time the callback is executed.
+    pub fn set_client_affinity_mask(&mut self, mask: u64) {
+        if mask == 0 {
+            self.cb_affinity_mask = None;
+        } else {
+            self.cb_affinity_mask = Some(mask);
+        }
+    }
+
+    /// Retrieve the affinity mask for the callback thread on this session
+    pub fn client_thread_priority(&self) -> Result<u32> {
+        if (*self.handle).is_null() {
+            return Err(Error::SessionNotInitialized);
+        }
+
+        let mut obuf = 0u32.to_le_bytes();
+        let status = unsafe {
+            xcGetField(
+                *self.handle,
+                0,
+                Field::ClientThreadPriority as u64,
+                obuf.as_mut_ptr() as *mut ffi::c_void,
+                obuf.len() as u32,
+            )
+        };
+
+        // if there was an error retrieving the status
+        Success::try_from(status)?;
+
+        Ok(u32::from_le_bytes(obuf))
+    }
+
+    /// Sets the priority for the callback thread on this session.
+    ///
+    /// The priority will be set the next time the callback is executed.
+    pub fn set_client_priority(&mut self, priority: u8) {
+        if priority == 0 {
+            self.cb_priority = None;
+        } else {
+            self.cb_priority = Some(priority.min(99));
+        }
+    }
+
+    /// Retrieve CPU affinity mask for the background thread.
+    pub fn client_bg_thread_affinity_mask(&self) -> Result<u64> {
+        if (*self.handle).is_null() {
+            return Err(Error::SessionNotInitialized);
+        }
+
+        let mut obuf = 0u64.to_le_bytes();
+        let status = unsafe {
+            xcGetField(
+                *self.handle,
+                0,
+                Field::ClientBgThreadAffinityMask as u64,
+                obuf.as_mut_ptr() as *mut ffi::c_void,
+                obuf.len() as u32,
+            )
+        };
+
+        // if there was an error retrieving the status
+        Success::try_from(status)?;
+
+        Ok(u64::from_le_bytes(obuf))
+    }
+
+    /// Retrieve CPU affinity mask for the background thread
+    pub fn client_bg_thread_priority(&self) -> Result<u32> {
+        if (*self.handle).is_null() {
+            return Err(Error::SessionNotInitialized);
+        }
+
+        let mut obuf = 0u32.to_le_bytes();
+        let status = unsafe {
+            xcGetField(
+                *self.handle,
+                0,
+                Field::ClientBgThreadPriority as u64,
+                obuf.as_mut_ptr() as *mut ffi::c_void,
+                obuf.len() as u32,
+            )
+        };
+
+        // if there was an error retrieving the status
+        Success::try_from(status)?;
+
+        Ok(u32::from_le_bytes(obuf))
+    }
+
+    /// Retrieve CPU affinity mask for the HB (?) thread.
+    pub fn client_hb_thread_affinity_mask(&self) -> Result<u64> {
+        if (*self.handle).is_null() {
+            return Err(Error::SessionNotInitialized);
+        }
+
+        let mut obuf = 0u64.to_le_bytes();
+        let status = unsafe {
+            xcGetField(
+                *self.handle,
+                0,
+                Field::ClientHbThreadAffinityMask as u64,
+                obuf.as_mut_ptr() as *mut ffi::c_void,
+                obuf.len() as u32,
+            )
+        };
+
+        // if there was an error retrieving the status
+        Success::try_from(status)?;
+
+        Ok(u64::from_le_bytes(obuf))
+    }
+
+    /// Retrieve CPU affinity mask for the HB (?) thread
+    pub fn client_hb_thread_priority(&self) -> Result<u32> {
+        if (*self.handle).is_null() {
+            return Err(Error::SessionNotInitialized);
+        }
+
+        let mut obuf = 0u32.to_le_bytes();
+        let status = unsafe {
+            xcGetField(
+                *self.handle,
+                0,
+                Field::ClientHbThreadPriority as u64,
+                obuf.as_mut_ptr() as *mut ffi::c_void,
+                obuf.len() as u32,
+            )
+        };
+
+        // if there was an error retrieving the status
+        Success::try_from(status)?;
+
+        Ok(u32::from_le_bytes(obuf))
     }
 }
 
@@ -160,6 +470,12 @@ pub struct Builder {
     username: String,
     password: SecretString,
     callbacks: Option<Box<dyn SessionCallbacks>>,
+    cb_affinity: Option<u64>,
+    cb_priority: Option<u8>,
+    bg_affinity: Option<u64>,
+    bg_priority: Option<u8>,
+    hb_affinity: Option<u64>,
+    hb_priority: Option<u8>,
 }
 
 impl Builder {
@@ -207,6 +523,66 @@ impl Builder {
         self
     }
 
+    /// Set the CPU affinity mask for the callback thread to the given value.
+    pub fn affinity(&mut self, mask: u64) -> &mut Self {
+        if mask == 0 {
+            self.cb_affinity = None;
+        } else {
+            self.cb_affinity = Some(mask);
+        }
+        self
+    }
+
+    /// Set the desired priority for the session's callback thread.
+    pub fn priority(&mut self, priority: u8) -> &mut Self {
+        if priority == 0 {
+            self.cb_priority = None;
+        } else {
+            self.cb_priority = Some(priority);
+        }
+
+        self
+    }
+
+    /// Set the CPU affinity mask for the background processing htread to the given value
+    pub fn bg_affinity(&mut self, mask: u64) -> &mut Self {
+        if mask == 0 {
+            self.bg_affinity = None
+        } else {
+            self.bg_affinity = Some(mask);
+        }
+        self
+    }
+
+    pub fn bg_priority(&mut self, priority: u8) -> &mut Self {
+        if priority == 0 {
+            self.bg_priority = None;
+        } else {
+            self.bg_priority = Some(priority);
+        }
+        self
+    }
+
+    /// Set the CPU affinity mask for this session.
+    pub fn hb_affinity(&mut self, mask: u64) -> &mut Self {
+        if mask == 0 {
+            self.hb_affinity = None;
+        } else {
+            self.hb_affinity = Some(mask);
+        }
+        self
+    }
+
+    /// Set the "HB Thread" priority.
+    pub fn hb_priority(&mut self, priority: u8) -> &mut Self {
+        if priority == 0 {
+            self.hb_priority = None;
+        } else {
+            self.hb_priority = Some(priority);
+        }
+        self
+    }
+
     /// Connect to the Exegy appliance and return the session object.
     pub fn build(self) -> Result<Pin<Arc<Mutex<Session>>>> {
         // Build our parameters
@@ -222,8 +598,10 @@ impl Builder {
 
         // Make our session object in a Pin'd Arc Mutex (probably overkill, but prevents some backdoors into the session)
         let mut retval = Pin::new(Arc::new(Mutex::new(Session {
-            handle: ptr::null_mut(),
+            handle: Box::new(ptr::null_mut()),
             callbacks: self.callbacks.ok_or(Error::NoCallbacksSet)?,
+            cb_affinity_mask: self.cb_affinity,
+            cb_priority: self.cb_priority,
         })));
 
         // Next, we create a trait object around a reference to our arc mutex
@@ -234,20 +612,81 @@ impl Builder {
         // or user-data pointer
         let turnkey = Box::into_raw(boxed) as u64;
 
-        unsafe {
-            let status = {
-                let mut session = retval.lock().or_else(|_e| Err(Error::SessionPanic))?;
-                xcCreateSession(
-                    Kind::Ticker as u16,
-                    &mut session.handle,
-                    Some(_rxegy_session_callback),
-                    turnkey,
-                    server_list.as_ptr(),
-                    username.as_ptr(),
-                    password.as_ptr(),
-                )
-            };
-            Success::try_from(status)?;
+        let mut session = retval.lock().or_else(|_e| Err(Error::SessionPanic))?;
+        let status = unsafe {
+            xcCreateSession(
+                Kind::Ticker as u16,
+                session.handle.as_mut(),
+                Some(_rxegy_session_callback),
+                turnkey,
+                server_list.as_ptr(),
+                username.as_ptr(),
+                password.as_ptr(),
+            )
+        };
+        Success::try_from(status)?;
+
+        if !(*session.handle).is_null() {
+            // Set thread affinities and priorities
+            if let Some(affinity) = self.bg_affinity {
+                let ibuf = affinity.to_le_bytes();
+                let status = unsafe {
+                    xcSetField(
+                        *session.handle,
+                        0,
+                        Field::ClientBgThreadAffinityMask as u64,
+                        ibuf.as_ptr() as *const c_void,
+                        ibuf.len() as u32,
+                    )
+                };
+                let _result = Success::try_from(status);
+                // TODO: log failures to set affinity
+            }
+
+            if let Some(priority) = self.bg_priority {
+                let ibuf = (priority as u32).to_le_bytes();
+                let status = unsafe {
+                    xcSetField(
+                        *session.handle,
+                        0,
+                        Field::ClientBgThreadPriority as u64,
+                        ibuf.as_ptr() as *const c_void,
+                        ibuf.len() as u32,
+                    )
+                };
+                let _result = Success::try_from(status);
+                // TODO: log failures to set priority
+            }
+
+            if let Some(affinity) = self.hb_affinity {
+                let ibuf = affinity.to_le_bytes();
+                let status = unsafe {
+                    xcSetField(
+                        *session.handle,
+                        0,
+                        Field::ClientHbThreadAffinityMask as u64,
+                        ibuf.as_ptr() as *const c_void,
+                        ibuf.len() as u32,
+                    )
+                };
+                let _result = Success::try_from(status);
+                // TODO: log failures to set affinity
+            }
+
+            if let Some(priority) = self.hb_priority {
+                let ibuf = (priority as u32).to_le_bytes();
+                let status = unsafe {
+                    xcSetField(
+                        *session.handle,
+                        0,
+                        Field::ClientHbThreadPriority as u64,
+                        ibuf.as_ptr() as *const c_void,
+                        ibuf.len() as u32,
+                    )
+                };
+                let _result = Success::try_from(status);
+                // TODO: log failures to set priority
+            }
         }
 
         Ok(retval.clone())

@@ -1,6 +1,11 @@
 //! Errors used within this crate
 
-use std::{ffi::NulError, io::Error as IoError, result::Result as StdResult};
+use std::{
+    ffi::{FromVecWithNulError, NulError},
+    io::Error as IoError,
+    result::Result as StdResult,
+    str::Utf8Error,
+};
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
@@ -25,8 +30,12 @@ pub enum Error {
     Io(#[from] IoError),
 
     /// The source of the C string in question contains an embedded nul already.
-    #[error("The string in question contains an embedded nul character: {0:?}")]
-    CString(#[from] NulError),
+    #[error("The string in question contains an embedded nul character: {0}")]
+    EmbeddedNull(#[from] NulError),
+
+    /// The source of a new C string was not nul-terminated.
+    #[error("The string in question was not nul-terminated: {0}")]
+    NoNullTerm(#[from] FromVecWithNulError),
 
     /// A thread paniced while holding the lock to a session.
     #[error("The mutex locking a session was poisoned")]
@@ -35,6 +44,14 @@ pub enum Error {
     /// Attempted to create a session or container without a callback object.
     #[error("Attempted to create a session or container without a callback object")]
     NoCallbacksSet,
+
+    /// The string in question contains invalid UTF-8 characters.
+    #[error("The string in question contains invalid UTF-8: {0}")]
+    InvalidUtf8(#[from] Utf8Error),
+
+    /// The session has not been initialized yet, this is a race condition!
+    #[error("The session's internal handle has not been set")]
+    SessionNotInitialized,
 }
 
 /// A local result type used to encapsulate a result and an FFI error.
