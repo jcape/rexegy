@@ -1,9 +1,9 @@
 #!/bin/bash
 
 npm install -g @withgraphite/graphite-cli@stable
-cargo install cargo-binstall
+cargo install -q cargo-binstall
+cargo install -q cargo-semver-checks
 cargo binstall -y release-plz
-cargo binstall -y cargo-semver-checks
 
 pushd /workspaces/rxegy >/dev/null
 pre-commit install >/dev/null
