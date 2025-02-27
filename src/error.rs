@@ -52,6 +52,14 @@ pub enum Error {
     /// The session has not been initialized yet, this is a race condition!
     #[error("The session's internal handle has not been set")]
     SessionNotInitialized,
+
+    /// The object is null.
+    #[error("The XCAPI object handle is null")]
+    NullObject,
+
+    /// The object pointed at by the XCAPI object handle is of an unexpected kind
+    #[error("The object pointed at by the XCAPI object handle is of an unexpected kind")]
+    UnexpectedKind,
 }
 
 /// A local result type used to encapsulate a result and an FFI error.
