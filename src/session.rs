@@ -111,14 +111,6 @@ impl AsRef<NonNull<c_void>> for StatusEvent {
     }
 }
 
-impl TryFrom<xhandle> for StatusEvent {
-    type Error = Error;
-
-    fn try_from(value: xhandle) -> StdResult<Self, Self::Error> {
-        Ok(StatusEvent(NonNull::new(value).ok_or(Error::NullObject)?))
-    }
-}
-
 impl CommonEvent for StatusEvent {}
 
 /// An enumeration of session event objects
@@ -134,8 +126,9 @@ impl Event {
         }
 
         let kind = EventKind::try_from(event_type)?;
+        let obj = NonNull::new(handle).ok_or(Error::NullObject)?;
         match kind {
-            EventKind::Status => Ok(Event::Status(StatusEvent::try_from(handle)?)),
+            EventKind::Status => Ok(Event::Status(StatusEvent(obj))),
         }
     }
 }

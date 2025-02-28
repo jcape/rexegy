@@ -6,11 +6,10 @@ use crate::{
     key::Key,
     timing::EventTiming,
 };
-use rxegy_sys::xhandle;
 use std::{ffi::c_void, ptr::NonNull, result::Result as StdResult};
 
 /// Fields common to every Exegy event.
-pub trait CommonEvent: AsRef<NonNull<c_void>> + TryFrom<xhandle> {
+pub trait CommonEvent: AsRef<NonNull<c_void>> {
     /// Retrieve the status code from the event
     fn status(&self) -> Result<StdResult<Success, ExegyError>> {
         Ok(Success::try_from(field::get_u32(
@@ -77,7 +76,7 @@ pub trait CommonEvent: AsRef<NonNull<c_void>> + TryFrom<xhandle> {
 
 #[derive(Clone, Copy)]
 #[repr(u64)]
-enum Field {
+pub(crate) enum Field {
     /// Client-specified turnaround key (set during object creation).
     #[allow(dead_code)]
     Turnkey = rxegy_sys::XFLD_EVT_TURNKEY,
