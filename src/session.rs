@@ -16,6 +16,7 @@ use std::{
     path::{Path, PathBuf},
     ptr::{self, NonNull},
     result::Result as StdResult,
+    sync::Arc,
 };
 
 /// An enumeration of session object types
@@ -595,14 +596,14 @@ impl Builder {
     pub fn tickerplant(
         self,
         market_events_per_instrument: bool,
-        callbacks: Box<dyn Callbacks>,
+        callbacks: Arc<dyn Callbacks>,
     ) -> Result<Session> {
         tracing::trace!("Starting tickerplant session");
         self.start_session(Kind::Ticker, Some(market_events_per_instrument), callbacks)
     }
 
     /// Connect to the Exegy appliance and return a monitoring session.
-    pub fn monitor(self, callbacks: Box<dyn Callbacks>) -> Result<Session> {
+    pub fn monitor(self, callbacks: Arc<dyn Callbacks>) -> Result<Session> {
         self.start_session(Kind::TickerMonitoring, None, callbacks)
     }
 
@@ -611,7 +612,7 @@ impl Builder {
         self,
         kind: Kind,
         market_events_per_instrument: Option<bool>,
-        callbacks: Box<dyn Callbacks>,
+        callbacks: Arc<dyn Callbacks>,
     ) -> Result<Session> {
         // Build our parameters
         let server_list = CString::new(
@@ -692,7 +693,7 @@ impl Builder {
 
 struct Context {
     /// An object which we'll fire callbacks on
-    callbacks: Box<dyn Callbacks>,
+    callbacks: Arc<dyn Callbacks>,
     /// The CPU affinity mask to be set when the callback is fired
     affinity: Option<u64>,
     /// The thread proiority to be set when the callback is fired
