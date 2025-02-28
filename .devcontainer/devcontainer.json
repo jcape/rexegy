@@ -2,11 +2,11 @@
     "capAdd": ["SYS_PTRACE"],
     "containerEnv": {
         "CARGO_PROFILE_DEV_BUILD_OVERRIDE_DEBUG": "true",
-        "EDITOR": "code --reuse-window --wait",
         "CARGO_HOME": "/workspaces/rxegy/.cache/cargo",
+        "EDITOR": "code --reuse-window --wait",
         "LD_LIBRARY_PATH": "/usr/local/exegy/lib",
         "RUST_BACKTRACE": "full",
-        "PRE_COMMIT_CACHE": "/workspaces/rxegy/.cache/pre-commit"
+        "PRE_COMMIT_HOME": "/workspaces/rxegy/.cache/pre-commit"
     },
     "containerUser": "vscode",
     "customizations": {
@@ -57,6 +57,10 @@
     ],
     "name": "rxegy",
     "privileged": true,
+    "remoteEnv": {
+        "CARGO_HOME": "/workspaces/rxegy/.cache/cargo",
+        "PRE_COMMIT_HOME": "/workspaces/rxegy/.cache/pre-commit"
+    },
     "remoteUser": "vscode",
     "postAttachCommand": "/workspaces/rxegy/.devcontainer/post-attach.sh",
     "securityOpt": [ "seccomp=unconfined" ],
