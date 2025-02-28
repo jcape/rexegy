@@ -4,20 +4,27 @@ use bindgen::{
 };
 use std::{cell::RefCell, env, error::Error, path::PathBuf, str::FromStr};
 
-#[derive(Debug)]
-struct Callbacks;
-
 const DERIVE_COMMON: [&str; 4] = ["XC_KEY", "XC_COUNTRY_ID", "XC_EXCHANGE_ID", "XC_SYMBOL"];
 
+#[derive(Debug, Default)]
+struct Callbacks {
+    current_file: RefCell<String>,
+}
+
 impl ParseCallbacks for Callbacks {
+    fn include_file(&self, filename: &str) {
+        self.current_file.replace(filename.to_owned());
+    }
+
     fn add_derives(&self, info: &DeriveInfo<'_>) -> Vec<String> {
         let mut retval = Vec::default();
         if DERIVE_COMMON.contains(&info.name) {
+            retval.push("Default");
             retval.push("Eq");
             retval.push("Hash");
+            retval.push("Ord");
             retval.push("PartialEq");
             retval.push("PartialOrd");
-            retval.push("Ord");
         }
 
         retval.iter().map(ToString::to_string).collect::<Vec<_>>()
@@ -26,15 +33,31 @@ impl ParseCallbacks for Callbacks {
     fn int_macro(&self, name: &str, _value: i64) -> Option<IntKind> {
         if name.ends_with("_XINT8") {
             Some(IntKind::I8)
-        } else if name.ends_with("_XUINT8") {
+        } else if name == "XPT_DEFAULT" || name.ends_with("_XUINT8") {
             Some(IntKind::U8)
         } else if name.ends_with("_XINT16") {
             Some(IntKind::I16)
         } else if name.ends_with("_XUINT16") {
             Some(IntKind::U16)
-        } else if name.ends_with("_XINT32") {
+        } else if name.starts_with("XFW_") || name.ends_with("_XINT32") {
             Some(IntKind::I32)
-        } else if name.ends_with("_XUINT32") {
+        } else if self.current_file.borrow().as_str() == "xerr.h"
+            || name.starts_with("XF_")
+            || name.starts_with("XFENUM_")
+            || name.starts_with("XFKEY_")
+            || name.starts_with("XFNUM_")
+            || name.starts_with("XFDT_")
+            || name.starts_with("XFPRI_")
+            || name.starts_with("XFEXCH_")
+            || name.starts_with("XFCC_")
+            || name.starts_with("XFCUR_")
+            || name.starts_with("XFSYM_")
+            || name.starts_with("XFSTR_")
+            || name.starts_with("XFSTRUCT_")
+            || name.starts_with("XCFMT_")
+            || name.starts_with("XPRSOFT_")
+            || name.ends_with("_XUINT32")
+        {
             Some(IntKind::U32)
         } else if name.ends_with("_XINT64") {
             Some(IntKind::I64)
@@ -49,50 +72,6 @@ impl ParseCallbacks for Callbacks {
             })
         } else {
             None
-        }
-    }
-}
-
-#[derive(Debug)]
-struct XerrCallbacks;
-
-impl ParseCallbacks for XerrCallbacks {
-    fn int_macro(&self, name: &str, _value: i64) -> Option<IntKind> {
-        if name.starts_with("X") {
-            Some(IntKind::U32)
-        } else {
-            None
-        }
-    }
-}
-
-#[derive(Debug, Default)]
-struct ConvertCallbacks {
-    current_file: RefCell<String>,
-}
-
-impl ParseCallbacks for ConvertCallbacks {
-    fn include_file(&self, filename: &str) {
-        self.current_file.replace(filename.to_owned());
-    }
-
-    fn int_macro(&self, name: &str, _value: i64) -> Option<IntKind> {
-        match self.current_file.borrow().as_str() {
-            "xcvttype.h" => Some(IntKind::U32),
-            "xcvtfmtf.h" | "xcvtfmt.h" => {
-                if name.starts_with("XFW_") {
-                    Some(IntKind::I32)
-                } else if name == "XPT_DEFAULT" {
-                    Some(IntKind::U8)
-                } else {
-                    None
-                }
-            }
-            "xcvtparse.h" => Some(IntKind::U32),
-            _ => {
-                cargo_emit::warning!("Ignoring macro {}", name);
-                None
-            }
         }
     }
 }
@@ -113,56 +92,32 @@ pub fn main() -> Result<(), Box<dyn Error>> {
     let mut path = PathBuf::from_str(&manifest_dir)?;
     path.push("src");
 
-    let mut xerr_path = path.clone();
-    xerr_path.push("xerr.inc.rs");
-    let xerr_path = xerr_path;
-
-    let mut fmt_path = path.clone();
-    fmt_path.push("xcvt.inc.rs");
-    let fmt_path = fmt_path;
-
     path.push("gen.inc.rs");
     let path = path;
 
     // If you want to re-generate rust files, delete the ones in src/gen
-    if xerr_path.exists() && path.exists() && fmt_path.exists() {
+    if path.exists() {
         return Ok(());
     }
 
     bindgen::builder()
-        .parse_callbacks(Box::new(XerrCallbacks))
-        .header("errors.h")
-        .clang_arg("-I/usr/local/exegy/include")
-        .allowlist_recursively(false)
-        .allowlist_file(".*/xerr.h")
-        .formatter(Formatter::Rustfmt)
-        .generate_cstr(true)
-        .impl_debug(true)
-        .sort_semantically(true)
-        .generate()?
-        .write_to_file(&xerr_path)?;
-
-    bindgen::builder()
-        .parse_callbacks(Box::new(ConvertCallbacks::default()))
-        .header("convert.h")
-        .clang_arg("-I/usr/local/exegy/include")
-        .allowlist_recursively(false)
-        .allowlist_file(".*/xcvt.*")
-        .formatter(Formatter::Rustfmt)
-        .generate_cstr(true)
-        .impl_debug(true)
-        .sort_semantically(true)
-        .generate()?
-        .write_to_file(&fmt_path)?;
-
-    bindgen::builder()
-        .parse_callbacks(Box::new(Callbacks))
+        .parse_callbacks(Box::new(Callbacks::default()))
         .header("wrapper.h")
         .clang_arg("-I/usr/local/exegy/include")
         .allowlist_recursively(false)
-        .blocklist_file(".*/xerr.h")
+        .allowlist_file("/usr/local/exegy/include/.*\\.h")
+        .no_debug("XC_GROUP_DERIVATIVE_REFERENCE")
+        .no_debug("XC_GROUP_DERIVATIVE_REFERENCE_INSTRUMENT")
+        .no_debug("XC_GROUP_DERIVATIVE_REFERENCE_PRODUCT")
+        .no_debug("XC_GROUP_DERIVATIVE_REFERENCE_LEG_V3_8")
+        .no_debug("XC_GROUP_DERIVATIVE_REFERENCE_LEG")
+        .no_debug("XC_GROUP_FXFWD_REFRESH_ALL")
+        .no_debug("XC_GROUP_FXFWD_QUOTE_ALL")
+        .no_debug("XC_GROUP_FXSWAP_REFRESH_ALL")
+        .no_debug("XC_GROUP_FXSWAP_QUOTE_ALL")
         .formatter(Formatter::Rustfmt)
         .generate_cstr(true)
+        .impl_debug(true)
         .sort_semantically(true)
         .generate()?
         .write_to_file(&path)?;

@@ -8,6 +8,7 @@ repos:
     rev: v1.1.0
     hooks:
       - id: fmt
+        exclude: 'sys/src/gen.inc.rs'
       - id: check
       - id: clippy
       - id: test

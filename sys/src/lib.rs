@@ -14,9 +14,8 @@
 
 )]
 mod generated {
-    include!("xerr.inc.rs");
+    #[rustfmt::skip]
     include!("gen.inc.rs");
-    include!("xcvt.inc.rs");
 }
 
 pub use generated::*;
