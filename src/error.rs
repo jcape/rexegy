@@ -5,6 +5,7 @@ use std::{
     io::Error as IoError,
     result::Result as StdResult,
     str::Utf8Error,
+    string::FromUtf8Error,
 };
 
 #[derive(Debug, thiserror::Error)]
@@ -60,6 +61,12 @@ pub enum Error {
     /// The object pointed at by the XCAPI object handle is of an unexpected kind
     #[error("The object pointed at by the XCAPI object handle is of an unexpected kind")]
     UnexpectedKind,
+}
+
+impl From<FromUtf8Error> for Error {
+    fn from(value: FromUtf8Error) -> Self {
+        Error::InvalidUtf8(value.utf8_error())
+    }
 }
 
 /// A local result type used to encapsulate a result and an FFI error.

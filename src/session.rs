@@ -2,9 +2,11 @@
 
 use crate::{
     error::{Error, ExegyError, Result, Success},
-    field::{self, Field},
+    event::CommonEvent,
+    field::{self, Field as FieldTrait},
     object::Kind as ObjectKind,
 };
+use rxegy_sys::{xerr, xhandle};
 use secrecy::{ExposeSecret, SecretString};
 use std::{
     any::{Any, TypeId},
@@ -58,6 +60,46 @@ impl TryFrom<u16> for EventKind {
     }
 }
 
+#[derive(Clone, Copy)]
+#[repr(u64)]
+enum Field {
+    Turnkey = rxegy_sys::XFLD_SESS_TURNKEY,
+    Status = rxegy_sys::XFLD_SESS_STATUS,
+    Type = rxegy_sys::XFLD_SESS_SESSION_TYPE,
+    ClientVersionString = rxegy_sys::XFLD_SESS_CLIENT_VERSION_STRING,
+    ClientMajorVersion = rxegy_sys::XFLD_SESS_CLIENT_MAJOR_VERSION,
+    ClientMinorVersion = rxegy_sys::XFLD_SESS_CLIENT_MINOR_VERSION,
+    ClientRevision = rxegy_sys::XFLD_SESS_CLIENT_REVISION,
+    ClientBuild = rxegy_sys::XFLD_SESS_CLIENT_BUILD,
+    ClientCpuCount = rxegy_sys::XFLD_SESS_CLIENT_CPU_COUNT,
+    ClientAffinityMask = rxegy_sys::XFLD_SESS_CLIENT_AFFINITY_MASK,
+    ClientBgThreadAffinityMask = rxegy_sys::XFLD_SESS_CLIENT_BG_THREAD_AFFINITY_MASK,
+    ClientHbThreadAffinityMask = rxegy_sys::XFLD_SESS_CLIENT_HB_THREAD_AFFINITY_MASK,
+    ClientThreadPriority = rxegy_sys::XFLD_SESS_CLIENT_THREAD_PRIORITY,
+    ClientBgThreadPriority = rxegy_sys::XFLD_SESS_CLIENT_BG_THREAD_PRIORITY,
+    ClientHbThreadPriority = rxegy_sys::XFLD_SESS_CLIENT_HB_THREAD_PRIORITY,
+    ServerName = rxegy_sys::XFLD_SESS_SERVER_NAME,
+    ServerVersionString = rxegy_sys::XFLD_SESS_SERVER_VERSION_STRING,
+    ServerMajorVersion = rxegy_sys::XFLD_SESS_SERVER_MAJOR_VERSION,
+    ServerMinorVersion = rxegy_sys::XFLD_SESS_SERVER_MINOR_VERSION,
+    ServerRevision = rxegy_sys::XFLD_SESS_SERVER_REVISION,
+    ServerBuild = rxegy_sys::XFLD_SESS_SERVER_BUILD,
+    DisableReconnect = rxegy_sys::XFLD_SESS_DISABLE_RECONNECT,
+    ReplayStart = rxegy_sys::XFLD_SESS_REPLAY_START,
+    ReplayQuoteMontage = rxegy_sys::XFLD_SESS_REPLAY_QUOTE_MONTAGE,
+    ReplayL2Composite = rxegy_sys::XFLD_SESS_REPLAY_L2_COMPOSITE,
+    ReplayUbbo = rxegy_sys::XFLD_SESS_REPLAY_UBBO,
+    TickerMaxPriceBookDepth = rxegy_sys::XFLD_SESS_TKR_MAX_PRICE_BOOK_DEPTH,
+    TickerMarketStatusCallbacks = rxegy_sys::XFLD_SESS_TKR_MARKET_STATUS_CALLBACKS,
+    TickerMaxPriceBookRowLevel = rxegy_sys::XFLD_SESS_TKR_MAX_PB_ROW_LEVEL,
+}
+
+impl FieldTrait for Field {
+    fn to_u64(&self) -> u64 {
+        *self as u64
+    }
+}
+
 /// A callback object containting status event details
 #[derive(Debug, Eq, Hash, PartialEq, PartialOrd, Ord)]
 #[repr(transparent)]
@@ -69,13 +111,15 @@ impl AsRef<NonNull<c_void>> for StatusEvent {
     }
 }
 
-impl TryFrom<rxegy_sys::xhandle> for StatusEvent {
+impl TryFrom<xhandle> for StatusEvent {
     type Error = Error;
 
-    fn try_from(value: rxegy_sys::xhandle) -> StdResult<Self, Self::Error> {
+    fn try_from(value: xhandle) -> StdResult<Self, Self::Error> {
         Ok(StatusEvent(NonNull::new(value).ok_or(Error::NullObject)?))
     }
 }
+
+impl CommonEvent for StatusEvent {}
 
 /// An enumeration of session event objects
 enum Event {
@@ -84,7 +128,7 @@ enum Event {
 }
 
 impl Event {
-    pub fn new(event_type: u16, handle: rxegy_sys::xhandle) -> Result<Event> {
+    pub fn new(event_type: u16, handle: xhandle) -> Result<Event> {
         if handle.is_null() {
             return Err(Error::NullObject);
         }
@@ -119,12 +163,12 @@ impl AsRef<NonNull<c_void>> for Session {
     }
 }
 
-impl TryFrom<rxegy_sys::xhandle> for Session {
+impl TryFrom<xhandle> for Session {
     type Error = Error;
 
-    fn try_from(value: rxegy_sys::xhandle) -> StdResult<Self, Self::Error> {
+    fn try_from(value: xhandle) -> StdResult<Self, Self::Error> {
         let handle = NonNull::new(value).ok_or(Error::NullObject)?;
-        let session_type = field::get_u16(handle, rxegy_sys::XC_SESSION, Field::SessionType)?;
+        let session_type = field::get_u16(handle, rxegy_sys::XC_SESSION, Field::Type)?;
         let kind = Kind::try_from(session_type)?;
         Session::new(kind, handle)
     }
@@ -140,7 +184,7 @@ impl Session {
     }
 
     /// Create a new object from the given kind and handle
-    fn from_handle(kind: Kind, handle: rxegy_sys::xhandle) -> Result<Session> {
+    fn from_handle(kind: Kind, handle: xhandle) -> Result<Session> {
         let handle = NonNull::new(handle).ok_or(Error::NullObject)?;
         Session::new(kind, handle)
     }
@@ -148,7 +192,7 @@ impl Session {
     /// Retrieve the turnkey value of this session
     #[allow(dead_code)]
     fn turnkey(&self) -> Result<u64> {
-        field::get_u64(*self.as_ref(), rxegy_sys::XC_SESSION, Field::SessionTurnkey)
+        field::get_u64(*self.as_ref(), rxegy_sys::XC_SESSION, Field::Turnkey)
     }
 
     /// Retrieve the status of this session.
@@ -168,7 +212,7 @@ impl Session {
         Ok(Success::try_from(field::get_u32(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
-            Field::SessionStatus,
+            Field::Status,
         )?))
     }
 
@@ -177,7 +221,7 @@ impl Session {
         field::get_string(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
-            Field::SessionClientVersionString,
+            Field::ClientVersionString,
         )
     }
 
@@ -186,7 +230,7 @@ impl Session {
         field::get_u32(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
-            Field::SessionClientMajorVersion,
+            Field::ClientMajorVersion,
         )
     }
 
@@ -195,35 +239,23 @@ impl Session {
         field::get_u32(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
-            Field::SessionClientMinorVersion,
+            Field::ClientMinorVersion,
         )
     }
 
     /// Retrieve the client version revision
     pub fn client_revision(&self) -> Result<u32> {
-        field::get_u32(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::SessionClientRevision,
-        )
+        field::get_u32(*self.as_ref(), rxegy_sys::XC_SESSION, Field::ClientRevision)
     }
 
     /// Retrieve the client version build
     pub fn client_build(&self) -> Result<u32> {
-        field::get_u32(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::SessionClientBuild,
-        )
+        field::get_u32(*self.as_ref(), rxegy_sys::XC_SESSION, Field::ClientBuild)
     }
 
     /// Retrieve the client CPU count.
     pub fn client_cpu_count(&self) -> Result<u32> {
-        field::get_u32(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::SessionClientCpuCount,
-        )
+        field::get_u32(*self.as_ref(), rxegy_sys::XC_SESSION, Field::ClientCpuCount)
     }
 
     /// Retrieve the affinity mask for the callback thread on this session
@@ -231,7 +263,7 @@ impl Session {
         field::get_u64(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
-            Field::SessionClientAffinityMask,
+            Field::ClientAffinityMask,
         )
     }
 
@@ -240,7 +272,7 @@ impl Session {
         field::get_u32(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
-            Field::SessionClientThreadPriority,
+            Field::ClientThreadPriority,
         )
     }
 
@@ -249,7 +281,7 @@ impl Session {
         field::get_u64(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
-            Field::SessionClientBgThreadAffinityMask,
+            Field::ClientBgThreadAffinityMask,
         )
     }
 
@@ -258,7 +290,7 @@ impl Session {
         field::get_u32(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
-            Field::SessionClientBgThreadPriority,
+            Field::ClientBgThreadPriority,
         )
     }
 
@@ -267,7 +299,7 @@ impl Session {
         field::get_u64(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
-            Field::SessionClientHbThreadAffinityMask,
+            Field::ClientHbThreadAffinityMask,
         )
     }
 
@@ -276,17 +308,13 @@ impl Session {
         field::get_u32(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
-            Field::SessionClientHbThreadPriority,
+            Field::ClientHbThreadPriority,
         )
     }
 
     /// Retrieve the name of the server this session is connected to.
     pub fn server_name(&self) -> Result<String> {
-        field::get_string(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::SessionServerName,
-        )
+        field::get_string(*self.as_ref(), rxegy_sys::XC_SESSION, Field::ServerName)
     }
 
     /// Retrieve the version string of the server this session is connected to.
@@ -294,7 +322,7 @@ impl Session {
         field::get_string(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
-            Field::SessionServerVersionString,
+            Field::ServerVersionString,
         )
     }
 
@@ -303,7 +331,7 @@ impl Session {
         field::get_u8(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
-            Field::SessionServerMajorVersion,
+            Field::ServerMajorVersion,
         )
     }
 
@@ -312,26 +340,18 @@ impl Session {
         field::get_u8(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
-            Field::SessionServerMinorVersion,
+            Field::ServerMinorVersion,
         )
     }
 
     /// Retrieve the software revision (patch) of the code running on the appliance
     pub fn server_revision(&self) -> Result<u8> {
-        field::get_u8(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::SessionServerRevision,
-        )
+        field::get_u8(*self.as_ref(), rxegy_sys::XC_SESSION, Field::ServerRevision)
     }
 
     /// Retrieve the build of the code running on the appliance
     pub fn server_build(&self) -> Result<u32> {
-        field::get_u32(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::SessionServerBuild,
-        )
+        field::get_u32(*self.as_ref(), rxegy_sys::XC_SESSION, Field::ServerBuild)
     }
 
     /// Retrieve whether reconnection is enabled
@@ -339,7 +359,7 @@ impl Session {
         Ok(field::get_u8(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
-            Field::SessionDisableReconnect,
+            Field::DisableReconnect,
         )? == 0)
     }
 
@@ -348,7 +368,7 @@ impl Session {
         field::set_u8(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
-            Field::SessionDisableReconnect,
+            Field::DisableReconnect,
             false as u8,
         )
     }
@@ -358,18 +378,14 @@ impl Session {
         field::set_u8(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
-            Field::SessionDisableReconnect,
+            Field::DisableReconnect,
             true as u8,
         )
     }
 
     /// Get whether the replay has been started
     pub fn replay_start(&self) -> Result<bool> {
-        Ok(field::get_u8(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::SessionReplayStart,
-        )? == 0)
+        Ok(field::get_u8(*self.as_ref(), rxegy_sys::XC_SESSION, Field::ReplayStart)? == 0)
     }
 
     /// Start a replay session
@@ -377,7 +393,7 @@ impl Session {
         field::set_u8(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
-            Field::SessionReplayStart,
+            Field::ReplayStart,
             true as u8,
         )
     }
@@ -387,7 +403,7 @@ impl Session {
         field::set_u8(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
-            Field::SessionReplayStart,
+            Field::ReplayStart,
             false as u8,
         )
     }
@@ -397,7 +413,7 @@ impl Session {
         field::get_string(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
-            Field::SessionReplayQuoteMontage,
+            Field::ReplayQuoteMontage,
         )
     }
 
@@ -406,7 +422,7 @@ impl Session {
         field::set_string(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
-            Field::SessionReplayQuoteMontage,
+            Field::ReplayQuoteMontage,
             montage,
         )
     }
@@ -416,7 +432,7 @@ impl Session {
         field::get_string(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
-            Field::SessionReplayL2Composite,
+            Field::ReplayL2Composite,
         )
     }
 
@@ -425,18 +441,14 @@ impl Session {
         field::set_string(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
-            Field::SessionReplayL2Composite,
+            Field::ReplayL2Composite,
             composite,
         )
     }
 
     /// Retrieve the exchange constituents for user-defined BBO on replay sessions
     pub fn replay_ubbo(&self) -> Result<String> {
-        field::get_string(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::SessionReplayUbbo,
-        )
+        field::get_string(*self.as_ref(), rxegy_sys::XC_SESSION, Field::ReplayUbbo)
     }
 
     /// Set the exchange constituents for user-defined BBO on replay sessions.
@@ -444,7 +456,7 @@ impl Session {
         field::set_string(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
-            Field::SessionReplayUbbo,
+            Field::ReplayUbbo,
             ubbo,
         )
     }
@@ -454,7 +466,7 @@ impl Session {
         field::get_u16(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
-            Field::SessionTickerMaxPriceBookDepth,
+            Field::TickerMaxPriceBookDepth,
         )
     }
 
@@ -463,7 +475,7 @@ impl Session {
         field::get_u16(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
-            Field::SessionTickerMaxPriceBookRowLevel,
+            Field::TickerMaxPriceBookRowLevel,
         )
     }
 }
@@ -677,7 +689,7 @@ impl Builder {
             field::set_u64(
                 *retval.as_ref(),
                 rxegy_sys::XC_SESSION,
-                Field::SessionClientBgThreadAffinityMask,
+                Field::ClientBgThreadAffinityMask,
                 affin,
             )?;
         }
@@ -686,7 +698,7 @@ impl Builder {
             field::set_u32(
                 *retval.as_ref(),
                 rxegy_sys::XC_SESSION,
-                Field::SessionClientBgThreadPriority,
+                Field::ClientBgThreadPriority,
                 prio as u32,
             )?;
         }
@@ -695,7 +707,7 @@ impl Builder {
             field::set_u64(
                 *retval.as_ref(),
                 rxegy_sys::XC_SESSION,
-                Field::SessionClientHbThreadAffinityMask,
+                Field::ClientHbThreadAffinityMask,
                 affin,
             )?;
         }
@@ -704,7 +716,7 @@ impl Builder {
             field::set_u32(
                 *retval.as_ref(),
                 rxegy_sys::XC_SESSION,
-                Field::SessionClientHbThreadPriority,
+                Field::ClientHbThreadPriority,
                 prio as u32,
             )?;
         }
@@ -727,8 +739,8 @@ struct Context {
 impl Context {
     fn dispatch(
         &self,
-        handle: rxegy_sys::xhandle,
-        event_handle: rxegy_sys::xhandle,
+        handle: xhandle,
+        event_handle: xhandle,
         event_type: u16,
         status: u32,
     ) -> Result<()> {
@@ -741,7 +753,7 @@ impl Context {
                 field::set_u64(
                     *session.as_ref(),
                     rxegy_sys::XC_SESSION,
-                    Field::SessionClientAffinityMask,
+                    Field::ClientAffinityMask,
                     affinity,
                 )?;
             }
@@ -750,7 +762,7 @@ impl Context {
                 field::set_u32(
                     *session.as_ref(),
                     rxegy_sys::XC_SESSION,
-                    Field::SessionClientThreadPriority,
+                    Field::ClientThreadPriority,
                     prio,
                 )?;
             }
@@ -759,7 +771,7 @@ impl Context {
                 field::set_u8(
                     *session.as_ref(),
                     rxegy_sys::XC_SESSION,
-                    Field::SessionTickerMarketStatusCallbacks,
+                    Field::TickerMarketStatusCallbacks,
                     enable as u8,
                 )?;
             }
@@ -775,12 +787,12 @@ impl Context {
 
 #[unsafe(no_mangle)]
 unsafe extern "C" fn _rxegy_session_callback(
-    handle: rxegy_sys::xhandle,
+    handle: xhandle,
     _slot: u32,
-    event_handle: rxegy_sys::xhandle,
+    event_handle: xhandle,
     event_type: u16,
     turnkey: u64,
-    status: rxegy_sys::xerr,
+    status: xerr,
 ) {
     // TODO: log panics
     let _ = std::panic::catch_unwind(|| {
