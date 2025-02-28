@@ -6,7 +6,7 @@ use crate::{
     timing::EventTiming,
 };
 use std::{
-    ffi::{CString, c_void},
+    ffi::{CStr, CString, c_void},
     ptr::NonNull,
 };
 
@@ -108,7 +108,7 @@ macro_rules! impl_scalar {
 
 /// Retrieve the contents of the given field ID as a UTF-8 string
 pub fn get_string<F: Field>(object: NonNull<c_void>, slot: u32, field: F) -> Result<String> {
-    let mut obuf = vec![0u8; 512];
+    let mut obuf = [0u8; 512];
     let status = unsafe {
         rxegy_sys::xcGetField(
             object.as_ptr(),
@@ -121,9 +121,9 @@ pub fn get_string<F: Field>(object: NonNull<c_void>, slot: u32, field: F) -> Res
 
     Success::try_from(status)?;
 
-    let cstr = CString::from_vec_with_nul(obuf)?;
-
-    Ok(cstr.to_str()?.to_owned())
+    Ok(CStr::from_bytes_until_nul(obuf.as_slice())?
+        .to_str()?
+        .to_owned())
 }
 
 /// Set the contents of a field value to the given string

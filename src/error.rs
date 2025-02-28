@@ -1,7 +1,7 @@
 //! Errors used within this crate
 
 use std::{
-    ffi::{FromVecWithNulError, NulError},
+    ffi::{FromBytesUntilNulError, NulError},
     io::Error as IoError,
     result::Result as StdResult,
     str::Utf8Error,
@@ -35,8 +35,8 @@ pub enum Error {
     EmbeddedNull(#[from] NulError),
 
     /// The source of a new C string was not nul-terminated.
-    #[error("The string in question was not nul-terminated: {0}")]
-    NoNullTerm(#[from] FromVecWithNulError),
+    #[error("The string in question was not nul-terminated")]
+    NoNullTerm,
 
     /// A thread paniced while holding the lock to a session.
     #[error("The mutex locking a session was poisoned")]
@@ -66,6 +66,12 @@ pub enum Error {
 impl From<FromUtf8Error> for Error {
     fn from(value: FromUtf8Error) -> Self {
         Error::InvalidUtf8(value.utf8_error())
+    }
+}
+
+impl From<FromBytesUntilNulError> for Error {
+    fn from(_value: FromBytesUntilNulError) -> Self {
+        Self::NoNullTerm
     }
 }
 
@@ -479,11 +485,11 @@ impl TryFrom<u32> for ExegyError {
 }
 
 /// An enumeration of status codes which are considered a "success".
-#[derive(Copy, Clone, Hash, Eq, PartialEq, PartialOrd, Ord)]
+#[derive(Copy, Clone, Debug, displaydoc::Display, Hash, Eq, PartialEq, PartialOrd, Ord)]
 #[repr(u32)]
 #[non_exhaustive]
 pub enum Success {
-    // Generic success
+    /// Generic success
     Success = rxegy_sys::XSUCCESS,
     /// Item Found
     Found = rxegy_sys::XFOUND,
@@ -510,6 +516,7 @@ impl TryFrom<u32> for Success {
 
     fn try_from(value: u32) -> std::result::Result<Self, Self::Error> {
         match value {
+            rxegy_sys::XSUCCESS => Ok(Success::Success),
             rxegy_sys::XFOUND => Ok(Success::Found),
             rxegy_sys::XCOMPLETE => Ok(Success::Complete),
             rxegy_sys::XMOREDATA => Ok(Success::MoreData),

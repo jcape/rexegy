@@ -17,16 +17,18 @@ use std::{
     path::{Path, PathBuf},
     pin::Pin,
     ptr::{self, NonNull},
+    rc::Rc,
     result::Result as StdResult,
 };
+use tracing::{debug, error};
 
 /// An enumeration of session object types
-#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq, PartialOrd, Ord)]
+#[derive(Copy, Clone, Debug, displaydoc::Display, Eq, Hash, PartialEq, PartialOrd, Ord)]
 #[repr(u16)]
 enum Kind {
-    /// The object type is a ticker
+    /// Ticker Plant
     Ticker = ObjectKind::SessionTicker as u16,
-    /// The objecdt type is a ticekr monitor
+    /// Monitoring
     TickerMonitoring = ObjectKind::SessionTickerMonitoring as u16,
 }
 
@@ -46,6 +48,7 @@ impl TryFrom<u16> for Kind {
 #[derive(Copy, Clone, Debug, Eq, Hash, PartialEq, PartialOrd, Ord)]
 #[repr(u16)]
 enum EventKind {
+    /// Session Status Event
     Status = ObjectKind::EventSessionStatus as u16,
 }
 
@@ -54,13 +57,13 @@ impl TryFrom<u16> for EventKind {
 
     fn try_from(value: u16) -> StdResult<Self, Self::Error> {
         match value {
-            rxegy_sys::XOBJ_SESSION_TICKER => Ok(EventKind::Status),
+            rxegy_sys::XOBJ_EVENT_SESSION_STATUS => Ok(EventKind::Status),
             _ => Err(Error::ObjectUnknown),
         }
     }
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 #[repr(u64)]
 enum Field {
     Turnkey = rxegy_sys::XFLD_SESS_TURNKEY,
@@ -121,12 +124,11 @@ enum Event {
 
 impl Event {
     pub fn new(event_type: u16, handle: xhandle) -> Result<Event> {
-        if handle.is_null() {
-            return Err(Error::NullObject);
-        }
+        tracing::trace!(event.type = event_type, "Trying to find event kind");
 
-        let kind = EventKind::try_from(event_type)?;
         let obj = NonNull::new(handle).ok_or(Error::NullObject)?;
+        let kind = EventKind::try_from(event_type)?;
+
         match kind {
             EventKind::Status => Ok(Event::Status(StatusEvent(obj))),
         }
@@ -140,6 +142,7 @@ pub trait Callbacks {
 }
 
 /// Session objects
+#[derive(Debug)]
 pub enum Session {
     /// A ticker plant session
     TickerPlant(NonNull<c_void>),
@@ -287,8 +290,8 @@ impl Session {
         )
     }
 
-    /// Retrieve CPU affinity mask for the heartbeat thread.
-    pub fn heartbeat_affinity(&self) -> Result<u64> {
+    /// Retrieve CPU affinity mask for the timing thread.
+    pub fn timing_affinity(&self) -> Result<u64> {
         field::get_u64(
             *self.as_ref(),
             rxegy_sys::XC_SESSION,
@@ -296,7 +299,7 @@ impl Session {
         )
     }
 
-    /// Retrieve priority for the heartbeat thread.
+    /// Retrieve priority for the timing thread.
     pub fn hearatbeat_priority(&self) -> Result<u32> {
         field::get_u32(
             *self.as_ref(),
@@ -517,37 +520,37 @@ pub struct Builder {
 
 impl Builder {
     /// Set the username to use when connecting to this session.
-    pub fn username<U: ToString>(&mut self, username: &U) -> &mut Self {
+    pub fn username(mut self, username: &str) -> Self {
         self.username = username.to_string();
         self
     }
 
     /// Set the password to use when connecting to this session.
-    pub fn password(&mut self, password: SecretString) -> &mut Self {
-        self.password = password;
+    pub fn password(mut self, password: &SecretString) -> Self {
+        self.password = password.clone();
         self
     }
 
     /// Add an XTI file to inject into this session.
-    pub fn add_xti(&mut self, xti: &Path) -> &mut Self {
+    pub fn add_xti(mut self, xti: &Path) -> Self {
         self.server_list.push(Server::Xti(xti.to_owned()));
         self
     }
 
     /// Add an RoCE1/Infiniband address to connect to.
-    pub fn add_ib<I: ToString>(&mut self, ib: &I) -> &mut Self {
+    pub fn add_ib<I: ToString>(mut self, ib: &I) -> Self {
         self.server_list.push(Server::Infiniband(ib.to_string()));
         self
     }
 
     /// Add a RoCE2 address to connect to.
-    pub fn add_roce<R: ToString>(&mut self, roce: &R) -> &mut Self {
+    pub fn add_roce<R: ToString>(mut self, roce: &R) -> Self {
         self.server_list.push(Server::RoCE(roce.to_string()));
         self
     }
 
     /// Add a server to connect to
-    pub fn add_server<S: ToSocketAddrs>(&mut self, server: &S) -> Result<&mut Self> {
+    pub fn add_server(mut self, server: &str) -> Result<Self> {
         server
             .to_socket_addrs()?
             .for_each(|addr| self.server_list.push(Server::Ip(addr)));
@@ -555,63 +558,38 @@ impl Builder {
     }
 
     /// Set the CPU affinity mask for the callback thread to the given value.
-    pub fn affinity(&mut self, mask: u64) -> &mut Self {
-        if mask == 0 {
-            self.cb_affinity = None;
-        } else {
-            self.cb_affinity = Some(mask);
-        }
+    pub fn callback_affinity(mut self, affinity: Option<u64>) -> Self {
+        self.cb_affinity = affinity;
         self
     }
 
     /// Set the thread priority for the session's callbacks.
-    pub fn priority(&mut self, priority: u8) -> &mut Self {
-        if priority == 0 {
-            self.cb_priority = None;
-        } else {
-            self.cb_priority = Some(priority);
-        }
-
+    pub fn callback_priority(mut self, priority: Option<u8>) -> Self {
+        self.cb_priority = priority;
         self
     }
 
     /// Set the CPU affinity mask for the background processing thread.
-    pub fn background_affinity(&mut self, mask: u64) -> &mut Self {
-        if mask == 0 {
-            self.bg_affinity = None
-        } else {
-            self.bg_affinity = Some(mask);
-        }
+    pub fn background_affinity(mut self, affinity: Option<u64>) -> Self {
+        self.bg_affinity = affinity;
         self
     }
 
     /// Set the priority for this session's background thread.
-    pub fn background_priority(&mut self, priority: u8) -> &mut Self {
-        if priority == 0 {
-            self.bg_priority = None;
-        } else {
-            self.bg_priority = Some(priority);
-        }
+    pub fn background_priority(mut self, priority: Option<u8>) -> Self {
+        self.bg_priority = priority;
         self
     }
 
-    /// Set the CPU affinity mask for the heartbeat thread.
-    pub fn heartbeat_affinity(&mut self, mask: u64) -> &mut Self {
-        if mask == 0 {
-            self.hb_affinity = None;
-        } else {
-            self.hb_affinity = Some(mask);
-        }
+    /// Set the CPU affinity mask for the timing thread.
+    pub fn timing_affinity(mut self, affinity: Option<u64>) -> Self {
+        self.hb_affinity = affinity;
         self
     }
 
-    /// Set the priority for this session's heartbeat thread.
-    pub fn heartbeat_priority(&mut self, priority: u8) -> &mut Self {
-        if priority == 0 {
-            self.hb_priority = None;
-        } else {
-            self.hb_priority = Some(priority);
-        }
+    /// Set the priority for this session's timing thread.
+    pub fn timing_priority(mut self, priority: Option<u8>) -> Self {
+        self.hb_priority = priority;
         self
     }
 
@@ -621,6 +599,7 @@ impl Builder {
         market_events_per_instrument: bool,
         callbacks: Box<dyn Callbacks>,
     ) -> Result<Session> {
+        tracing::trace!("Starting tickerplant session");
         self.start_session(Kind::Ticker, Some(market_events_per_instrument), callbacks)
     }
 
@@ -674,6 +653,7 @@ impl Builder {
                 username.as_ptr(),
                 password.as_ptr(),
             );
+
             Success::try_from(status)?;
             Session::from_handle(kind, handle)?
         };
@@ -737,11 +717,17 @@ impl Context {
         event_type: u16,
         status: u32,
     ) -> Result<()> {
+        tracing::trace_span!("rxegy::session::Context::dispatch");
+
         // Grab the session handle
         let session = Session::try_from(handle)?;
 
+        tracing::trace!("Session = {:?}", session);
+
         // Check the event status
         if Success::try_from(status).is_ok() {
+            tracing::trace!("Status is good, maybe setting callback affinity.");
+
             if let Some(affinity) = self.affinity {
                 field::set_u64(
                     *session.as_ref(),
@@ -770,7 +756,12 @@ impl Context {
             }
         }
 
-        match Event::new(event_type, event_handle)? {
+        tracing::trace!("Wrapping up event");
+
+        let event = Event::new(event_type, event_handle)?;
+
+        tracing::trace_span!("rxegy::session::Context::dispatch::user");
+        match event {
             Event::Status(status_event) => (*self.callbacks).status(&session, &status_event),
         };
 
@@ -789,29 +780,35 @@ unsafe extern "C" fn _rxegy_session_callback(
 ) {
     // TODO: log panics
     let _ = std::panic::catch_unwind(|| {
+        tracing::trace_span!("rxegy::session::_rxegy_session_callback");
+
         // Get our context
         let boxed = unsafe {
             let ptr = turnkey as *mut &mut dyn Any;
             Box::from_raw(ptr)
         };
 
-        if boxed.type_id() != TypeId::of::<Pin<Box<Context>>>() {
-            // TODO: Log this error
+        if (**boxed).type_id() != TypeId::of::<Pin<Box<Context>>>() {
+            tracing::error!(
+                turnkey.type_id = format!("{:?}", (**boxed).type_id()),
+                expected.type_id = format!("{:?}", TypeId::of::<Pin<Box<Context>>>()),
+                "Unexpected turnkey type"
+            );
             return;
         }
 
-        let context = (*boxed).downcast_ref::<Pin<Box<Context>>>();
+        let context = (**boxed).downcast_ref::<Pin<Box<Context>>>();
 
         if context.is_none() {
-            // TODO: Log this error
+            tracing::error!("Turnkey could not be downcast to a Pin<Box<Context>>...");
             return;
         }
 
-        if let Err(_error) = context
+        if let Err(error) = context
             .unwrap()
             .dispatch(handle, event_handle, event_type, status)
         {
-            // TODO: Log the error.
+            tracing::error!("Dispatch returned an error: {}", error);
         }
     });
 }
