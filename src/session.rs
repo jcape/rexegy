@@ -9,18 +9,14 @@ use crate::{
 use rxegy_sys::{xerr, xhandle};
 use secrecy::{ExposeSecret, SecretString};
 use std::{
-    any::{Any, TypeId},
     ffi::CString,
     fmt::{Display, Formatter, Result as FmtResult},
     net::{SocketAddr, ToSocketAddrs},
     os::raw::c_void,
     path::{Path, PathBuf},
-    pin::Pin,
     ptr::{self, NonNull},
-    rc::Rc,
     result::Result as StdResult,
 };
-use tracing::{debug, error};
 
 /// An enumeration of session object types
 #[derive(Copy, Clone, Debug, displaydoc::Display, Eq, Hash, PartialEq, PartialOrd, Ord)]
@@ -128,6 +124,8 @@ impl Event {
 
         let obj = NonNull::new(handle).ok_or(Error::NullObject)?;
         let kind = EventKind::try_from(event_type)?;
+
+        tracing::trace!(event.kind = format!("{:?}", kind), "Event kind found!");
 
         match kind {
             EventKind::Status => Ok(Event::Status(StatusEvent(obj))),
@@ -627,20 +625,14 @@ impl Builder {
         let password = CString::new(self.password.expose_secret())?;
 
         // Make our session context object (used to dispatch callbacks)
-        let mut context = Box::pin(Context {
+        let context = Box::new(Context {
             callbacks,
             affinity: self.cb_affinity,
             priority: self.cb_priority.map(|v| v as u32),
             market_events_per_instrument,
         });
 
-        // Next, we create a trait object around a reference to our arc mutex
-        let anyref = &mut context as &mut dyn Any;
-        // Then we box the trait object
-        let boxed = Box::new(anyref);
-        // Finally, we cast the raw boxed pointer to the u64 that exegy requires as a "turnkey",
-        // or user-data pointer
-        let turnkey = Box::into_raw(boxed) as u64;
+        let turnkey = Box::into_raw(context) as u64;
 
         let retval = unsafe {
             let mut handle = ptr::null_mut();
@@ -709,6 +701,12 @@ struct Context {
     market_events_per_instrument: Option<bool>,
 }
 
+impl Drop for Context {
+    fn drop(&mut self) {
+        tracing::error!("Drop called on context, this shouldn't happen.")
+    }
+}
+
 impl Context {
     fn dispatch(
         &self,
@@ -760,10 +758,12 @@ impl Context {
 
         let event = Event::new(event_type, event_handle)?;
 
-        tracing::trace_span!("rxegy::session::Context::dispatch::user");
-        match event {
-            Event::Status(status_event) => (*self.callbacks).status(&session, &status_event),
-        };
+        {
+            tracing::trace_span!("rxegy::session::Context::dispatch::user");
+            match event {
+                Event::Status(status_event) => (*self.callbacks).status(&session, &status_event),
+            };
+        }
 
         Ok(())
     }
@@ -783,32 +783,18 @@ unsafe extern "C" fn _rxegy_session_callback(
         tracing::trace_span!("rxegy::session::_rxegy_session_callback");
 
         // Get our context
-        let boxed = unsafe {
-            let ptr = turnkey as *mut &mut dyn Any;
+        let context = unsafe {
+            let ptr = turnkey as *mut Context;
             Box::from_raw(ptr)
         };
 
-        if (**boxed).type_id() != TypeId::of::<Pin<Box<Context>>>() {
-            tracing::error!(
-                turnkey.type_id = format!("{:?}", (**boxed).type_id()),
-                expected.type_id = format!("{:?}", TypeId::of::<Pin<Box<Context>>>()),
-                "Unexpected turnkey type"
-            );
-            return;
-        }
-
-        let context = (**boxed).downcast_ref::<Pin<Box<Context>>>();
-
-        if context.is_none() {
-            tracing::error!("Turnkey could not be downcast to a Pin<Box<Context>>...");
-            return;
-        }
-
-        if let Err(error) = context
-            .unwrap()
-            .dispatch(handle, event_handle, event_type, status)
-        {
+        tracing::trace!("Dispatching to user callbacks...");
+        if let Err(error) = context.dispatch(handle, event_handle, event_type, status) {
             tracing::error!("Dispatch returned an error: {}", error);
         }
+        tracing::trace!("Completed dispatching");
+
+        let _ = Box::into_raw(context);
+        tracing::trace!("Supposedly released the box contents");
     });
 }
