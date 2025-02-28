@@ -206,13 +206,13 @@ pub struct XC_PRICE_DESC {
     pub XPD_RESERVED_01: [xuint8; 3usize],
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Debug, Copy, Clone, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct XC_EXCHANGE_ID {
     #[doc = "< characters in exchange identifier"]
     pub xex_ch: [::std::os::raw::c_char; 2usize],
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Debug, Copy, Clone, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct XC_COUNTRY_ID {
     #[doc = "< characters in country identifier"]
     pub xcc_ch: [::std::os::raw::c_char; 2usize],
@@ -287,13 +287,13 @@ pub struct XC_ORDER_REF_ID__bindgen_ty_6 {
     pub xoid_sym_uint_refid: xuint64,
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Debug, Copy, Clone, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct XC_SYMBOL {
     #[doc = "< characters in symbol"]
     pub xsym_ch: [::std::os::raw::c_char; 20usize],
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Debug, Copy, Clone, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct XC_KEY {
     pub xk_exchange: XC_EXCHANGE_ID,
     pub xk_country: XC_COUNTRY_ID,

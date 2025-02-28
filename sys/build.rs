@@ -4,7 +4,7 @@ use bindgen::{
 };
 use std::{cell::RefCell, env, error::Error, path::PathBuf, str::FromStr};
 
-const DERIVE_COMMON: [&str; 4] = ["XC_KEY", "XC_COUNTRY_ID", "XC_EXCHANGE_ID", "XC_SYMBOL"];
+const DERIVE_COMMON: [&str; 4] = ["XC_COUNTRY_ID", "XC_EXCHANGE_ID", "XC_KEY", "XC_SYMBOL"];
 
 #[derive(Debug, Default)]
 struct Callbacks {
@@ -19,7 +19,6 @@ impl ParseCallbacks for Callbacks {
     fn add_derives(&self, info: &DeriveInfo<'_>) -> Vec<String> {
         let mut retval = Vec::default();
         if DERIVE_COMMON.contains(&info.name) {
-            retval.push("Default");
             retval.push("Eq");
             retval.push("Hash");
             retval.push("Ord");
