@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.0.4](https://github.com/jcape/rxegy/compare/rxegy-v0.0.3...rxegy-v0.0.4) - 2025-02-28
+
+### Added
+
+- [**breaking**] support common event fields
+
 ## [0.0.3](https://github.com/jcape/rxegy/compare/rxegy-v0.0.2...rxegy-v0.0.3) - 2025-02-27
 
 ### Added
