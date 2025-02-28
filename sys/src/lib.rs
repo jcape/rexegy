@@ -16,6 +16,7 @@
 mod generated {
     include!("xerr.inc.rs");
     include!("gen.inc.rs");
+    include!("xcvt.inc.rs");
 }
 
 pub use generated::*;

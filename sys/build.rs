@@ -2,7 +2,7 @@ use bindgen::{
     Formatter,
     callbacks::{DeriveInfo, IntKind, ParseCallbacks},
 };
-use std::{env, error::Error, path::PathBuf, str::FromStr};
+use std::{cell::RefCell, env, error::Error, path::PathBuf, str::FromStr};
 
 #[derive(Debug)]
 struct Callbacks;
@@ -66,6 +66,37 @@ impl ParseCallbacks for XerrCallbacks {
     }
 }
 
+#[derive(Debug, Default)]
+struct ConvertCallbacks {
+    current_file: RefCell<String>,
+}
+
+impl ParseCallbacks for ConvertCallbacks {
+    fn include_file(&self, filename: &str) {
+        self.current_file.replace(filename.to_owned());
+    }
+
+    fn int_macro(&self, name: &str, _value: i64) -> Option<IntKind> {
+        match self.current_file.borrow().as_str() {
+            "xcvttype.h" => Some(IntKind::U32),
+            "xcvtfmtf.h" | "xcvtfmt.h" => {
+                if name.starts_with("XFW_") {
+                    Some(IntKind::I32)
+                } else if name == "XPT_DEFAULT" {
+                    Some(IntKind::U8)
+                } else {
+                    None
+                }
+            }
+            "xcvtparse.h" => Some(IntKind::U32),
+            _ => {
+                cargo_emit::warning!("Ignoring macro {}", name);
+                None
+            }
+        }
+    }
+}
+
 pub fn main() -> Result<(), Box<dyn Error>> {
     match env::var("CARGO_CFG_TARGET_ARCH")
         .expect("Missing build architecture")
@@ -86,11 +117,15 @@ pub fn main() -> Result<(), Box<dyn Error>> {
     xerr_path.push("xerr.inc.rs");
     let xerr_path = xerr_path;
 
+    let mut fmt_path = path.clone();
+    fmt_path.push("xcvt.inc.rs");
+    let fmt_path = fmt_path;
+
     path.push("gen.inc.rs");
     let path = path;
 
     // If you want to re-generate rust files, delete the ones in src/gen
-    if xerr_path.exists() && path.exists() {
+    if xerr_path.exists() && path.exists() && fmt_path.exists() {
         return Ok(());
     }
 
@@ -106,6 +141,19 @@ pub fn main() -> Result<(), Box<dyn Error>> {
         .sort_semantically(true)
         .generate()?
         .write_to_file(&xerr_path)?;
+
+    bindgen::builder()
+        .parse_callbacks(Box::new(ConvertCallbacks::default()))
+        .header("convert.h")
+        .clang_arg("-I/usr/local/exegy/include")
+        .allowlist_recursively(false)
+        .allowlist_file(".*/xcvt.*")
+        .formatter(Formatter::Rustfmt)
+        .generate_cstr(true)
+        .impl_debug(true)
+        .sort_semantically(true)
+        .generate()?
+        .write_to_file(&fmt_path)?;
 
     bindgen::builder()
         .parse_callbacks(Box::new(Callbacks))
