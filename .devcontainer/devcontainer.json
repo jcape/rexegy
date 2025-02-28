@@ -1,4 +1,7 @@
 {
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
     "capAdd": ["SYS_PTRACE"],
     "containerEnv": {
         "CARGO_PROFILE_DEV_BUILD_OVERRIDE_DEBUG": "true",
@@ -38,7 +41,6 @@
             }
         }
     },
-    "image": "mcr.microsoft.com/devcontainers/base:debian",
     "features": {
         "ghcr.io/devcontainers/features/git-lfs:1": {},
         "ghcr.io/devcontainers/features/github-cli:1": {},
