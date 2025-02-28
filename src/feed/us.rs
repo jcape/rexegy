@@ -1,11 +1,10 @@
 //! US Feed Codes
 
+use super::{Feed as FeedTrait, Id};
 use crate::group::{Country, Group};
 
-use super::{Feed as FeedTrait, Id};
-
 // US feed codes used by Exegy
-#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq, PartialOrd, Ord)]
+#[derive(Copy, Clone, Debug, displaydoc::Display, Eq, Hash, PartialEq, PartialOrd, Ord)]
 #[repr(i16)]
 #[non_exhaustive]
 pub enum Feed {
@@ -663,13 +662,7 @@ impl TryFrom<i16> for Feed {
 impl FeedTrait for Feed {
     fn mic(&self) -> Option<i32> {
         match *self {
-            Feed::NyseMktAlerts
-            | Feed::NyseMktBbo
-            | Feed::NyseMktImbalances
-            | Feed::NyseMktIntegrated
-            | Feed::NyseMktOpenBookUltra
-            | Feed::NyseMktViaSip => Some(i32::from_be_bytes(*b"????")),
-
+            // NYSE ARCA
             Feed::ArcaBbo
             | Feed::ArcaBook
             | Feed::ArcaImbalances
@@ -677,41 +670,104 @@ impl FeedTrait for Feed {
             | Feed::ArcaTrades
             | Feed::ArcaViaSip => Some(i32::from_be_bytes(*b"ARCX")),
 
+            // Nasdaq BX
+            Feed::BxMatchView
+            | Feed::BxTotalView
+            | Feed::BxViaSip => Some(i32::from_be_bytes(*b"XBOS")),
+
+            // TRFs
+            Feed::FinraViaSip => Some(i32::from_be_bytes(*b"XADF")),
+            Feed::NasdaqChicagoTrf => Some(i32::from_be_bytes(*b"FINC")),
+            Feed::NasdaqTrf | Feed::NasdaqCarteretTrf => Some(i32::from_be_bytes(*b"FINN")),
+            Feed::NyseTrf | Feed::NyseTrfLevel1 => Some(i32::from_be_bytes(*b"FINY")),
+
+            // IEX
+            Feed::IexDeep | Feed::IexTops | Feed::IexViaSip => Some(i32::from_be_bytes(*b"IEXG")),
+
+            // ISE Equities
+            Feed::IseViaSip => todo!(),
+
+            // EDGA
+            Feed::EdgaViaMulticast | Feed::EdgaViaSip => Some(i32::from_be_bytes(*b"EDGA")),
+
+            // EDGX
+            Feed::EdgxViaMulticast | Feed::EdgxViaSip => Some(i32::from_be_bytes(*b"EDGX")),
+
+            // LTSE
+            Feed::LtseViaSip => Some(i32::from_be_bytes(*b"LTSE")),
+
+            Feed::NasdaqViaSip => todo!(),
+
+            // NYSE
+            Feed::NyseAlerts
+            | Feed::NyseBbo
+            | Feed::NyseImbalances
+            | Feed::NyseIntegrated
+            | Feed::NyseOpenBookUltra
+            | Feed::NyseTrades
+            | Feed::NyseViaSip => Some(i32::from_be_bytes(*b"XNYS")),
+
+            // NYSE Chicago
+            Feed::NyseChicagoBbo
+            | Feed::NyseChicagoTrades
+            | Feed::NyseChicagoIntegrated
+            | Feed::NyseChicagoViaSip  => Some(i32::from_be_bytes(*b"XCHI")),
+
+            // NYSE MKT (fka NYSE American, fka American Stock Exchange)
+            Feed::NyseMktAlerts
+            | Feed::NyseMktBbo
+            | Feed::NyseMktImbalances
+            | Feed::NyseMktIntegrated
+            | Feed::NyseMktOpenBookUltra
+            | Feed::AmexTrades  // Should this actually be AMXO?
+            | Feed::NyseMktViaSip => Some(i32::from_be_bytes(*b"XASE")),
+
+            // NYSE National (fka National Stock Exchange, fka Cincinati Stock Exchange)
+            Feed::NyseNationalBbo
+            | Feed::NyseNationalTrades
+            | Feed::NyseNationalDepth
+            | Feed::NyseNationalViaSip => Some(i32::from_be_bytes(*b"XCIS")),
+
+            // Nasdaq PSX (fka Philadelphia Stock Exchange)
+            Feed::PsxMatchView
+            | Feed::PsxTotalView
+            | Feed::PsxViaSip => Some(i32::from_be_bytes(*b"XPSX")),
+
+            // MEMX
+            Feed::MemxDepth
+            | Feed::MemxLastSale
+            | Feed::MemxTop
+            | Feed::MemxViaSip => Some(i32::from_be_bytes(*b"MEMX")),
+
+            // BATS Y
+            Feed::ByxViaMulticast | Feed::ByxViaSip => Some(i32::from_be_bytes(*b"BATY")),
+
+            // BATS Z
+            Feed::BzxLevel1 | Feed::BzxLevel2 | Feed::BzxViaSip => Some(i32::from_be_bytes(*b"BATS")),
+
+            // TODO: fill in the below
             Feed::AmexOptionsComplex => todo!(),
             Feed::AmexOptionsPillarTop => todo!(),
-            Feed::AmexTrades => todo!(),
             Feed::AmexOptionsPillarDeep => todo!(),
             Feed::AmexOptionsViaOpra => todo!(),
-            Feed::BxViaSip => todo!(),
             Feed::BoxLevel2ViaHsvf => todo!(),
             Feed::BxOptionsDepthOfMarket => todo!(),
             Feed::BoxLevel1ViaHsvf => todo!(),
             Feed::BxOptionsTopOfMarket => todo!(),
-            Feed::BxMatchView => todo!(),
-            Feed::BxTotalView => todo!(),
             Feed::CbotY => todo!(),
             Feed::CbotZ => todo!(),
             Feed::BoxViaOpra => todo!(),
-            Feed::NyseNationalViaSip => todo!(),
-            Feed::NyseNationalBbo => todo!(),
             Feed::CitadelIoi => todo!(),
             Feed::CitadelFixedIncome => todo!(),
             Feed::CmeIndices => todo!(),
             Feed::CmePit => todo!(),
             Feed::CboeC2ViaPitch => todo!(),
             Feed::CboeIndices => todo!(),
-            Feed::NyseNationalTrades => todo!(),
-            Feed::NyseNationalDepth => todo!(),
             Feed::CmeY => todo!(),
             Feed::CmeZ => todo!(),
             Feed::CboeViaOpra => todo!(),
-            Feed::FinraViaSip => todo!(),
-            Feed::NasdaqChicagoTrf => todo!(),
             Feed::DowIndices => todo!(),
-            Feed::NyseTrf => todo!(),
-            Feed::NasdaqCarteretTrf => todo!(),
             Feed::MiaxEmeraldViaOpra => todo!(),
-            Feed::IexViaSip => todo!(),
             Feed::EdgxOptionsViaOpra2 => todo!(),
             Feed::ComexPit => todo!(),
             Feed::MiaxEmeraldViaTomAis => todo!(),
@@ -733,11 +789,8 @@ impl FeedTrait for Feed {
             Feed::HanweckRisk => todo!(),
             Feed::NasdaqGemxDepthOfMarket => todo!(),
             Feed::GeminiViaOpra => todo!(),
-            Feed::IseViaSip => todo!(),
             Feed::IntelligentCrossAdf => todo!(),
             Feed::IntelligentCrossAspen => todo!(),
-            Feed::IexDeep => todo!(),
-            Feed::IexTops => todo!(),
             Feed::NasdaqIseTopOfMarket => todo!(),
             Feed::IntelligentCrossAspenMakerTaker => todo!(),
             Feed::NasdaqIseOptionsDepthOfMarket => todo!(),
@@ -749,18 +802,13 @@ impl FeedTrait for Feed {
             Feed::IceUsMarketByOrder => todo!(),
             Feed::IceUsMarketByOrderNonFullImplied => todo!(),
             Feed::IseViaOpra => todo!(),
-            Feed::EdgaViaSip => todo!(),
             Feed::MercuryViaOpraLegacy => todo!(),
             Feed::NasdaqMrxOptionsDepthOfMarket => todo!(),
             Feed::JaneStreetIoi => todo!(),
             Feed::JpmUsTreasuries => todo!(),
-            Feed::EdgaViaMulticast => todo!(),
             Feed::MercuryViaOpra => todo!(),
-            Feed::EdgxViaSip => todo!(),
             Feed::KcgEquityIoi => todo!(),
-            Feed::EdgxViaMulticast => todo!(),
             Feed::Kcbt => todo!(),
-            Feed::LtseViaSip => todo!(),
             Feed::LightPoolDepth => todo!(),
             Feed::LiffeUsMarketByOrder => todo!(),
             Feed::LiffeUsMarketByOrderNonFullImplied => todo!(),
@@ -771,26 +819,14 @@ impl FeedTrait for Feed {
             Feed::LiffeUsTop => todo!(),
             Feed::LtseMemoirDepth => todo!(),
             Feed::LiffeUsDepth => todo!(),
-            Feed::NyseChicagoViaSip => todo!(),
             Feed::MiaxEmeraldViaOpraLegacy => todo!(),
             Feed::MiaxViaOpraLegacy => todo!(),
-            Feed::NyseChicagoBbo => todo!(),
             Feed::MiaxViaTomAis => todo!(),
-            Feed::NyseChicagoTrades => todo!(),
-            Feed::NyseChicagoIntegrated => todo!(),
             Feed::MgexY => todo!(),
             Feed::MgexZ => todo!(),
             Feed::MiaxViaOpra => todo!(),
-            Feed::NyseViaSip => todo!(),
             Feed::NyseArcaOptionsLevel1 => todo!(),
             Feed::NasdaqFixedIncomeItch => todo!(),
-            Feed::NyseIntegrated => todo!(),
-            Feed::NyseImbalances => todo!(),
-            Feed::NyseAlerts => todo!(),
-            Feed::NyseBbo => todo!(),
-            Feed::NyseTrfLevel1 => todo!(),
-            Feed::NyseTrades => todo!(),
-            Feed::NyseOpenBookUltra => todo!(),
             Feed::NymexY => todo!(),
             Feed::NymexZ => todo!(),
             Feed::MiaxPearlViaOpraLegacy => todo!(),
@@ -804,14 +840,11 @@ impl FeedTrait for Feed {
             Feed::PearlViaTomAis => todo!(),
             Feed::PhlxOrders => todo!(),
             Feed::PhlxOptionsTop => todo!(),
-            Feed::PsxMatchView => todo!(),
             Feed::OtcMarkets => todo!(),
             Feed::OtcMarketsViaQuoteBook => todo!(),
             Feed::ArcaOptionsViaOpra => todo!(),
-            Feed::NasdaqViaSip => todo!(),
             Feed::QuincyCbotEquityFutures => todo!(),
             Feed::QuincyCmeEquityFutures => todo!(),
-            Feed::NasdaqTrf => todo!(),
             Feed::BestOfNasdaqOptions => todo!(),
             Feed::NasdaqExecutionSystem => todo!(),
             Feed::NasdaqOptionsItto => todo!(),
@@ -820,12 +853,8 @@ impl FeedTrait for Feed {
             Feed::ArcaOptionsImbalances => todo!(),
             Feed::ArcaOptionsBbo => todo!(),
             Feed::ArcaOptionsTrades => todo!(),
-            Feed::MemxViaSip => todo!(),
             Feed::SapphireViaTom => todo!(),
             Feed::SunIoi => todo!(),
-            Feed::MemxTop => todo!(),
-            Feed::MemxLastSale => todo!(),
-            Feed::MemxDepth => todo!(),
             Feed::SapphireViaOpra => todo!(),
             Feed::BxOptionsViaOpraLegacy => todo!(),
             Feed::NasdaqViaTotalView => todo!(),
@@ -843,21 +872,15 @@ impl FeedTrait for Feed {
             Feed::CboeC1ViaPitch => todo!(),
             Feed::CboeEquitiesC2 => todo!(),
             Feed::CboeC2ViaOpra => todo!(),
-            Feed::PsxViaSip => todo!(),
             Feed::CmeItcF => todo!(),
             Feed::CmeItcSp100Sp500 => todo!(),
             Feed::PhlxLevel1 => todo!(),
             Feed::CmeItcW => todo!(),
-            Feed::PsxTotalView => todo!(),
             Feed::ComexY => todo!(),
             Feed::ComexZ => todo!(),
             Feed::PhxlOptionsViaOpra => todo!(),
-            Feed::ByxViaSip => todo!(),
-            Feed::ByxViaMulticast => todo!(),
-            Feed::BzxViaSip => todo!(),
-            Feed::BzxLevel1 => todo!(),
-            Feed::BzxLevel2 => todo!(),
             Feed::BzxOptionsViaOpra => todo!(),
+
             _ => None,
         }
     }

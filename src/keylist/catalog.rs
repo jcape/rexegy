@@ -10,8 +10,13 @@ use std::{ffi::c_void, ptr::NonNull, result::Result as StdResult};
 
 /// A trait used to provide callback marshalling
 pub trait Callbacks {
+    /// A subscription result is ready
     fn subscribe(&self, catalog: &Catalog, event: &SubscribeEvent);
+
+    /// A catalog refresh event has been received
     fn refresh(&self, catalog: &Catalog, event: &RefreshEvent);
+
+    /// A catalog update event has been received
     fn update(&self, catalog: &Catalog, event: &UpdateEvent);
 }
 

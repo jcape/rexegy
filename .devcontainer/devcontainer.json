@@ -3,9 +3,10 @@
     "containerEnv": {
         "CARGO_PROFILE_DEV_BUILD_OVERRIDE_DEBUG": "true",
         "EDITOR": "code --reuse-window --wait",
-        "CARGO_HOME": "/workspaces/rxegy/.cargo/cache",
+        "CARGO_HOME": "/workspaces/rxegy/.cache/cargo",
         "LD_LIBRARY_PATH": "/usr/local/exegy/lib",
-        "RUST_BACKTRACE": "full"
+        "RUST_BACKTRACE": "full",
+        "PRE_COMMIT_CACHE": "/workspaces/rxegy/.cache/pre-commit"
     },
     "containerUser": "vscode",
     "customizations": {
