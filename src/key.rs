@@ -1,11 +1,16 @@
 //! Exegy key support
 
 use crate::{
-    error::{Error, Result},
+    error::{Error, Result, Success},
     feed::Id as FeedId,
     group::{Group, Id as GroupId},
 };
 use ref_cast::RefCast;
+use rxegy_sys::XC_FORMAT_CONTROL;
+use std::{
+    ffi::CStr,
+    fmt::{Display, Error as FmtError, Formatter, Result as FmtResult},
+};
 
 /// A wrapper for an Exegy key
 #[derive(Clone, Eq, Hash, PartialEq, PartialOrd, Ord, RefCast)]
@@ -34,7 +39,47 @@ impl Key {
     }
 }
 
+impl Display for Key {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        let mut outbuf = [0i8; 81];
+        let mut ctrl = XC_FORMAT_CONTROL::default();
+        let status = unsafe {
+            rxegy_sys::xcFmtInitialize(&mut ctrl, outbuf.as_mut_ptr(), outbuf.len() as u32)
+        };
+
+        Success::try_from(status).map_err(|_e| FmtError::default())?;
+
+        let status = unsafe { rxegy_sys::xcFmtKey(&mut ctrl, &self.0) };
+
+        Success::try_from(status).map_err(|_e| FmtError::default())?;
+
+        let outbuf = unsafe { CStr::from_ptr(outbuf.as_mut_ptr()) };
+
+        write!(f, "{}", outbuf.to_str().map_err(|_e| FmtError::default())?)
+    }
+}
+
 /// Exegy symbol data.
 #[derive(Clone, Eq, Hash, PartialEq, PartialOrd, Ord, RefCast)]
 #[repr(transparent)]
 pub struct Symbol(rxegy_sys::XC_SYMBOL);
+
+impl Display for Symbol {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        let mut outbuf = [0i8; 81];
+        let mut ctrl = XC_FORMAT_CONTROL::default();
+        let status = unsafe {
+            rxegy_sys::xcFmtInitialize(&mut ctrl, outbuf.as_mut_ptr(), outbuf.len() as u32)
+        };
+
+        Success::try_from(status).map_err(|_e| FmtError::default())?;
+
+        let status = unsafe { rxegy_sys::xcFmtSymbol(&mut ctrl, &self.0) };
+
+        Success::try_from(status).map_err(|_e| FmtError::default())?;
+
+        let outbuf = unsafe { CStr::from_ptr(outbuf.as_mut_ptr()) };
+
+        write!(f, "{}", outbuf.to_str().map_err(|_e| FmtError::default())?)
+    }
+}
