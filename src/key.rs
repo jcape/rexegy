@@ -47,15 +47,15 @@ impl Display for Key {
             rxegy_sys::xcFmtInitialize(&mut ctrl, outbuf.as_mut_ptr(), outbuf.len() as u32)
         };
 
-        Success::try_from(status).map_err(|_e| FmtError::default())?;
+        Success::try_from(status).map_err(|_e| FmtError)?;
 
         let status = unsafe { rxegy_sys::xcFmtKey(&mut ctrl, &self.0) };
 
-        Success::try_from(status).map_err(|_e| FmtError::default())?;
+        Success::try_from(status).map_err(|_e| FmtError)?;
 
         let outbuf = unsafe { CStr::from_ptr(outbuf.as_mut_ptr()) };
 
-        write!(f, "{}", outbuf.to_str().map_err(|_e| FmtError::default())?)
+        write!(f, "{}", outbuf.to_str().map_err(|_e| FmtError)?)
     }
 }
 
@@ -72,14 +72,14 @@ impl Display for Symbol {
             rxegy_sys::xcFmtInitialize(&mut ctrl, outbuf.as_mut_ptr(), outbuf.len() as u32)
         };
 
-        Success::try_from(status).map_err(|_e| FmtError::default())?;
+        Success::try_from(status).map_err(|_e| FmtError)?;
 
         let status = unsafe { rxegy_sys::xcFmtSymbol(&mut ctrl, &self.0) };
 
-        Success::try_from(status).map_err(|_e| FmtError::default())?;
+        Success::try_from(status).map_err(|_e| FmtError)?;
 
         let outbuf = unsafe { CStr::from_ptr(outbuf.as_mut_ptr()) };
 
-        write!(f, "{}", outbuf.to_str().map_err(|_e| FmtError::default())?)
+        write!(f, "{}", outbuf.to_str().map_err(|_e| FmtError)?)
     }
 }
