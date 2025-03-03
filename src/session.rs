@@ -604,6 +604,7 @@ impl Builder {
 
     /// Connect to the Exegy appliance and return a monitoring session.
     pub fn monitor(self, callbacks: Arc<dyn Callbacks>) -> Result<Session> {
+        tracing::trace!("Starting monitoring session");
         self.start_session(Kind::TickerMonitoring, None, callbacks)
     }
 
@@ -759,12 +760,10 @@ impl Context {
 
         let event = Event::new(event_type, event_handle)?;
 
-        {
-            tracing::trace_span!("rxegy::session::Context::dispatch::user");
-            match event {
-                Event::Status(status_event) => (*self.callbacks).status(&session, &status_event),
-            };
-        }
+        tracing::trace_span!("rxegy::session::Context::dispatch::user");
+        match event {
+            Event::Status(status_event) => self.callbacks.as_ref().status(&session, &status_event),
+        };
 
         Ok(())
     }
@@ -795,7 +794,6 @@ unsafe extern "C" fn _rxegy_session_callback(
         }
         tracing::trace!("Completed dispatching");
 
-        let _ = Box::into_raw(context);
-        tracing::trace!("Supposedly released the box contents");
+        let _leaked = Box::into_raw(context);
     });
 }

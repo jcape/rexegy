@@ -3,39 +3,16 @@
 use crate::{
     error::{Error, Result, Success},
     event::CommonEvent,
+    object::Kind as ObjectKind,
     session::Session,
 };
-use rxegy_sys::xhandle;
-use std::{ffi::c_void, ptr::NonNull, result::Result as StdResult};
-
-/// A trait used to provide callback marshalling
-pub trait Callbacks {
-    /// A subscription result is ready
-    fn subscribe(&self, catalog: &Catalog, event: &SubscribeEvent);
-
-    /// A catalog refresh event has been received
-    fn refresh(&self, catalog: &Catalog, event: &RefreshEvent);
-
-    /// A catalog update event has been received
-    fn update(&self, catalog: &Catalog, event: &UpdateEvent);
-}
-
-/// An XCAPI object containing a keylist catalog
-#[derive(Debug, Eq, Hash, PartialEq, PartialOrd, Ord)]
-#[repr(transparent)]
-pub struct Catalog(NonNull<c_void>);
-
-impl AsRef<NonNull<c_void>> for Catalog {
-    fn as_ref(&self) -> &NonNull<c_void> {
-        &self.0
-    }
-}
-
-impl Catalog {
-    pub fn new(_session: &Session, _callbacks: Box<dyn Callbacks>) -> Result<Catalog> {
-        todo!()
-    }
-}
+use rxegy_sys::{xerr, xhandle};
+use std::{
+    any::Any,
+    ffi::c_void,
+    ptr::{self, NonNull},
+    sync::Arc,
+};
 
 /// An XCAPI object containg a subscribe event.
 #[repr(transparent)]
@@ -73,54 +50,120 @@ impl AsRef<NonNull<c_void>> for UpdateEvent {
 
 impl CommonEvent for UpdateEvent {}
 
-/// An enumeration of event object types.
-#[derive(Clone, Copy)]
-#[repr(u16)]
-enum EventKind {
-    Subscribe = rxegy_sys::XOBJ_EVENT_SUBSCRIBE,
-    Refresh = rxegy_sys::XOBJ_EVENT_KEYLIST_CATALOG_REFRESH,
-    Update = rxegy_sys::XOBJ_EVENT_KEYLIST_CATALOG_UPDATE,
+/// A trait used to provide callback marshalling
+pub trait Callbacks {
+    /// A subscription result is ready
+    fn subscribe(&self, catalog: &Catalog, event: &SubscribeEvent);
+
+    /// A catalog refresh event has been received
+    fn refresh(&self, catalog: &Catalog, event: &RefreshEvent);
+
+    /// A catalog update event has been received
+    fn update(&self, catalog: &Catalog, event: &UpdateEvent);
 }
 
-impl TryFrom<u16> for EventKind {
-    type Error = Error;
+/// An XCAPI object containing a keylist catalog
+#[derive(Debug, Eq, Hash, PartialEq, PartialOrd, Ord)]
+#[repr(transparent)]
+pub struct Catalog(NonNull<c_void>);
 
-    fn try_from(value: u16) -> StdResult<Self, Self::Error> {
-        match value {
-            rxegy_sys::XOBJ_EVENT_SUBSCRIBE => Ok(EventKind::Subscribe),
-            rxegy_sys::XOBJ_EVENT_KEYLIST_CATALOG_REFRESH => Ok(EventKind::Refresh),
-            rxegy_sys::XOBJ_EVENT_KEYLIST_CATALOG_UPDATE => Ok(EventKind::Update),
-            _ => Err(Error::UnexpectedKind),
-        }
+impl AsRef<NonNull<c_void>> for Catalog {
+    fn as_ref(&self) -> &NonNull<c_void> {
+        &self.0
     }
 }
 
-/// An inner enumeration used for callback dispatch
-#[allow(dead_code)]
-enum Event {
-    /// A subscription event
-    Subscribe(SubscribeEvent),
-    /// A refresh event
-    Refresh(RefreshEvent),
-    /// An update event
-    Update(UpdateEvent),
-}
+impl Catalog {
+    pub fn new(
+        session: &Session,
+        max_slots: u32,
+        callbacks: Arc<dyn Callbacks>,
+    ) -> Result<Catalog> {
+        let mut object = ptr::null_mut();
+        let status = unsafe {
+            // Create a fat pointer to a reference to the arc
+            let fat_ptr = &callbacks as &dyn Any;
+            // Create a pointer to the fat pointer
+            let boxed_fat_ptr = Box::new(fat_ptr);
+            // Cast the double-pointer to a u64
+            let turnkey = Box::into_raw(boxed_fat_ptr) as u64;
 
-impl TryFrom<xhandle> for Event {
-    type Error = Error;
-
-    fn try_from(value: xhandle) -> StdResult<Self, Self::Error> {
-        let mut object_type = 0u16;
-        let status = unsafe { rxegy_sys::xcObjectType(value, &mut object_type) };
+            rxegy_sys::xcCreateContainer(
+                session.as_ref().as_ptr(),
+                ObjectKind::RealtimeKeylistCatalog as u16,
+                &mut object,
+                Some(_rxegy_catalog_callback),
+                turnkey,
+                max_slots,
+            )
+        };
 
         Success::try_from(status)?;
 
-        let kind = EventKind::try_from(object_type)?;
-        let ptr = NonNull::new(value).ok_or(Error::NullObject)?;
-        match kind {
-            EventKind::Subscribe => Ok(Event::Subscribe(SubscribeEvent(ptr))),
-            EventKind::Refresh => Ok(Event::Refresh(RefreshEvent(ptr))),
-            EventKind::Update => Ok(Event::Update(UpdateEvent(ptr))),
-        }
+        let object = NonNull::new(object).ok_or(Error::NullObject)?;
+
+        Ok(Catalog(object))
     }
+}
+
+#[unsafe(no_mangle)]
+unsafe extern "C" fn _rxegy_catalog_callback(
+    handle: xhandle,
+    _slot: u32,
+    event_handle: xhandle,
+    event_type: u16,
+    turnkey: u64,
+    _status: xerr,
+) {
+    // TODO: log panics
+    let _ = std::panic::catch_unwind(|| {
+        tracing::trace_span!("rxegy::keylist::catalog::_rxegy_catalog_callback");
+
+        // Get the catalog handle ptr
+        let object = match NonNull::new(handle) {
+            Some(ptr) => ptr,
+            None => {
+                tracing::error!("Callback without a valid container handle");
+                return;
+            }
+        };
+
+        // Get the handle ptr
+        let event = match NonNull::new(event_handle) {
+            Some(ptr) => ptr,
+            None => {
+                tracing::error!("Callback without a valid event handle");
+                return;
+            }
+        };
+
+        let catalog = Catalog(object);
+
+        // Get our context
+        let boxed_fat_ptr = unsafe {
+            let fat_ptr = turnkey as *mut &dyn Any;
+            Box::from_raw(fat_ptr)
+        };
+
+        if let Some(callbacks) = boxed_fat_ptr.downcast_ref::<Arc<dyn Callbacks>>() {
+            // Take a clone here to ensure reference survives
+            let cb = callbacks.clone();
+            match event_type {
+                rxegy_sys::XOBJ_EVENT_SUBSCRIBE => {
+                    cb.subscribe(&catalog, &SubscribeEvent(event));
+                }
+                rxegy_sys::XOBJ_EVENT_KEYLIST_CATALOG_REFRESH => {
+                    cb.refresh(&catalog, &RefreshEvent(event));
+                }
+                rxegy_sys::XOBJ_EVENT_KEYLIST_CATALOG_UPDATE => {
+                    cb.update(&catalog, &UpdateEvent(event));
+                }
+                _ => {
+                    tracing::error!("Received catalog callback with unknown event type")
+                }
+            }
+        }
+
+        let _leaked = Box::into_raw(boxed_fat_ptr);
+    });
 }
