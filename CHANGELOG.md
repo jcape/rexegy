@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.0.6](https://github.com/jcape/rxegy/compare/rxegy-v0.0.5...rxegy-v0.0.6) - 2025-03-03
+
+### Added
+
+- start work on equity streaming.
+
+### Fixed
+
+- disable markdownlint pre-commit hook
+
 ## [0.0.5](https://github.com/jcape/rxegy/compare/rxegy-v0.0.4...rxegy-v0.0.5) - 2025-03-03
 
 ### Added

@@ -3,7 +3,7 @@ resolver = "2"
 members = [".", "sys"]
 
 [workspace.package]
-version = "0.0.5"
+version = "0.0.6"
 authors = ["James Cape <jamescape777@gmail.com>"]
 edition = "2024"
 license = "Apache-2.0"
@@ -27,7 +27,7 @@ anyhow = "1"
 displaydoc = "0.2.1"
 paste = "1"
 ref-cast = "1"
-rxegy-sys = { path = "./sys", version = "0.0.5" }
+rxegy-sys = { path = "./sys", version = "0.0.6" }
 secrecy = "0.10"
 thiserror = "2"
 tracing = "0.1"
