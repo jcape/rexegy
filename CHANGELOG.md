@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - initial catalog impl
 - add display impls for key and symbol
-- use arc<callbacks> for shared callbacks
+- use arc for shared callbacks
 - finish us equites mics, make xx enum a feed
 - more work on keylist catalog
 
