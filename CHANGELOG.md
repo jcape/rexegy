@@ -6,6 +6,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.0.5](https://github.com/jcape/rxegy/compare/rxegy-v0.0.4...rxegy-v0.0.5) - 2025-03-03
+
+### Added
+
+- initial catalog impl
+- add display impls for key and symbol
+- use arc<callbacks> for shared callbacks
+- finish us equites mics, make xx enum a feed
+- more work on keylist catalog
+
+### Fixed
+
+- post-attach install cargo tools to the path.
+- clippy warnings
+- don't lose track of session after the first callback
+- functional session creation / connection
+
+### Other
+
+- [**breaking**] clean up bindgen usage, remove system types
+- use custom dockerfile to install libclang
+- use local cargo/pre-commit cache.
+- move cargo installs to post-create command.
+
 ## [0.0.4](https://github.com/jcape/rxegy/compare/rxegy-v0.0.3...rxegy-v0.0.4) - 2025-02-28
 
 ### Added
