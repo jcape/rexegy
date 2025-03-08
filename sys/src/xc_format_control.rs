@@ -1,0 +1,62 @@
+//! XC_FORMAT_CONTROL implementations
+
+use crate::XC_FORMAT_CONTROL;
+use std::ptr;
+
+impl Default for XC_FORMAT_CONTROL {
+    fn default() -> Self {
+        Self {
+            xfc_obuf: ptr::null_mut(),
+            xfc_obufsiz: Default::default(),
+            xfc_optr: ptr::null_mut(),
+            xfc_oprevptr: ptr::null_mut(),
+            XFC_RESERVED_00: Default::default(),
+            xfc_no_nul_term: Default::default(),
+            xfc_add_space_after: Default::default(),
+            xfc_auto_expand: Default::default(),
+            xfc_field_width: Default::default(),
+            XFC_RESERVED_01: Default::default(),
+            xfc_fw_alternate_id: Default::default(),
+            xfc_fw_country_id: Default::default(),
+            xfc_fw_currency_id: Default::default(),
+            xfc_fw_date: Default::default(),
+            xfc_fw_enum: Default::default(),
+            xfc_fw_exchange_id: Default::default(),
+            xfc_fw_key: Default::default(),
+            xfc_fw_numeric: Default::default(),
+            xfc_fw_price: Default::default(),
+            xfc_fw_string: Default::default(),
+            xfc_fw_symbol: Default::default(),
+            xfc_fw_time: Default::default(),
+            xfc_fw_timedate: Default::default(),
+            xfc_fw_traded_value: Default::default(),
+            xfc_fw_volume: Default::default(),
+            xfc_indent_struct: Default::default(),
+            xfc_fw_order_ref_id: Default::default(),
+            xfc_fw_mmid: Default::default(),
+            XFC_RESERVED_02: Default::default(),
+            xfc_opt_alternate_id: Default::default(),
+            xfc_opt_country_id: Default::default(),
+            xfc_opt_currency_id: Default::default(),
+            xfc_opt_enum: Default::default(),
+            xfc_opt_exchange_id: Default::default(),
+            xfc_opt_key: Default::default(),
+            xfc_opt_numeric: Default::default(),
+            xfc_opt_price: Default::default(),
+            xfc_opt_string: Default::default(),
+            xfc_opt_symbol: Default::default(),
+            xfc_opt_timedate: Default::default(),
+            xfc_opt_traded_value: Default::default(),
+            xfc_opt_volume: Default::default(),
+            xfc_opt_struct: Default::default(),
+            xfc_opt_order_ref_id: Default::default(),
+            xfc_opt_mmid: Default::default(),
+            XFC_RESERVED_03: Default::default(),
+            xfc_def_price_type: Default::default(),
+            xfc_def_qual_type: Default::default(),
+            XFC_RESERVED_04: Default::default(),
+            XFC_RESERVED_05: Default::default(),
+            xfc_magic_cookie: Default::default(),
+        }
+    }
+}

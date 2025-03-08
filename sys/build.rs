@@ -2,7 +2,7 @@ use bindgen::{
     Formatter,
     callbacks::{DeriveInfo, IntKind, ParseCallbacks},
 };
-use std::{cell::RefCell, env, error::Error, path::PathBuf, str::FromStr};
+use std::{cell::RefCell, env, error::Error, path::PathBuf};
 
 const DERIVE_COMMON: [&str; 4] = ["XC_COUNTRY_ID", "XC_EXCHANGE_ID", "XC_KEY", "XC_SYMBOL"];
 
@@ -85,26 +85,58 @@ pub fn main() -> Result<(), Box<dyn Error>> {
         _ => panic!("Invalid build architecture"),
     }
 
-    cargo_emit::rustc_link_search!("/usr/local/exegy/lib");
+    let manifest_dir =
+        env::var_os("CARGO_MANIFEST_DIR")
+            .map(PathBuf::from)
+            .ok_or(anyhow::anyhow!(
+                "Could not find CARGO_MANIFEST_DIR environment variable"
+            ))?;
 
-    let manifest_dir = env::var("CARGO_MANIFEST_DIR").expect("Could not retrieve manifest dir.");
-    let mut path = PathBuf::from_str(&manifest_dir)?;
-    path.push("src");
+    let xcapi_home = env::var_os("XCAPI_HOME")
+        .map(PathBuf::from)
+        .unwrap_or("/usr/local/exegy".into());
+    let xcapi_include = env::var_os("XCAPI_INCLUDE")
+        .map(PathBuf::from)
+        .unwrap_or_else(|| xcapi_home.join("include"));
+    let xcapi_libdir = env::var_os("XCAPI_LIBDIR")
+        .map(PathBuf::from)
+        .unwrap_or_else(|| xcapi_home.join("lib"));
 
+    let xcapi_include_str = xcapi_include
+        .to_str()
+        .ok_or(anyhow::anyhow!("XCAPI_INCLUDE contains invalid UTF-8"))?;
+    let xcapi_libdir_str = xcapi_libdir
+        .to_str()
+        .ok_or(anyhow::anyhow!("XCAPI_LIBDIR contains invalid UTF-8"))?;
+
+    cargo_emit::rerun_if_env_changed!("XCAPI_HOME", "XCAPI_INCLUDE", "XCAPI_LIBDIR");
+    cargo_emit::rerun_if_changed!(
+        manifest_dir
+            .to_str()
+            .ok_or(anyhow::anyhow!("Invalid UTF-8 in CARGO_MANIFEST_DIR"))?,
+        xcapi_include_str,
+        xcapi_libdir_str,
+    );
+    cargo_emit::rustc_link_search!(xcapi_libdir_str);
+
+    let mut path = manifest_dir.join("src");
     path.push("gen.inc.rs");
     let path = path;
 
-    // If you want to re-generate rust files, delete the ones in src/gen
-    if path.exists() {
+    // Don't try to regenerate our wrappers if xcapi.h can't be found
+    if !xcapi_include.join("xcapi.h").exists() {
         return Ok(());
     }
 
     bindgen::builder()
         .parse_callbacks(Box::new(Callbacks::default()))
         .header("wrapper.h")
-        .clang_arg("-I/usr/local/exegy/include")
+        .clang_arg(format!("-I{}", xcapi_include_str))
         .allowlist_recursively(false)
-        .allowlist_file("/usr/local/exegy/include/.*\\.h")
+        .allowlist_file(format!("{}/.*\\.h", xcapi_include_str))
+        .formatter(Formatter::Rustfmt)
+        .generate_cstr(true)
+        .impl_debug(true)
         .no_debug("XC_GROUP_DERIVATIVE_REFERENCE")
         .no_debug("XC_GROUP_DERIVATIVE_REFERENCE_INSTRUMENT")
         .no_debug("XC_GROUP_DERIVATIVE_REFERENCE_PRODUCT")
@@ -114,9 +146,6 @@ pub fn main() -> Result<(), Box<dyn Error>> {
         .no_debug("XC_GROUP_FXFWD_QUOTE_ALL")
         .no_debug("XC_GROUP_FXSWAP_REFRESH_ALL")
         .no_debug("XC_GROUP_FXSWAP_QUOTE_ALL")
-        .formatter(Formatter::Rustfmt)
-        .generate_cstr(true)
-        .impl_debug(true)
         .sort_semantically(true)
         .generate()?
         .write_to_file(&path)?;
