@@ -1,6 +1,19 @@
 [workspace]
 resolver = "2"
 members = [".", "sys"]
+exclude = [".cache"]
+
+[workspace.metadata.release]
+shared-version = true
+consolidate-commits = true
+tag-name = "v{{version}}"
+pre-release-replacements = [
+  {file="CHANGELOG.md", search="Unreleased", replace="{{version}}", min=1},
+  {file="CHANGELOG.md", search="\\.\\.\\.HEAD", replace="...{{tag_name}}", exactly=1},
+  {file="CHANGELOG.md", search="ReleaseDate", replace="{{date}}", min=1},
+  {file="CHANGELOG.md", search="<!-- next-header -->", replace="<!-- next-header -->\n## [Unreleased] - ReleaseDate\n", exactly=1},
+  {file="CHANGELOG.md", search="<!-- next-url -->", replace="<!-- next-url -->\n[Unreleased]: https://github.com/jcape/rexegy/compare/{{tag_name}}...HEAD", exactly=1},
+]
 
 [workspace.package]
 version = "0.0.6"
@@ -10,6 +23,12 @@ license = "Apache-2.0"
 readme = "README.md"
 repository = "https://github.com/jcape/rxegy"
 rust-version = "1.85.0"
+
+[profile.release]
+lto = true
+
+[profile.dev]
+rpath = true
 
 [package]
 name = "rxegy"
@@ -23,7 +42,6 @@ repository.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-anyhow = "1"
 displaydoc = "0.2.1"
 paste = "1"
 ref-cast = "1"
@@ -31,21 +49,3 @@ rxegy-sys = { path = "./sys", version = "0.0.6" }
 secrecy = "0.10"
 thiserror = "2"
 tracing = "0.1"
-
-[profile.release]
-lto = true
-
-[profile.dev]
-rpath = true
-
-[workspace.metadata.release]
-shared-version = true
-consolidate-commits = true
-tag-name = "v{{version}}"
-pre-release-replacements = [
-  {file="CHANGELOG.md", search="Unreleased", replace="{{version}}", min=1},
-  {file="CHANGELOG.md", search="\\.\\.\\.HEAD", replace="...{{tag_name}}", exactly=1},
-  {file="CHANGELOG.md", search="ReleaseDate", replace="{{date}}", min=1},
-  {file="CHANGELOG.md", search="<!-- next-header -->", replace="<!-- next-header -->\n## [Unreleased] - ReleaseDate\n", exactly=1},
-  {file="CHANGELOG.md", search="<!-- next-url -->", replace="<!-- next-url -->\n[Unreleased]: https://github.com/jcape/rexegy/compare/{{tag_name}}...HEAD", exactly=1},
-]
