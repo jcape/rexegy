@@ -16,89 +16,7 @@ use std::{
     path::{Path, PathBuf},
     ptr::{self, NonNull},
     result::Result as StdResult,
-    sync::Arc,
 };
-
-/// An enumeration of session object types
-#[derive(Copy, Clone, Debug, displaydoc::Display, Eq, Hash, PartialEq, PartialOrd, Ord)]
-#[repr(u16)]
-enum Kind {
-    /// Ticker Plant
-    Ticker = ObjectKind::SessionTicker as u16,
-    /// Monitoring
-    TickerMonitoring = ObjectKind::SessionTickerMonitoring as u16,
-}
-
-impl TryFrom<u16> for Kind {
-    type Error = Error;
-
-    fn try_from(value: u16) -> StdResult<Self, Self::Error> {
-        match value {
-            rxegy_sys::XOBJ_SESSION_TICKER => Ok(Kind::Ticker),
-            rxegy_sys::XOBJ_SESSION_TICKER_MONITORING => Ok(Kind::TickerMonitoring),
-            _ => Err(Error::ObjectUnknown),
-        }
-    }
-}
-
-/// An enumeration of callback event types
-#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq, PartialOrd, Ord)]
-#[repr(u16)]
-enum EventKind {
-    /// Session Status Event
-    Status = ObjectKind::EventSessionStatus as u16,
-}
-
-impl TryFrom<u16> for EventKind {
-    type Error = Error;
-
-    fn try_from(value: u16) -> StdResult<Self, Self::Error> {
-        match value {
-            rxegy_sys::XOBJ_EVENT_SESSION_STATUS => Ok(EventKind::Status),
-            _ => Err(Error::ObjectUnknown),
-        }
-    }
-}
-
-#[derive(Clone, Copy, Debug)]
-#[repr(u64)]
-enum Field {
-    Turnkey = rxegy_sys::XFLD_SESS_TURNKEY,
-    Status = rxegy_sys::XFLD_SESS_STATUS,
-    Type = rxegy_sys::XFLD_SESS_SESSION_TYPE,
-    ClientVersionString = rxegy_sys::XFLD_SESS_CLIENT_VERSION_STRING,
-    ClientMajorVersion = rxegy_sys::XFLD_SESS_CLIENT_MAJOR_VERSION,
-    ClientMinorVersion = rxegy_sys::XFLD_SESS_CLIENT_MINOR_VERSION,
-    ClientRevision = rxegy_sys::XFLD_SESS_CLIENT_REVISION,
-    ClientBuild = rxegy_sys::XFLD_SESS_CLIENT_BUILD,
-    ClientCpuCount = rxegy_sys::XFLD_SESS_CLIENT_CPU_COUNT,
-    ClientAffinityMask = rxegy_sys::XFLD_SESS_CLIENT_AFFINITY_MASK,
-    ClientBgThreadAffinityMask = rxegy_sys::XFLD_SESS_CLIENT_BG_THREAD_AFFINITY_MASK,
-    ClientHbThreadAffinityMask = rxegy_sys::XFLD_SESS_CLIENT_HB_THREAD_AFFINITY_MASK,
-    ClientThreadPriority = rxegy_sys::XFLD_SESS_CLIENT_THREAD_PRIORITY,
-    ClientBgThreadPriority = rxegy_sys::XFLD_SESS_CLIENT_BG_THREAD_PRIORITY,
-    ClientHbThreadPriority = rxegy_sys::XFLD_SESS_CLIENT_HB_THREAD_PRIORITY,
-    ServerName = rxegy_sys::XFLD_SESS_SERVER_NAME,
-    ServerVersionString = rxegy_sys::XFLD_SESS_SERVER_VERSION_STRING,
-    ServerMajorVersion = rxegy_sys::XFLD_SESS_SERVER_MAJOR_VERSION,
-    ServerMinorVersion = rxegy_sys::XFLD_SESS_SERVER_MINOR_VERSION,
-    ServerRevision = rxegy_sys::XFLD_SESS_SERVER_REVISION,
-    ServerBuild = rxegy_sys::XFLD_SESS_SERVER_BUILD,
-    DisableReconnect = rxegy_sys::XFLD_SESS_DISABLE_RECONNECT,
-    ReplayStart = rxegy_sys::XFLD_SESS_REPLAY_START,
-    ReplayQuoteMontage = rxegy_sys::XFLD_SESS_REPLAY_QUOTE_MONTAGE,
-    ReplayL2Composite = rxegy_sys::XFLD_SESS_REPLAY_L2_COMPOSITE,
-    ReplayUbbo = rxegy_sys::XFLD_SESS_REPLAY_UBBO,
-    TickerMaxPriceBookDepth = rxegy_sys::XFLD_SESS_TKR_MAX_PRICE_BOOK_DEPTH,
-    TickerMarketStatusCallbacks = rxegy_sys::XFLD_SESS_TKR_MARKET_STATUS_CALLBACKS,
-    TickerMaxPriceBookRowLevel = rxegy_sys::XFLD_SESS_TKR_MAX_PB_ROW_LEVEL,
-}
-
-impl FieldTrait for Field {
-    fn to_u64(&self) -> u64 {
-        *self as u64
-    }
-}
 
 /// A callback object containting status event details
 #[derive(Debug, Eq, Hash, PartialEq, PartialOrd, Ord)]
@@ -112,33 +30,6 @@ impl AsRef<NonNull<c_void>> for StatusEvent {
 }
 
 impl CommonEvent for StatusEvent {}
-
-/// An enumeration of session event objects
-enum Event {
-    /// A status event
-    Status(StatusEvent),
-}
-
-impl Event {
-    pub fn new(event_type: u16, handle: xhandle) -> Result<Event> {
-        tracing::trace!(event.type = event_type, "Trying to find event kind");
-
-        let obj = NonNull::new(handle).ok_or(Error::NullObject)?;
-        let kind = EventKind::try_from(event_type)?;
-
-        tracing::trace!(event.kind = format!("{:?}", kind), "Event kind found!");
-
-        match kind {
-            EventKind::Status => Ok(Event::Status(StatusEvent(obj))),
-        }
-    }
-}
-
-/// A callback object used with sessions
-pub trait Callbacks {
-    /// A callback to call when a status event has occurred
-    fn status(&self, session: &Session, event: &StatusEvent);
-}
 
 /// Session objects
 #[derive(Debug)]
@@ -475,33 +366,8 @@ impl Session {
     }
 }
 
-/// A representation of all the various address types supported by XCAPI
-#[derive(Clone, Eq, Hash, PartialEq, PartialOrd, Ord)]
-enum Server {
-    Xti(PathBuf),
-    Infiniband(String),
-    RoCE(String),
-    Ip(SocketAddr),
-}
-
-impl Display for Server {
-    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-        match self {
-            Self::Xti(pathbuf) => write!(
-                f,
-                "{}",
-                pathbuf
-                    .canonicalize()
-                    .expect("Could not canonicalize XTI path")
-                    .to_str()
-                    .expect("Received a path with non-UTF-8 characters?")
-            ),
-            Self::Infiniband(ib) => write!(f, "ib::{}", ib),
-            Self::RoCE(roce) => write!(f, "roce::{}", roce),
-            Self::Ip(sockaddr) => write!(f, "{}", sockaddr),
-        }
-    }
-}
+/// The callback prototype for status events
+pub type StatusEventFn = fn(&Session, &StatusEvent) -> Result<bool>;
 
 /// A session builder
 #[derive(Default)]
@@ -509,6 +375,7 @@ pub struct Builder {
     server_list: Vec<Server>,
     username: String,
     password: SecretString,
+    on_status_fn: Option<StatusEventFn>,
     cb_affinity: Option<u64>,
     cb_priority: Option<u8>,
     bg_affinity: Option<u64>,
@@ -556,6 +423,11 @@ impl Builder {
         Ok(self)
     }
 
+    pub fn on_status_event(mut self, func: StatusEventFn) -> Self {
+        self.on_status_fn = Some(func);
+        self
+    }
+
     /// Set the CPU affinity mask for the callback thread to the given value.
     pub fn callback_affinity(mut self, affinity: Option<u64>) -> Self {
         self.cb_affinity = affinity;
@@ -593,27 +465,22 @@ impl Builder {
     }
 
     /// Connect to the Exegy appliance and return a ticker plant session.
-    pub fn tickerplant(
-        self,
-        market_events_per_instrument: bool,
-        callbacks: Arc<dyn Callbacks>,
-    ) -> Result<Session> {
+    pub fn tickerplant(self, market_events_per_instrument: bool) -> Result<Session> {
         tracing::trace!("Starting tickerplant session");
-        self.start_session(Kind::Ticker, Some(market_events_per_instrument), callbacks)
+        self.start_session(Kind::Ticker, Some(market_events_per_instrument))
     }
 
     /// Connect to the Exegy appliance and return a monitoring session.
-    pub fn monitor(self, callbacks: Arc<dyn Callbacks>) -> Result<Session> {
+    pub fn monitor(self) -> Result<Session> {
         tracing::trace!("Starting monitoring session");
-        self.start_session(Kind::TickerMonitoring, None, callbacks)
+        self.start_session(Kind::TickerMonitoring, None)
     }
 
-    /// Actually build a session object
+    /// Actually build a session object and start the connection process
     fn start_session(
         self,
         kind: Kind,
         market_events_per_instrument: Option<bool>,
-        callbacks: Arc<dyn Callbacks>,
     ) -> Result<Session> {
         // Build our parameters
         let server_list = CString::new(
@@ -628,7 +495,7 @@ impl Builder {
 
         // Make our session context object (used to dispatch callbacks)
         let context = Box::new(Context {
-            callbacks,
+            status: self.on_status_fn,
             affinity: self.cb_affinity,
             priority: self.cb_priority.map(|v| v as u32),
             market_events_per_instrument,
@@ -692,9 +559,139 @@ impl Builder {
     }
 }
 
+/// An enumeration of session event objects
+enum Event {
+    /// A status event
+    Status(StatusEvent),
+}
+
+impl Event {
+    pub fn new(event_type: u16, handle: xhandle) -> Result<Event> {
+        tracing::trace!(event.type = event_type, "Trying to find event kind");
+
+        let obj = NonNull::new(handle).ok_or(Error::NullObject)?;
+        let kind = EventKind::try_from(event_type)?;
+
+        tracing::trace!(event.kind = format!("{:?}", kind), "Event kind found!");
+
+        match kind {
+            EventKind::Status => Ok(Event::Status(StatusEvent(obj))),
+        }
+    }
+}
+
+/// An enumeration of session object types
+#[derive(Copy, Clone, Debug, displaydoc::Display, Eq, Hash, PartialEq, PartialOrd, Ord)]
+#[repr(u16)]
+enum Kind {
+    /// Ticker Plant
+    Ticker = ObjectKind::SessionTicker as u16,
+    /// Monitoring
+    TickerMonitoring = ObjectKind::SessionTickerMonitoring as u16,
+}
+
+impl TryFrom<u16> for Kind {
+    type Error = Error;
+
+    fn try_from(value: u16) -> StdResult<Self, Self::Error> {
+        match value {
+            rxegy_sys::XOBJ_SESSION_TICKER => Ok(Kind::Ticker),
+            rxegy_sys::XOBJ_SESSION_TICKER_MONITORING => Ok(Kind::TickerMonitoring),
+            _ => Err(Error::ObjectUnknown),
+        }
+    }
+}
+
+/// An enumeration of callback event types
+#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq, PartialOrd, Ord)]
+#[repr(u16)]
+enum EventKind {
+    /// Session Status Event
+    Status = ObjectKind::EventSessionStatus as u16,
+}
+
+impl TryFrom<u16> for EventKind {
+    type Error = Error;
+
+    fn try_from(value: u16) -> StdResult<Self, Self::Error> {
+        match value {
+            rxegy_sys::XOBJ_EVENT_SESSION_STATUS => Ok(EventKind::Status),
+            _ => Err(Error::ObjectUnknown),
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug)]
+#[repr(u64)]
+enum Field {
+    Turnkey = rxegy_sys::XFLD_SESS_TURNKEY,
+    Status = rxegy_sys::XFLD_SESS_STATUS,
+    Type = rxegy_sys::XFLD_SESS_SESSION_TYPE,
+    ClientVersionString = rxegy_sys::XFLD_SESS_CLIENT_VERSION_STRING,
+    ClientMajorVersion = rxegy_sys::XFLD_SESS_CLIENT_MAJOR_VERSION,
+    ClientMinorVersion = rxegy_sys::XFLD_SESS_CLIENT_MINOR_VERSION,
+    ClientRevision = rxegy_sys::XFLD_SESS_CLIENT_REVISION,
+    ClientBuild = rxegy_sys::XFLD_SESS_CLIENT_BUILD,
+    ClientCpuCount = rxegy_sys::XFLD_SESS_CLIENT_CPU_COUNT,
+    ClientAffinityMask = rxegy_sys::XFLD_SESS_CLIENT_AFFINITY_MASK,
+    ClientBgThreadAffinityMask = rxegy_sys::XFLD_SESS_CLIENT_BG_THREAD_AFFINITY_MASK,
+    ClientHbThreadAffinityMask = rxegy_sys::XFLD_SESS_CLIENT_HB_THREAD_AFFINITY_MASK,
+    ClientThreadPriority = rxegy_sys::XFLD_SESS_CLIENT_THREAD_PRIORITY,
+    ClientBgThreadPriority = rxegy_sys::XFLD_SESS_CLIENT_BG_THREAD_PRIORITY,
+    ClientHbThreadPriority = rxegy_sys::XFLD_SESS_CLIENT_HB_THREAD_PRIORITY,
+    ServerName = rxegy_sys::XFLD_SESS_SERVER_NAME,
+    ServerVersionString = rxegy_sys::XFLD_SESS_SERVER_VERSION_STRING,
+    ServerMajorVersion = rxegy_sys::XFLD_SESS_SERVER_MAJOR_VERSION,
+    ServerMinorVersion = rxegy_sys::XFLD_SESS_SERVER_MINOR_VERSION,
+    ServerRevision = rxegy_sys::XFLD_SESS_SERVER_REVISION,
+    ServerBuild = rxegy_sys::XFLD_SESS_SERVER_BUILD,
+    DisableReconnect = rxegy_sys::XFLD_SESS_DISABLE_RECONNECT,
+    ReplayStart = rxegy_sys::XFLD_SESS_REPLAY_START,
+    ReplayQuoteMontage = rxegy_sys::XFLD_SESS_REPLAY_QUOTE_MONTAGE,
+    ReplayL2Composite = rxegy_sys::XFLD_SESS_REPLAY_L2_COMPOSITE,
+    ReplayUbbo = rxegy_sys::XFLD_SESS_REPLAY_UBBO,
+    TickerMaxPriceBookDepth = rxegy_sys::XFLD_SESS_TKR_MAX_PRICE_BOOK_DEPTH,
+    TickerMarketStatusCallbacks = rxegy_sys::XFLD_SESS_TKR_MARKET_STATUS_CALLBACKS,
+    TickerMaxPriceBookRowLevel = rxegy_sys::XFLD_SESS_TKR_MAX_PB_ROW_LEVEL,
+}
+
+impl FieldTrait for Field {
+    fn to_u64(&self) -> u64 {
+        *self as u64
+    }
+}
+
+/// A representation of all the various address types supported by XCAPI
+#[derive(Clone, Eq, Hash, PartialEq, PartialOrd, Ord)]
+enum Server {
+    Xti(PathBuf),
+    Infiniband(String),
+    RoCE(String),
+    Ip(SocketAddr),
+}
+
+impl Display for Server {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        match self {
+            Self::Xti(pathbuf) => write!(
+                f,
+                "{}",
+                pathbuf
+                    .canonicalize()
+                    .expect("Could not canonicalize XTI path")
+                    .to_str()
+                    .expect("Received a path with non-UTF-8 characters?")
+            ),
+            Self::Infiniband(ib) => write!(f, "ib::{}", ib),
+            Self::RoCE(roce) => write!(f, "roce::{}", roce),
+            Self::Ip(sockaddr) => write!(f, "{}", sockaddr),
+        }
+    }
+}
+
 struct Context {
-    /// An object which we'll fire callbacks on
-    callbacks: Arc<dyn Callbacks>,
+    /// The callback to fire for status events
+    status: Option<StatusEventFn>,
     /// The CPU affinity mask to be set when the callback is fired
     affinity: Option<u64>,
     /// The thread proiority to be set when the callback is fired
@@ -726,9 +723,8 @@ impl Context {
 
         // Check the event status
         if Success::try_from(status).is_ok() {
-            tracing::trace!("Status is good, maybe setting callback affinity.");
-
             if let Some(affinity) = self.affinity {
+                tracing::debug!("Setting callback thread affinity");
                 field::set_u64(
                     *session.as_ref(),
                     rxegy_sys::XC_SESSION,
@@ -738,6 +734,7 @@ impl Context {
             }
 
             if let Some(prio) = self.priority {
+                tracing::debug!("Setting callback thread priority");
                 field::set_u32(
                     *session.as_ref(),
                     rxegy_sys::XC_SESSION,
@@ -756,13 +753,15 @@ impl Context {
             }
         }
 
-        tracing::trace!("Wrapping up event");
-
         let event = Event::new(event_type, event_handle)?;
 
         tracing::trace_span!("rxegy::session::Context::dispatch::user");
         match event {
-            Event::Status(status_event) => self.callbacks.as_ref().status(&session, &status_event),
+            Event::Status(status_event) => {
+                if let Some(func) = self.status.as_ref() {
+                    func(&session, &status_event)?;
+                }
+            }
         };
 
         Ok(())
@@ -778,8 +777,7 @@ unsafe extern "C" fn _rxegy_session_callback(
     turnkey: u64,
     status: xerr,
 ) {
-    // TODO: log panics
-    let _ = std::panic::catch_unwind(|| {
+    if let Err(_e) = std::panic::catch_unwind(|| {
         tracing::trace_span!("rxegy::session::_rxegy_session_callback");
 
         // Get our context
@@ -790,10 +788,13 @@ unsafe extern "C" fn _rxegy_session_callback(
 
         tracing::trace!("Dispatching to user callbacks...");
         if let Err(error) = context.dispatch(handle, event_handle, event_type, status) {
-            tracing::error!("Dispatch returned an error: {}", error);
+            tracing::debug!("Callback returned an error: {}", error);
         }
-        tracing::trace!("Completed dispatching");
 
         let _leaked = Box::into_raw(context);
-    });
+    }) {
+        tracing::error!(
+            "Panic at the callback, allowing the application to continue, but user locks may be poisoined..."
+        );
+    }
 }
