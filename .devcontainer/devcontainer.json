@@ -61,7 +61,10 @@
     "privileged": true,
     "remoteEnv": {
         "CARGO_HOME": "/workspaces/rxegy/.cache/cargo",
-        "PRE_COMMIT_HOME": "/workspaces/rxegy/.cache/pre-commit"
+        "PRE_COMMIT_HOME": "/workspaces/rxegy/.cache/pre-commit",
+        "EDITOR": "code --reuse-window --wait",
+        "LD_LIBRARY_PATH": "/usr/local/exegy/lib",
+        "RUST_BACKTRACE": "full"
     },
     "remoteUser": "vscode",
     "postAttachCommand": "/workspaces/rxegy/.devcontainer/post-attach.sh",

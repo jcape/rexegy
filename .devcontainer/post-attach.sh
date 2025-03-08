@@ -12,6 +12,7 @@ cargo install -q cargo-semver-checks
 cargo binstall -y release-plz
 
 mkdir -p /workspaces/rxegy/.cache/pre-commit
+
 pushd /workspaces/rxegy >/dev/null
 pre-commit install >/dev/null
 popd >/dev/null

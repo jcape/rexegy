@@ -85,3 +85,17 @@ jobs:
           toolchain: ${{ matrix.rust }}
       - uses: r7kamura/rust-problem-matchers@v1
       - run: cargo +${{ matrix.rust }} build --release
+
+  miri:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        rust:
+          - nightly
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.rust }}
+      - uses: r7kamura/rust-problem-matchers@v1
+      - run: cargo +${{ matrix.rust }} miri test
