@@ -18,8 +18,6 @@ mod generated {
     include!("gen.inc.rs");
 }
 
-mod xc_format_control;
-
 pub use self::generated::*;
 
 /// Check whether a code is good or not

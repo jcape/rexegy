@@ -124,7 +124,7 @@ pub struct __BindgenBitfieldUnit<Storage> {
     storage: Storage,
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XM_DATA_TYPE_INFO {
     #[doc = "< datatype described in this record"]
     pub xdti_datatype: xuint16,
@@ -138,7 +138,7 @@ pub struct XM_DATA_TYPE_INFO {
     pub xdti_name: [::std::os::raw::c_char; 64usize],
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XM_STRUCTFIELD_INFO {
     #[doc = "< datatype of field described in this record"]
     pub xsfi_datatype: xuint16,
@@ -160,7 +160,7 @@ pub struct XM_STRUCTFIELD_INFO {
     pub xsfi_name: [::std::os::raw::c_char; 64usize],
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XM_ENUM_VALUE_INFO {
     #[doc = "< datatype of enumeration to which this value belongs"]
     pub xevi_datatype: xuint16,
@@ -176,13 +176,13 @@ pub struct XM_ENUM_VALUE_INFO {
     pub xevi_name: [::std::os::raw::c_char; 64usize],
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_DATE__bindgen_ty_1 {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 4usize]>,
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_DAYSBACK {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 4usize]>,
@@ -196,7 +196,7 @@ pub struct XC_DATETIME {
     pub xdtm_date: XC_DATE,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_PRICE_DESC {
     #[doc = "< price"]
     pub xpd_price: XC_PRICE,
@@ -206,60 +206,60 @@ pub struct XC_PRICE_DESC {
     pub XPD_RESERVED_01: [xuint8; 3usize],
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_EXCHANGE_ID {
     #[doc = "< characters in exchange identifier"]
     pub xex_ch: [::std::os::raw::c_char; 2usize],
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_COUNTRY_ID {
     #[doc = "< characters in country identifier"]
     pub xcc_ch: [::std::os::raw::c_char; 2usize],
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_CURRENCY_ID {
     #[doc = "< characters in currency identifier"]
     pub xcur_ch: [::std::os::raw::c_char; 3usize],
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_ALTERNATE_ID {
     #[doc = "< characters in alternate identifier"]
     pub xalt_ch: [::std::os::raw::c_char; 16usize],
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_REFERENCE_STRING {
     pub str_: [::std::os::raw::c_char; 72usize],
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_MMID {
     #[doc = "< characters in market maker identifier"]
     pub xmmid_ch: [::std::os::raw::c_char; 6usize],
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_TRADE_VENUE {
     #[doc = "< characters in trade venue"]
     pub ch: [::std::os::raw::c_char; 4usize],
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_ORDER_REF_ID__bindgen_ty_1 {
     #[doc = "< characters in order reference identifier"]
     pub xoid_ch: [::std::os::raw::c_char; 12usize],
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_ORDER_REF_ID__bindgen_ty_2 {
     #[doc = "< binary-coded decimal values (plus some extensions)"]
     pub xoid_bcd_pair: [xuint8; 12usize],
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_ORDER_REF_ID__bindgen_ty_3 {
     #[doc = "< first number of pair"]
     pub xoid_uint1: xuint32,
@@ -267,19 +267,19 @@ pub struct XC_ORDER_REF_ID__bindgen_ty_3 {
     pub xoid_uint2: xuint32,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_ORDER_REF_ID__bindgen_ty_4 {
     #[doc = "< 12-character alphanumeric encoded as a base-36 number"]
     pub xoid_alpha36: xuint64,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_ORDER_REF_ID__bindgen_ty_5 {
     #[doc = "< 64-bit unsigned integer"]
     pub xoid_raw64: xuint64,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_ORDER_REF_ID__bindgen_ty_6 {
     #[doc = "< 32-bit symbol hash ID"]
     pub xoid_sym_uint_symbol: xuint32,
@@ -287,20 +287,20 @@ pub struct XC_ORDER_REF_ID__bindgen_ty_6 {
     pub xoid_sym_uint_refid: xuint64,
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_SYMBOL {
     #[doc = "< characters in symbol"]
     pub xsym_ch: [::std::os::raw::c_char; 20usize],
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_KEY {
     pub xk_exchange: XC_EXCHANGE_ID,
     pub xk_country: XC_COUNTRY_ID,
     pub xk_symbol: XC_SYMBOL,
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_KEY_DESC {
     pub xkd_key: XC_KEY,
     pub _bitfield_align_1: [u8; 0],
@@ -332,7 +332,7 @@ pub struct XC_FIELD_DESC {
 }
 #[doc = "Fields related to conversion of output to a string type.\nxfds_string_type must be one of:\nXTYP_STRING_FIXED_LENGTH: elmsiz indicates length of each output string\nXTYP_STRING_KNOWN_LENGTH: elmsiz indicates length of each output string\nXTYP_STRING_NUL_TERM:     elmsiz indicates buffer size (including NUL)\nin_count must be 1 in this case"]
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_FIELD_DESC__bindgen_ty_1__bindgen_ty_1 {
     #[doc = "< [INPUT]  Convert output to specified string type"]
     pub xfds_string_type: XM_DATA_TYPE,
@@ -342,13 +342,13 @@ pub struct XC_FIELD_DESC__bindgen_ty_1__bindgen_ty_1 {
 }
 #[doc = "Fields related to conversion of output to a different binary type.\nSupported types (xfdb_convert_type) are:\nXTYP_float:                single-precision floating point\nXTYP_double, XTYP_xreal64: double-precision floating point"]
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_FIELD_DESC__bindgen_ty_1__bindgen_ty_2 {
     #[doc = "< [INPUT]  Convert output to specified binary type"]
     pub xfdb_convert_type: XM_DATA_TYPE,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_EVENT_DESC {
     #[doc = "< Object type of event"]
     pub xvi_type: XC_OBJECT_TYPE,
@@ -362,7 +362,7 @@ pub struct XC_EVENT_DESC {
     pub XVI_RESERVED_01: [xuint64; 2usize],
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_SLOT_CONTEXT {
     #[doc = "< Request key"]
     pub xcreq_key: XC_KEY,
@@ -387,12 +387,12 @@ pub struct XC_LIST_UPDATE {
     pub var: XC_LIST_UPDATE__bindgen_ty_1,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_LIST_UPDATE__bindgen_ty_1__bindgen_ty_1 {
     pub xlu_index: xuint32,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_LIST_UPDATE__bindgen_ty_1__bindgen_ty_2 {
     #[doc = "< Byte offset to key within data item"]
     pub xlu_key_offset: xuint16,
@@ -400,7 +400,7 @@ pub struct XC_LIST_UPDATE__bindgen_ty_1__bindgen_ty_2 {
     pub xlu_key_size: xuint16,
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_TRADING_STATE_FILTER__bindgen_ty_1 {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 1usize]>,
@@ -421,41 +421,41 @@ pub struct XC_INSTRUMENT_GROUP_ID {
     pub __bindgen_anon_1: XC_INSTRUMENT_GROUP_ID__bindgen_ty_1,
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_EVENT_ID {
     #[doc = "< characters in event ID"]
     pub xei_ch: [::std::os::raw::c_char; 32usize],
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_EQUITY_TRADE_UPDATE_FLAGS {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 2usize]>,
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_COMMODITY_TRADE_UPDATE_FLAGS {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 1usize]>,
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_DFLOAT_64__bindgen_ty_1 {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 8usize]>,
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_SYMBOL_LABEL {
     pub ch: [::std::os::raw::c_char; 256usize],
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_THRESHOLDS {
     pub thresholds: [XC_PROBABILITY; 4usize],
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_EVENT_QUALS__bindgen_ty_1 {
     #[doc = "< first qualifier"]
     pub q1: XC_EVENT_QUAL,
@@ -467,7 +467,7 @@ pub struct XC_EVENT_QUALS__bindgen_ty_1 {
     pub q4: XC_EVENT_QUAL,
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_QUOTE_QUALS__bindgen_ty_1 {
     #[doc = "< first qualifier"]
     pub qq1: XC_QUOTE_QUAL,
@@ -479,7 +479,7 @@ pub struct XC_QUOTE_QUALS__bindgen_ty_1 {
     pub qq4: XC_QUOTE_QUAL,
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_TRADE_QUALS__bindgen_ty_1 {
     #[doc = "< first qualifier"]
     pub tq1: XC_TRADE_QUAL,
@@ -491,7 +491,7 @@ pub struct XC_TRADE_QUALS__bindgen_ty_1 {
     pub tq4: XC_TRADE_QUAL,
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_REFRESH_QUALS__bindgen_ty_1 {
     #[doc = "< first qualifier"]
     pub rq1: XC_REFRESH_QUAL,
@@ -503,7 +503,7 @@ pub struct XC_REFRESH_QUALS__bindgen_ty_1 {
     pub rq4: XC_REFRESH_QUAL,
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_INDICATIVE_QUALS__bindgen_ty_1 {
     #[doc = "< first qualifier"]
     pub iq1: XC_INDICATIVE_QUAL,
@@ -515,7 +515,7 @@ pub struct XC_INDICATIVE_QUALS__bindgen_ty_1 {
     pub iq4: XC_INDICATIVE_QUAL,
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_STAT_QUALS__bindgen_ty_1 {
     #[doc = "< first qualifier"]
     pub eq1: XC_STAT_QUAL,
@@ -527,61 +527,61 @@ pub struct XC_STAT_QUALS__bindgen_ty_1 {
     pub eq4: XC_STAT_QUAL,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_QUALIFIERS {
     #[doc = "< array of qualifiers"]
     pub entries: [XC_QUALIFIER; 8usize],
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_QUOTE_QUALIFIERS {
     #[doc = "< Array of quote qualifiers"]
     pub entries: [XC_QUOTE_QUALIFIER; 8usize],
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_TRADE_QUALIFIERS {
     #[doc = "< Array of trade qualifiers"]
     pub entries: [XC_TRADE_QUALIFIER; 8usize],
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_REFRESH_QUALIFIERS {
     #[doc = "< Array of refresh qualifiers"]
     pub entries: [XC_REFRESH_QUALIFIER; 8usize],
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_INDICATIVE_QUALIFIERS {
     #[doc = "< Array of indicative qualifiers"]
     pub entries: [XC_INDICATIVE_QUALIFIER; 8usize],
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_TICK_FLAGS {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 1usize]>,
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_TS_REQUEST_TYPE {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 2usize]>,
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_FINANCIAL_STATUS {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 1usize]>,
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_CC_FLAGS {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 1usize]>,
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_TRADING_STATE__bindgen_ty_1 {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 1usize]>,
@@ -617,7 +617,7 @@ pub struct XC_GROUP_EVENT_COMMON {
     pub xev_sequence: xuint64,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_EVENT_TIMING {
     #[doc = "< data sequence number"]
     pub xtev_sequence: xuint64,
@@ -636,7 +636,7 @@ pub struct XC_GROUP_EVENT_TIMING {
     pub XTEV_RESERVED_01: xuint64,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_EQUITY_QUOTE {
     #[doc = "< -- Reserved for future use --"]
     pub XCQ_RESERVED_00: xuint16,
@@ -760,7 +760,7 @@ pub struct XC_GROUP_EQUITY_QUOTE_WITH_CPMVOL_ALL {
     pub xcq_ask_market_maker_size: XC_VOLUME,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_EQUITY_TRADE {
     #[doc = "< -- Reserved for future use --"]
     pub XCT_RESERVED_00: xuint32,
@@ -774,7 +774,7 @@ pub struct XC_GROUP_EQUITY_TRADE {
     pub xct_size: XC_VOLUME,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_EQUITY_TRADE_ACCUM {
     #[doc = "< close price"]
     pub xct_close_price: XC_PRICE,
@@ -932,7 +932,7 @@ pub struct XC_GROUP_EQUITY_CANCEL_ALL {
     pub xca_low_price: XC_PRICE,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_EQUITY_CORRECTION {
     #[doc = "< -- Reserved for future use --"]
     pub XCC_RESERVED_00: xuint32,
@@ -1893,7 +1893,7 @@ pub struct XC_GROUP_TRADE_REF {
     pub xct_trade_ref: XC_ORDER_REF_ID,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_COMMODITY_QUOTE {
     #[doc = "< -- Reserved for future use --"]
     pub XCQ_RESERVED_00: xuint16,
@@ -1959,7 +1959,7 @@ pub struct XC_GROUP_COMMODITY_QUOTE_ALL {
     pub xcq_ask_size: XC_VOLUME,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_COMMODITY_TRADE {
     #[doc = "< -- Reserved for future use --"]
     pub XCT_RESERVED_00: xuint8,
@@ -1977,7 +1977,7 @@ pub struct XC_GROUP_COMMODITY_TRADE {
     pub xct_size: XC_VOLUME,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_COMMODITY_TRADE_ACCUM {
     #[doc = "< volume"]
     pub xct_volume: XC_VOLUME,
@@ -2081,7 +2081,7 @@ pub struct XC_GROUP_COMMODITY_CANCEL_ALL {
     pub xca_total_change: XC_PRICE,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_COMMODITY_CORRECTION {
     #[doc = "< -- Reserved for future use --"]
     pub XCC_RESERVED_00: xuint8,
@@ -2973,7 +2973,7 @@ pub struct XC_GROUP_ORDER_BOOK_ENTRY_WITH_PRIORITY {
     pub xob_order_priority: xuint64,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_PRICE_BOOK_ENTRY {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 1usize]>,
@@ -2993,7 +2993,7 @@ pub struct XC_GROUP_PRICE_BOOK_ENTRY {
     pub xpb_extime: XC_EXTIME,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_PRICE_BOOK_ENTRY_WITH_CPMVOL {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 1usize]>,
@@ -3021,7 +3021,7 @@ pub struct XC_GROUP_PRICE_BOOK_ENTRY_WITH_CPMVOL {
     pub XPB_RESERVED_02: xuint32,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_PRICE_BOOK_LEVEL {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 1usize]>,
@@ -3045,7 +3045,7 @@ pub struct XC_GROUP_PRICE_BOOK_LEVEL {
     pub xpb_implied_volume: XC_VOLUME,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_PRICE_BOOK_LEVEL_WITH_CPMVOL {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 1usize]>,
@@ -3159,7 +3159,7 @@ pub struct XC_GROUP_ORDER_BOOK_UPDATE_ALL {
     pub xobu_origin_extime: XC_EXTIME,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_PRICE_BOOK_UPDATE {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 2usize]>,
@@ -3173,7 +3173,7 @@ pub struct XC_GROUP_PRICE_BOOK_UPDATE {
     pub xpbu_extime: XC_EXTIME,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_CPMVOL {
     #[doc = "< Volume attributed to non-professional customer"]
     pub xcpm_customer_volume: XC_VOLUME,
@@ -3273,7 +3273,7 @@ pub struct XC_GROUP_PRICE_BOOK_UPDATE_WITH_CPMVOL_ALL {
     pub XPBU_RESERVED_05: xuint32,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 2usize]>,
@@ -3441,7 +3441,7 @@ pub struct XC_GROUP_ORDER_BOOK_ENTRY_WITH_PRIORITY_HITIME {
     pub xob_order_priority: xuint64,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_PRICE_BOOK_ENTRY_WITH_HITIME {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 1usize]>,
@@ -3461,7 +3461,7 @@ pub struct XC_GROUP_PRICE_BOOK_ENTRY_WITH_HITIME {
     pub xpb_hitime: XC_HITIME,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_PRICE_BOOK_ENTRY_WITH_CPMVOL_HITIME {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 1usize]>,
@@ -3489,7 +3489,7 @@ pub struct XC_GROUP_PRICE_BOOK_ENTRY_WITH_CPMVOL_HITIME {
     pub XPB_RESERVED_02: xuint32,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_PRICE_BOOK_LEVEL_WITH_HITIME {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 1usize]>,
@@ -3513,7 +3513,7 @@ pub struct XC_GROUP_PRICE_BOOK_LEVEL_WITH_HITIME {
     pub xpb_implied_volume: XC_VOLUME,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_PRICE_BOOK_LEVEL_WITH_CPMVOL_HITIME {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 1usize]>,
@@ -3583,7 +3583,7 @@ pub struct XC_GROUP_ORDER_BOOK_UPDATE_WITH_PRIORITY_HITIME {
     pub xobu_order_priority: xuint64,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_PRICE_BOOK_UPDATE_WITH_HITIME {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 2usize]>,
@@ -3597,7 +3597,7 @@ pub struct XC_GROUP_PRICE_BOOK_UPDATE_WITH_HITIME {
     pub xpbu_hitime: XC_HITIME,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_HITIME {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 2usize]>,
@@ -3769,7 +3769,7 @@ pub struct XC_GROUP_ORDER_EXECUTION_ALL {
     pub xoex_ask_mmid: XC_MMID,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_ORDER_IMBALANCE {
     #[doc = "< -- Reserved for future use --"]
     pub XOIMB_RESERVED_00: xuint16,
@@ -3876,7 +3876,7 @@ pub struct XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED {
     pub xoimb_imbalance_auction_owner: [::std::os::raw::c_char; 8usize],
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_ORDER_IMBALANCE_REGULATORY {
     #[doc = "< -- Reserved for future use --"]
     pub XOIMB_RESERVED_00: xuint16,
@@ -3913,7 +3913,7 @@ pub struct XC_GROUP_INDICATION_OF_INTEREST {
     pub IOI_RESERVED_01: [xuint8; 6usize],
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_ORDER_IMBALANCE_AUCTION_CLEARING {
     pub xoimb_imbalance_auction_clearing_leg_security_id: xuint64,
     #[doc = "< Identifier of clearing firm"]
@@ -3922,7 +3922,7 @@ pub struct XC_GROUP_ORDER_IMBALANCE_AUCTION_CLEARING {
     pub xoimb_imbalance_auction_clearing_account: [::std::os::raw::c_char; 8usize],
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_MARKET_DIRECTORY {
     #[doc = "< -- Reserved for future use --"]
     pub XMD_RESERVED_00: xuint32,
@@ -3972,7 +3972,7 @@ pub struct XC_GROUP_MARKET_DIRECTORY_ALL {
     pub xmd_prime_exch: XC_EXCHANGE_ID,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_REQUEST_FOR_QUOTE {
     #[doc = "< Quantity of requested quote"]
     pub xrfq_requested_size: XC_VOLUME,
@@ -4084,7 +4084,7 @@ pub struct XC_GROUP_TRADING_ACTION_WITH_LULD_ALL {
     pub xta_lower_limit_price: XC_PRICE,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_NAV_UPDATE_ALL {
     #[doc = "< -- Reserved for future use --"]
     pub NAV_RESERVED_00: xuint8,
@@ -4106,7 +4106,7 @@ pub struct XC_GROUP_NAV_UPDATE_ALL {
     pub nav_ask: XC_PRICE,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, PartialOrd, PartialEq)]
 pub struct XC_GROUP_BASKET_HEADER {
     #[doc = "< divisor for the basket"]
     pub bskh_divisor: xreal64,
@@ -4124,7 +4124,7 @@ pub struct XC_GROUP_BASKET_HEADER {
     pub bskh_user_nav2: xreal64,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialOrd, PartialEq)]
 pub struct XC_GROUP_BASKET_CONSTITUENT {
     #[doc = "< key of instrument"]
     pub bskc_key_string: [::std::os::raw::c_char; 80usize],
@@ -4141,7 +4141,7 @@ pub struct XC_GROUP_BASKET_CONSTITUENT {
     pub BSKC_RESERVED_02: [xuint8; 3usize],
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_BASKET_CONSTITUENT_INFO {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 1usize]>,
@@ -4171,7 +4171,7 @@ pub struct XC_GROUP_KEYLIST_HEADER {
     pub klh_description: XC_KEYLIST_DESCRIPTION,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_KEYLIST_ITEM {
     #[doc = "< Matched key"]
     pub kli_key: XC_KEY,
@@ -4325,7 +4325,7 @@ pub struct XC_GROUP_LINE_GAP_LINE_INFO {
     pub lginf_line_name: XC_STATS_IDENTIFIER,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_LINE_GAPS {
     #[doc = "< Sequence number of first missing item in this gap range"]
     pub lgi_first_missing: xuint64,
@@ -4372,7 +4372,7 @@ pub struct XC_GROUP_FEED_INFO {
     pub fi_update_info: XC_LIST_UPDATE,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_MWCB {
     pub mwcb_level1_price: XC_PRICE,
     pub mwcb_level2_price: XC_PRICE,
@@ -4548,7 +4548,7 @@ pub struct XC_GROUP_DERIVATIVE_REFERENCE_PRODUCT {
     pub DRP_RESERVED_02: [xuint64; 2usize],
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_DERIVATIVE_REFERENCE_TICK {
     pub drt_tick_price_range_start: XC_PRICE,
     pub drt_tick_price_range_end: XC_PRICE,
@@ -4560,7 +4560,7 @@ pub struct XC_GROUP_DERIVATIVE_REFERENCE_TICK {
     pub DRT_RESERVED_01: [xuint8; 2usize],
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_DERIVATIVE_REFERENCE_MATCH {
     pub _bitfield_align_1: [u8; 0],
     pub _bitfield_1: __BindgenBitfieldUnit<[u8; 1usize]>,
@@ -4571,7 +4571,7 @@ pub struct XC_GROUP_DERIVATIVE_REFERENCE_MATCH {
     pub DRM_RESERVED_02: [xuint8; 3usize],
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_DERIVATIVE_REFERENCE_DELIVERABLE {
     pub drd_deliverable_security_id: xuint64,
     pub drd_deliverable_factor: xuint32,
@@ -4585,7 +4585,7 @@ pub struct XC_GROUP_DERIVATIVE_REFERENCE_DELIVERABLE {
     pub drd_deliverable_key_string: [::std::os::raw::c_char; 32usize],
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_DERIVATIVE_REFERENCE_AUCTION {
     pub dra_auction_types: [::std::os::raw::c_char; 40usize],
     pub dra_auction_rule_id: XC_RULE_ID,
@@ -4593,7 +4593,7 @@ pub struct XC_GROUP_DERIVATIVE_REFERENCE_AUCTION {
     pub DRA_RESERVED_00: [xuint8; 7usize],
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_DERIVATIVE_REFERENCE_UNDERLYING {
     pub dru_underlying_key_string: [::std::os::raw::c_char; 32usize],
     #[doc = "< Underlying security id"]
@@ -4604,7 +4604,7 @@ pub struct XC_GROUP_DERIVATIVE_REFERENCE_UNDERLYING {
     pub DRU_RESERVED_00: [xuint8; 7usize],
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_DERIVATIVE_REFERENCE_SIZE_RULE {
     #[doc = "< The minimum tradable quantity of the instrument."]
     pub drsr_size_rule_min_trade: XC_VOLUME,
@@ -4679,7 +4679,7 @@ pub struct XC_GROUP_DERIVATIVE_REFERENCE_LEG {
     pub DRL_RESERVED_06: [xuint64; 2usize],
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_ORDER_ON_BOOK {
     pub oobc_entry_count: xuint8,
     pub oobc_party_count: xuint8,
@@ -4703,7 +4703,7 @@ pub struct XC_GROUP_ORDER_ON_BOOK_ENTRY {
     pub OOBE_RESERVED_02: [xuint8; 3usize],
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_ORDER_ON_BOOK_PARTY {
     pub oobp_party_id: [::std::os::raw::c_char; 8usize],
     pub oobp_party_role: xuint32,
@@ -4736,7 +4736,7 @@ pub struct XC_GROUP_CLIENT_STATS {
     pub clst_current_unique_subscription_count: xuint32,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_TICKER_PLANT_SUMMARY_RATES {
     pub tpsr_pre_arb_packet_count: xuint64,
     pub tpsr_pre_arb_message_count: xuint64,
@@ -4789,7 +4789,7 @@ pub struct XC_GROUP_TICKER_PLANT_SUMMARY_RATES {
     pub tpsr_output_byte_burstrate_at_message_peak: xuint64,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_TICKER_PLANT_LATENCY {
     pub tpls_samples: xuint32,
     #[doc = "< -- Reserved for future use --"]
@@ -4816,7 +4816,7 @@ pub struct XC_GROUP_TICKER_PLANT_LATENCY {
     pub tpls_bin7_samples: xuint32,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_TICKER_PLANT_CLIENTS_RATES {
     pub tpcr_max_client_buffer_size: xuint64,
     pub tpcr_appliance_output_packet_count: xuint64,
@@ -4854,7 +4854,7 @@ pub struct XC_GROUP_TICKER_PLANT_CLIENTS_RATES {
     pub tpcr_bin7_samples: xuint32,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_TICKER_PLANT_SUMMARY {
     pub tpsm_ticker_plant_version: XC_STATS_IDENTIFIER,
     pub tpsm_last_restart_time: XC_STATS_IDENTIFIER,
@@ -5074,7 +5074,7 @@ pub struct XC_GROUP_FXSWAP_QUOTE_ALL {
     pub XGFXWQ_RESERVED_03: xuint32,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_SESSIONS_RATES {
     pub tpsr_max_client_buffer_size: xuint64,
     pub tpsr_appliance_output_packet_count: xuint64,
@@ -5141,7 +5141,7 @@ pub struct XC_GROUP_SESSIONS {
     pub sest_current_unique_subscription_count: xuint32,
 }
 #[repr(C, packed)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_GROUP_INDICATIVE_PRICE {
     #[doc = "< Indicative price"]
     pub xip_price: XC_PRICE,
@@ -5234,7 +5234,7 @@ pub struct XC_GROUP_VOLATILITY_MISC {
 }
 #[doc = " @brief String Conversion Control/State Block\n\n Maintain state for the suite of string conversion routines.  Fields\n can be read or written at will, although it's certainly possible to\n cause unintended results by so doing!\n"]
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub struct XC_FORMAT_CONTROL {
     #[doc = "< pointer to output buffer"]
     pub xfc_obuf: *mut ::std::os::raw::c_char,
@@ -27761,6 +27761,15 @@ where
         }
     }
 }
+impl Default for XM_DATA_TYPE_INFO {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
 impl XM_DATA_TYPE_INFO {
     #[inline]
     pub fn xdti_representation(&self) -> XM_DATA_TYPE_REPRESENTATION {
@@ -27883,6 +27892,15 @@ impl XM_DATA_TYPE_INFO {
         __bindgen_bitfield_unit
     }
 }
+impl Default for XM_STRUCTFIELD_INFO {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
 impl XM_STRUCTFIELD_INFO {
     #[inline]
     pub fn xsfi_is_pointer(&self) -> xuint8 {
@@ -28003,6 +28021,15 @@ impl XM_STRUCTFIELD_INFO {
             XSFI_RESERVED_00 as u64
         });
         __bindgen_bitfield_unit
+    }
+}
+impl Default for XM_ENUM_VALUE_INFO {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_DATE__bindgen_ty_1 {
@@ -28165,9 +28192,13 @@ impl XC_DATE__bindgen_ty_1 {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_DATE {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "XC_DATE {{ union }}")
+impl Default for XC_DATE {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_DAYSBACK {
@@ -28292,14 +28323,22 @@ impl XC_DAYSBACK {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_DATETIME {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "XC_DATETIME {{ xdtm_date: {:?} }}", self.xdtm_date)
+impl Default for XC_DATETIME {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_IPV4_ADDRESS {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "XC_IPV4_ADDRESS {{ union }}")
+impl Default for XC_IPV4_ADDRESS {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_PRICE_DESC {
@@ -28386,14 +28425,31 @@ impl XC_PRICE_DESC {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_AUTHORIZATION {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "XC_AUTHORIZATION {{ union }}")
+impl Default for XC_AUTHORIZATION {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_ORDER_REF_ID {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "XC_ORDER_REF_ID {{ union }}")
+impl Default for XC_REFERENCE_STRING {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
+impl Default for XC_ORDER_REF_ID {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_KEY_DESC {
@@ -28480,18 +28536,31 @@ impl XC_KEY_DESC {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_FIELD_DESC__bindgen_ty_1 {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "XC_FIELD_DESC__bindgen_ty_1 {{ union }}")
+impl Default for XC_FIELD_DESC__bindgen_ty_1 {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_FIELD_DESC {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(
-            f,
-            "XC_FIELD_DESC {{ __bindgen_anon_1: {:?} }}",
-            self.__bindgen_anon_1
-        )
+impl Default for XC_FIELD_DESC {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
+impl Default for XC_EVENT_DESC {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_SLOT_CONTEXT {
@@ -28579,14 +28648,22 @@ impl XC_SLOT_CONTEXT {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_LIST_UPDATE__bindgen_ty_1 {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "XC_LIST_UPDATE__bindgen_ty_1 {{ union }}")
+impl Default for XC_LIST_UPDATE__bindgen_ty_1 {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_LIST_UPDATE {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_LIST_UPDATE {{ xlu_action : {:?}, XLU_RESERVED_00 : {:?}, xlu_variant : {:?}, XLU_RESERVED_01: {:?}, var: {:?} }}" , self . xlu_action () , self . XLU_RESERVED_00 () , self . xlu_variant () , self . XLU_RESERVED_01 , self . var)
+impl Default for XC_LIST_UPDATE {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_LIST_UPDATE {
@@ -28909,28 +28986,40 @@ impl XC_TRADING_STATE_FILTER__bindgen_ty_1 {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_TRADING_STATE_FILTER {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "XC_TRADING_STATE_FILTER {{ union }}")
+impl Default for XC_TRADING_STATE_FILTER {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_FEED_ID {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "XC_FEED_ID {{ union }}")
+impl Default for XC_FEED_ID {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_INSTRUMENT_GROUP_ID__bindgen_ty_1 {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "XC_INSTRUMENT_GROUP_ID__bindgen_ty_1 {{ union }}")
+impl Default for XC_INSTRUMENT_GROUP_ID__bindgen_ty_1 {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_INSTRUMENT_GROUP_ID {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(
-            f,
-            "XC_INSTRUMENT_GROUP_ID {{ country: {:?}, exchange: {:?}, __bindgen_anon_1: {:?} }}",
-            self.country, self.exchange, self.__bindgen_anon_1
-        )
+impl Default for XC_INSTRUMENT_GROUP_ID {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_EQUITY_TRADE_UPDATE_FLAGS {
@@ -29489,39 +29578,76 @@ impl XC_DFLOAT_64__bindgen_ty_1 {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_DFLOAT_64 {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "XC_DFLOAT_64 {{ union }}")
+impl Default for XC_DFLOAT_64 {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_EVENT_QUALS {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "XC_EVENT_QUALS {{ union }}")
+impl Default for XC_SYMBOL_LABEL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_QUOTE_QUALS {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "XC_QUOTE_QUALS {{ union }}")
+impl Default for XC_EVENT_QUALS {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_TRADE_QUALS {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "XC_TRADE_QUALS {{ union }}")
+impl Default for XC_QUOTE_QUALS {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_REFRESH_QUALS {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "XC_REFRESH_QUALS {{ union }}")
+impl Default for XC_TRADE_QUALS {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_INDICATIVE_QUALS {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "XC_INDICATIVE_QUALS {{ union }}")
+impl Default for XC_REFRESH_QUALS {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_STAT_QUALS {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "XC_STAT_QUALS {{ union }}")
+impl Default for XC_INDICATIVE_QUALS {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
+impl Default for XC_STAT_QUALS {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_TICK_FLAGS {
@@ -30363,14 +30489,22 @@ impl XC_TRADING_STATE__bindgen_ty_1 {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_TRADING_STATE {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "XC_TRADING_STATE {{ union }}")
+impl Default for XC_TRADING_STATE {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_EVENT_COMMON {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_EVENT_COMMON {{ xev_exchange_code: {:?}, xev_country_code: {:?}, xev_price_type : {:?}, XEV_RESERVED_00 : {:?}, xev_quals: {:?}, xev_instrument_status: {:?}, xev_market_status: {:?}, xev_short_sale_restricted : {:?}, XEV_RESERVED_01 : {:?} }}" , self . xev_exchange_code , self . xev_country_code , self . xev_price_type () , self . XEV_RESERVED_00 () , self . xev_quals , self . xev_instrument_status , self . xev_market_status , self . xev_short_sale_restricted () , self . XEV_RESERVED_01 ())
+impl Default for XC_GROUP_EVENT_COMMON {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_EVENT_COMMON {
@@ -30540,9 +30674,13 @@ impl XC_GROUP_EVENT_COMMON {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_EQUITY_QUOTE_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_EQUITY_QUOTE_ALL {{ xcq_exchange_code: {:?}, xcq_country_code: {:?}, xcq_price_type : {:?}, XCQ_RESERVED_00 : {:?}, xcq_quals: {:?}, xcq_instrument_status: {:?}, xcq_market_status: {:?}, xcq_short_sale_restricted : {:?}, XCQ_RESERVED_01 : {:?}, xcq_bid_exch: {:?}, xcq_bid_tick_flags: {:?}, xcq_ask_exch: {:?} }}" , self . xcq_exchange_code , self . xcq_country_code , self . xcq_price_type () , self . XCQ_RESERVED_00 () , self . xcq_quals , self . xcq_instrument_status , self . xcq_market_status , self . xcq_short_sale_restricted () , self . XCQ_RESERVED_01 () , self . xcq_bid_exch , self . xcq_bid_tick_flags , self . xcq_ask_exch)
+impl Default for XC_GROUP_EQUITY_QUOTE_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_EQUITY_QUOTE_ALL {
@@ -30712,9 +30850,13 @@ impl XC_GROUP_EQUITY_QUOTE_ALL {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_EQUITY_QUOTE_WITH_CPMVOL_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_EQUITY_QUOTE_WITH_CPMVOL_ALL {{ xcq_exchange_code: {:?}, xcq_country_code: {:?}, xcq_price_type : {:?}, XCQ_RESERVED_00 : {:?}, xcq_quals: {:?}, xcq_instrument_status: {:?}, xcq_market_status: {:?}, xcq_short_sale_restricted : {:?}, XCQ_RESERVED_01 : {:?}, xcq_bid_exch: {:?}, xcq_bid_tick_flags: {:?}, xcq_ask_exch: {:?} }}" , self . xcq_exchange_code , self . xcq_country_code , self . xcq_price_type () , self . XCQ_RESERVED_00 () , self . xcq_quals , self . xcq_instrument_status , self . xcq_market_status , self . xcq_short_sale_restricted () , self . XCQ_RESERVED_01 () , self . xcq_bid_exch , self . xcq_bid_tick_flags , self . xcq_ask_exch)
+impl Default for XC_GROUP_EQUITY_QUOTE_WITH_CPMVOL_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_EQUITY_QUOTE_WITH_CPMVOL_ALL {
@@ -30884,9 +31026,13 @@ impl XC_GROUP_EQUITY_QUOTE_WITH_CPMVOL_ALL {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_EQUITY_TRADE_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_EQUITY_TRADE_ALL {{ xct_exchange_code: {:?}, xct_country_code: {:?}, xct_price_type : {:?}, XCT_RESERVED_00 : {:?}, xct_quals: {:?}, xct_instrument_status: {:?}, xct_market_status: {:?}, xct_short_sale_restricted : {:?}, xct_trade_thru_exempt : {:?}, XCT_RESERVED_01 : {:?}, xct_side_attr : {:?}, XCT_RESERVED_04 : {:?}, xct_sub_market: {:?}, xct_trade_tick_flags: {:?} }}" , self . xct_exchange_code , self . xct_country_code , self . xct_price_type () , self . XCT_RESERVED_00 () , self . xct_quals , self . xct_instrument_status , self . xct_market_status , self . xct_short_sale_restricted () , self . xct_trade_thru_exempt () , self . XCT_RESERVED_01 () , self . xct_side_attr () , self . XCT_RESERVED_04 () , self . xct_sub_market , self . xct_trade_tick_flags)
+impl Default for XC_GROUP_EQUITY_TRADE_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_EQUITY_TRADE_ALL {
@@ -31176,9 +31322,13 @@ impl XC_GROUP_EQUITY_TRADE_ALL {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_EQUITY_CANCEL_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_EQUITY_CANCEL_ALL {{ xca_exchange_code: {:?}, xca_country_code: {:?}, xca_price_type : {:?}, XCA_RESERVED_00 : {:?}, xca_quals: {:?}, xca_instrument_status: {:?}, xca_market_status: {:?}, xca_short_sale_restricted : {:?}, xca_trade_thru_exempt : {:?}, XCA_RESERVED_01 : {:?}, xca_side_attr : {:?}, XCA_RESERVED_04 : {:?}, xca_sub_market: {:?}, xca_trade_tick_flags: {:?} }}" , self . xca_exchange_code , self . xca_country_code , self . xca_price_type () , self . XCA_RESERVED_00 () , self . xca_quals , self . xca_instrument_status , self . xca_market_status , self . xca_short_sale_restricted () , self . xca_trade_thru_exempt () , self . XCA_RESERVED_01 () , self . xca_side_attr () , self . XCA_RESERVED_04 () , self . xca_sub_market , self . xca_trade_tick_flags)
+impl Default for XC_GROUP_EQUITY_CANCEL_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_EQUITY_CANCEL_ALL {
@@ -31468,9 +31618,13 @@ impl XC_GROUP_EQUITY_CANCEL_ALL {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_EQUITY_CORRECTION_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_EQUITY_CORRECTION_ALL {{ xcc_exchange_code: {:?}, xcc_country_code: {:?}, xcc_price_type : {:?}, XCC_RESERVED_00 : {:?}, xcc_quals: {:?}, xcc_instrument_status: {:?}, xcc_market_status: {:?}, xcc_short_sale_restricted : {:?}, xcc_trade_thru_exempt : {:?}, XCC_RESERVED_01 : {:?}, xcc_cancel_side_attr : {:?}, XCC_RESERVED_04 : {:?}, xcc_cancel_sub_market: {:?}, xcc_correct_side_attr : {:?}, XCC_RESERVED_08 : {:?}, xcc_correct_sub_market: {:?}, xcc_trade_tick_flags: {:?} }}" , self . xcc_exchange_code , self . xcc_country_code , self . xcc_price_type () , self . XCC_RESERVED_00 () , self . xcc_quals , self . xcc_instrument_status , self . xcc_market_status , self . xcc_short_sale_restricted () , self . xcc_trade_thru_exempt () , self . XCC_RESERVED_01 () , self . xcc_cancel_side_attr () , self . XCC_RESERVED_04 () , self . xcc_cancel_sub_market , self . xcc_correct_side_attr () , self . XCC_RESERVED_08 () , self . xcc_correct_sub_market , self . xcc_trade_tick_flags)
+impl Default for XC_GROUP_EQUITY_CORRECTION_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_EQUITY_CORRECTION_ALL {
@@ -31848,9 +32002,13 @@ impl XC_GROUP_EQUITY_CORRECTION_ALL {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_EQUITY_REFRESH_ALL_WITH_HITIME {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_EQUITY_REFRESH_ALL_WITH_HITIME {{ xcr_exchange_code: {:?}, xcr_country_code: {:?}, xcr_price_type : {:?}, XCR_RESERVED_00 : {:?}, xcr_quals: {:?}, xcr_instrument_status: {:?}, xcr_market_status: {:?}, xcr_short_sale_restricted : {:?}, XCR_RESERVED_01 : {:?}, xcr_alternate_id1: {:?}, xcr_alternate_id2: {:?}, xcr_currency: {:?}, xcr_close_exch: {:?}, xcr_prime_exch: {:?}, XCR_RESERVED_08: {:?}, xcr_bid_exch: {:?}, xcr_bid_tick_flags: {:?}, xcr_ask_exch: {:?}, xcr_last_exch: {:?}, xcr_trade_tick_flags: {:?}, xcr_trading_session_date: {:?}, xcr_high_exch: {:?}, xcr_low_exch: {:?}, xcr_open_exch: {:?}, xcr_quote_quals: {:?}, xcr_trade_quals: {:?} }}" , self . xcr_exchange_code , self . xcr_country_code , self . xcr_price_type () , self . XCR_RESERVED_00 () , self . xcr_quals , self . xcr_instrument_status , self . xcr_market_status , self . xcr_short_sale_restricted () , self . XCR_RESERVED_01 () , self . xcr_alternate_id1 , self . xcr_alternate_id2 , self . xcr_currency , self . xcr_close_exch , self . xcr_prime_exch , self . XCR_RESERVED_08 , self . xcr_bid_exch , self . xcr_bid_tick_flags , self . xcr_ask_exch , self . xcr_last_exch , self . xcr_trade_tick_flags , self . xcr_trading_session_date , self . xcr_high_exch , self . xcr_low_exch , self . xcr_open_exch , self . xcr_quote_quals , self . xcr_trade_quals)
+impl Default for XC_GROUP_EQUITY_REFRESH_ALL_WITH_HITIME {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_EQUITY_REFRESH_ALL_WITH_HITIME {
@@ -32020,9 +32178,13 @@ impl XC_GROUP_EQUITY_REFRESH_ALL_WITH_HITIME {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_EQUITY_REFRESH_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_EQUITY_REFRESH_ALL {{ xcr_exchange_code: {:?}, xcr_country_code: {:?}, xcr_price_type : {:?}, XCR_RESERVED_00 : {:?}, xcr_quals: {:?}, xcr_instrument_status: {:?}, xcr_market_status: {:?}, xcr_short_sale_restricted : {:?}, XCR_RESERVED_01 : {:?}, xcr_alternate_id1: {:?}, xcr_alternate_id2: {:?}, xcr_currency: {:?}, xcr_close_exch: {:?}, xcr_prime_exch: {:?}, XCR_RESERVED_08: {:?}, xcr_bid_exch: {:?}, xcr_bid_tick_flags: {:?}, xcr_ask_exch: {:?}, xcr_last_exch: {:?}, xcr_trade_tick_flags: {:?}, xcr_trading_session_date: {:?}, xcr_high_exch: {:?}, xcr_low_exch: {:?}, xcr_open_exch: {:?} }}" , self . xcr_exchange_code , self . xcr_country_code , self . xcr_price_type () , self . XCR_RESERVED_00 () , self . xcr_quals , self . xcr_instrument_status , self . xcr_market_status , self . xcr_short_sale_restricted () , self . XCR_RESERVED_01 () , self . xcr_alternate_id1 , self . xcr_alternate_id2 , self . xcr_currency , self . xcr_close_exch , self . xcr_prime_exch , self . XCR_RESERVED_08 , self . xcr_bid_exch , self . xcr_bid_tick_flags , self . xcr_ask_exch , self . xcr_last_exch , self . xcr_trade_tick_flags , self . xcr_trading_session_date , self . xcr_high_exch , self . xcr_low_exch , self . xcr_open_exch)
+impl Default for XC_GROUP_EQUITY_REFRESH_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_EQUITY_REFRESH_ALL {
@@ -32192,9 +32354,13 @@ impl XC_GROUP_EQUITY_REFRESH_ALL {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_EQUITY_REFRESH_WITH_LULD_CPMVOL_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_EQUITY_REFRESH_WITH_LULD_CPMVOL_ALL {{ xcr_exchange_code: {:?}, xcr_country_code: {:?}, xcr_price_type : {:?}, XCR_RESERVED_00 : {:?}, xcr_quals: {:?}, xcr_instrument_status: {:?}, xcr_market_status: {:?}, xcr_short_sale_restricted : {:?}, XCR_RESERVED_01 : {:?}, xcr_alternate_id1: {:?}, xcr_alternate_id2: {:?}, xcr_currency: {:?}, xcr_close_exch: {:?}, xcr_prime_exch: {:?}, XCR_RESERVED_08: {:?}, xcr_bid_exch: {:?}, xcr_bid_tick_flags: {:?}, xcr_ask_exch: {:?}, xcr_last_exch: {:?}, xcr_trade_tick_flags: {:?}, xcr_trading_session_date: {:?}, xcr_high_exch: {:?}, xcr_low_exch: {:?}, xcr_open_exch: {:?}, xcr_quote_quals: {:?}, xcr_trade_quals: {:?} }}" , self . xcr_exchange_code , self . xcr_country_code , self . xcr_price_type () , self . XCR_RESERVED_00 () , self . xcr_quals , self . xcr_instrument_status , self . xcr_market_status , self . xcr_short_sale_restricted () , self . XCR_RESERVED_01 () , self . xcr_alternate_id1 , self . xcr_alternate_id2 , self . xcr_currency , self . xcr_close_exch , self . xcr_prime_exch , self . XCR_RESERVED_08 , self . xcr_bid_exch , self . xcr_bid_tick_flags , self . xcr_ask_exch , self . xcr_last_exch , self . xcr_trade_tick_flags , self . xcr_trading_session_date , self . xcr_high_exch , self . xcr_low_exch , self . xcr_open_exch , self . xcr_quote_quals , self . xcr_trade_quals)
+impl Default for XC_GROUP_EQUITY_REFRESH_WITH_LULD_CPMVOL_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_EQUITY_REFRESH_WITH_LULD_CPMVOL_ALL {
@@ -32364,9 +32530,13 @@ impl XC_GROUP_EQUITY_REFRESH_WITH_LULD_CPMVOL_ALL {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_EQUITY_IMAGE_ALL_WITH_HITIME {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_EQUITY_IMAGE_ALL_WITH_HITIME {{ xci_exchange_code: {:?}, xci_country_code: {:?}, xci_symbol: {:?}, xci_price_type : {:?}, XCI_RESERVED_00 : {:?}, xci_instrument_status: {:?}, xci_market_status: {:?}, xci_short_sale_restricted : {:?}, XCI_RESERVED_01 : {:?}, xci_alternate_id1: {:?}, xci_alternate_id2: {:?}, xci_currency: {:?}, xci_close_exch: {:?}, xci_prime_exch: {:?}, XCI_RESERVED_09: {:?}, xci_bid_exch: {:?}, xci_bid_tick_flags: {:?}, xci_ask_exch: {:?}, xci_last_exch: {:?}, xci_trade_tick_flags: {:?}, xci_trading_session_date: {:?}, xci_high_exch: {:?}, xci_low_exch: {:?}, xci_open_exch: {:?} }}" , self . xci_exchange_code , self . xci_country_code , self . xci_symbol , self . xci_price_type () , self . XCI_RESERVED_00 () , self . xci_instrument_status , self . xci_market_status , self . xci_short_sale_restricted () , self . XCI_RESERVED_01 () , self . xci_alternate_id1 , self . xci_alternate_id2 , self . xci_currency , self . xci_close_exch , self . xci_prime_exch , self . XCI_RESERVED_09 , self . xci_bid_exch , self . xci_bid_tick_flags , self . xci_ask_exch , self . xci_last_exch , self . xci_trade_tick_flags , self . xci_trading_session_date , self . xci_high_exch , self . xci_low_exch , self . xci_open_exch)
+impl Default for XC_GROUP_EQUITY_IMAGE_ALL_WITH_HITIME {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_EQUITY_IMAGE_ALL_WITH_HITIME {
@@ -32536,9 +32706,13 @@ impl XC_GROUP_EQUITY_IMAGE_ALL_WITH_HITIME {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_EQUITY_IMAGE_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_EQUITY_IMAGE_ALL {{ xci_exchange_code: {:?}, xci_country_code: {:?}, xci_symbol: {:?}, xci_price_type : {:?}, XCI_RESERVED_00 : {:?}, xci_instrument_status: {:?}, xci_market_status: {:?}, xci_short_sale_restricted : {:?}, XCI_RESERVED_01 : {:?}, xci_alternate_id1: {:?}, xci_alternate_id2: {:?}, xci_currency: {:?}, xci_close_exch: {:?}, xci_prime_exch: {:?}, XCI_RESERVED_09: {:?}, xci_bid_exch: {:?}, xci_bid_tick_flags: {:?}, xci_ask_exch: {:?}, xci_last_exch: {:?}, xci_trade_tick_flags: {:?}, xci_trading_session_date: {:?}, xci_high_exch: {:?}, xci_low_exch: {:?}, xci_open_exch: {:?} }}" , self . xci_exchange_code , self . xci_country_code , self . xci_symbol , self . xci_price_type () , self . XCI_RESERVED_00 () , self . xci_instrument_status , self . xci_market_status , self . xci_short_sale_restricted () , self . XCI_RESERVED_01 () , self . xci_alternate_id1 , self . xci_alternate_id2 , self . xci_currency , self . xci_close_exch , self . xci_prime_exch , self . XCI_RESERVED_09 , self . xci_bid_exch , self . xci_bid_tick_flags , self . xci_ask_exch , self . xci_last_exch , self . xci_trade_tick_flags , self . xci_trading_session_date , self . xci_high_exch , self . xci_low_exch , self . xci_open_exch)
+impl Default for XC_GROUP_EQUITY_IMAGE_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_EQUITY_IMAGE_ALL {
@@ -32708,9 +32882,13 @@ impl XC_GROUP_EQUITY_IMAGE_ALL {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_EQUITY_IMAGE_WITH_LULD_CPMVOL_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_EQUITY_IMAGE_WITH_LULD_CPMVOL_ALL {{ xci_exchange_code: {:?}, xci_country_code: {:?}, xci_symbol: {:?}, xci_price_type : {:?}, XCI_RESERVED_00 : {:?}, xci_instrument_status: {:?}, xci_market_status: {:?}, xci_short_sale_restricted : {:?}, XCI_RESERVED_01 : {:?}, xci_alternate_id1: {:?}, xci_alternate_id2: {:?}, xci_currency: {:?}, xci_close_exch: {:?}, xci_prime_exch: {:?}, XCI_RESERVED_09: {:?}, xci_bid_exch: {:?}, xci_bid_tick_flags: {:?}, xci_ask_exch: {:?}, xci_last_exch: {:?}, xci_trade_tick_flags: {:?}, xci_trading_session_date: {:?}, xci_high_exch: {:?}, xci_low_exch: {:?}, xci_open_exch: {:?}, xci_quote_quals: {:?}, xci_trade_quals: {:?} }}" , self . xci_exchange_code , self . xci_country_code , self . xci_symbol , self . xci_price_type () , self . XCI_RESERVED_00 () , self . xci_instrument_status , self . xci_market_status , self . xci_short_sale_restricted () , self . XCI_RESERVED_01 () , self . xci_alternate_id1 , self . xci_alternate_id2 , self . xci_currency , self . xci_close_exch , self . xci_prime_exch , self . XCI_RESERVED_09 , self . xci_bid_exch , self . xci_bid_tick_flags , self . xci_ask_exch , self . xci_last_exch , self . xci_trade_tick_flags , self . xci_trading_session_date , self . xci_high_exch , self . xci_low_exch , self . xci_open_exch , self . xci_quote_quals , self . xci_trade_quals)
+impl Default for XC_GROUP_EQUITY_IMAGE_WITH_LULD_CPMVOL_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_EQUITY_IMAGE_WITH_LULD_CPMVOL_ALL {
@@ -32880,14 +33058,22 @@ impl XC_GROUP_EQUITY_IMAGE_WITH_LULD_CPMVOL_ALL {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_TRADE_REF {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_TRADE_REF {{ xct_bid_order_ref: {:?}, xct_ask_order_ref: {:?}, xct_bid_mmid: {:?}, xct_ask_mmid: {:?}, xct_trade_ref: {:?} }}" , self . xct_bid_order_ref , self . xct_ask_order_ref , self . xct_bid_mmid , self . xct_ask_mmid , self . xct_trade_ref)
+impl Default for XC_GROUP_TRADE_REF {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_COMMODITY_QUOTE_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_COMMODITY_QUOTE_ALL {{ xcq_exchange_code: {:?}, xcq_country_code: {:?}, xcq_price_type : {:?}, XCQ_RESERVED_00 : {:?}, xcq_quals: {:?}, xcq_instrument_status: {:?}, xcq_market_status: {:?}, xcq_short_sale_restricted : {:?}, XCQ_RESERVED_01 : {:?}, xcq_bid_tick_flags: {:?} }}" , self . xcq_exchange_code , self . xcq_country_code , self . xcq_price_type () , self . XCQ_RESERVED_00 () , self . xcq_quals , self . xcq_instrument_status , self . xcq_market_status , self . xcq_short_sale_restricted () , self . XCQ_RESERVED_01 () , self . xcq_bid_tick_flags)
+impl Default for XC_GROUP_COMMODITY_QUOTE_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_COMMODITY_QUOTE_ALL {
@@ -33141,9 +33327,13 @@ impl XC_GROUP_COMMODITY_TRADE {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_COMMODITY_TRADE_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_COMMODITY_TRADE_ALL {{ xct_exchange_code: {:?}, xct_country_code: {:?}, xct_price_type : {:?}, XCT_RESERVED_00 : {:?}, xct_quals: {:?}, xct_instrument_status: {:?}, xct_market_status: {:?}, xct_short_sale_restricted : {:?}, xct_trade_thru_exempt : {:?}, XCT_RESERVED_01 : {:?}, xct_bate : {:?}, xct_side_attr : {:?}, XCT_RESERVED_04 : {:?}, xct_trade_tick_flags: {:?} }}" , self . xct_exchange_code , self . xct_country_code , self . xct_price_type () , self . XCT_RESERVED_00 () , self . xct_quals , self . xct_instrument_status , self . xct_market_status , self . xct_short_sale_restricted () , self . xct_trade_thru_exempt () , self . XCT_RESERVED_01 () , self . xct_bate () , self . xct_side_attr () , self . XCT_RESERVED_04 () , self . xct_trade_tick_flags)
+impl Default for XC_GROUP_COMMODITY_TRADE_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_COMMODITY_TRADE_ALL {
@@ -33471,9 +33661,13 @@ impl XC_GROUP_COMMODITY_TRADE_ALL {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_COMMODITY_CANCEL_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_COMMODITY_CANCEL_ALL {{ xca_exchange_code: {:?}, xca_country_code: {:?}, xca_price_type : {:?}, XCA_RESERVED_00 : {:?}, xca_quals: {:?}, xca_instrument_status: {:?}, xca_market_status: {:?}, xca_short_sale_restricted : {:?}, xca_trade_thru_exempt : {:?}, XCA_RESERVED_01 : {:?}, xca_bate : {:?}, xca_side_attr : {:?}, XCA_RESERVED_04 : {:?}, xca_trade_tick_flags: {:?} }}" , self . xca_exchange_code , self . xca_country_code , self . xca_price_type () , self . XCA_RESERVED_00 () , self . xca_quals , self . xca_instrument_status , self . xca_market_status , self . xca_short_sale_restricted () , self . xca_trade_thru_exempt () , self . XCA_RESERVED_01 () , self . xca_bate () , self . xca_side_attr () , self . XCA_RESERVED_04 () , self . xca_trade_tick_flags)
+impl Default for XC_GROUP_COMMODITY_CANCEL_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_COMMODITY_CANCEL_ALL {
@@ -33967,9 +34161,13 @@ impl XC_GROUP_COMMODITY_CORRECTION {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_COMMODITY_CORRECTION_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_COMMODITY_CORRECTION_ALL {{ xcc_exchange_code: {:?}, xcc_country_code: {:?}, xcc_price_type : {:?}, XCC_RESERVED_00 : {:?}, xcc_quals: {:?}, xcc_instrument_status: {:?}, xcc_market_status: {:?}, xcc_short_sale_restricted : {:?}, xcc_trade_thru_exempt : {:?}, XCC_RESERVED_01 : {:?}, xcc_cancel_bate : {:?}, xcc_cancel_side_attr : {:?}, XCC_RESERVED_04 : {:?}, xcc_cancel_trade_tick_flags: {:?}, xcc_correct_bate : {:?}, xcc_correct_side_attr : {:?}, XCC_RESERVED_08 : {:?}, xcc_correct_trade_tick_flags: {:?} }}" , self . xcc_exchange_code , self . xcc_country_code , self . xcc_price_type () , self . XCC_RESERVED_00 () , self . xcc_quals , self . xcc_instrument_status , self . xcc_market_status , self . xcc_short_sale_restricted () , self . xcc_trade_thru_exempt () , self . XCC_RESERVED_01 () , self . xcc_cancel_bate () , self . xcc_cancel_side_attr () , self . XCC_RESERVED_04 () , self . xcc_cancel_trade_tick_flags , self . xcc_correct_bate () , self . xcc_correct_side_attr () , self . XCC_RESERVED_08 () , self . xcc_correct_trade_tick_flags)
+impl Default for XC_GROUP_COMMODITY_CORRECTION_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_COMMODITY_CORRECTION_ALL {
@@ -34423,9 +34621,13 @@ impl XC_GROUP_COMMODITY_CORRECTION_ALL {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_COMMODITY_REFRESH_ALL_WITH_HITIME {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_COMMODITY_REFRESH_ALL_WITH_HITIME {{ xcr_exchange_code: {:?}, xcr_country_code: {:?}, xcr_price_type : {:?}, XCR_RESERVED_00 : {:?}, xcr_quals: {:?}, xcr_instrument_status: {:?}, xcr_market_status: {:?}, xcr_short_sale_restricted : {:?}, XCR_RESERVED_01 : {:?}, xcr_alternate_id1: {:?}, xcr_alternate_id2: {:?}, xcr_currency: {:?}, XCR_RESERVED_07: {:?}, xcr_bid_tick_flags: {:?}, xcr_expiration: {:?}, xcr_setl_bate : {:?}, xcr_last_bate : {:?}, xcr_high_bate : {:?}, xcr_low_bate : {:?}, xcr_trade_tick_flags: {:?}, xcr_trading_session_date: {:?}, xcr_quote_quals: {:?}, xcr_trade_quals: {:?} }}" , self . xcr_exchange_code , self . xcr_country_code , self . xcr_price_type () , self . XCR_RESERVED_00 () , self . xcr_quals , self . xcr_instrument_status , self . xcr_market_status , self . xcr_short_sale_restricted () , self . XCR_RESERVED_01 () , self . xcr_alternate_id1 , self . xcr_alternate_id2 , self . xcr_currency , self . XCR_RESERVED_07 , self . xcr_bid_tick_flags , self . xcr_expiration , self . xcr_setl_bate () , self . xcr_last_bate () , self . xcr_high_bate () , self . xcr_low_bate () , self . xcr_trade_tick_flags , self . xcr_trading_session_date , self . xcr_quote_quals , self . xcr_trade_quals)
+impl Default for XC_GROUP_COMMODITY_REFRESH_ALL_WITH_HITIME {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_COMMODITY_REFRESH_ALL_WITH_HITIME {
@@ -34753,9 +34955,13 @@ impl XC_GROUP_COMMODITY_REFRESH_ALL_WITH_HITIME {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_COMMODITY_REFRESH_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_COMMODITY_REFRESH_ALL {{ xcr_exchange_code: {:?}, xcr_country_code: {:?}, xcr_price_type : {:?}, XCR_RESERVED_00 : {:?}, xcr_quals: {:?}, xcr_instrument_status: {:?}, xcr_market_status: {:?}, xcr_short_sale_restricted : {:?}, XCR_RESERVED_01 : {:?}, xcr_alternate_id1: {:?}, xcr_alternate_id2: {:?}, xcr_currency: {:?}, XCR_RESERVED_07: {:?}, xcr_bid_tick_flags: {:?}, xcr_expiration: {:?}, xcr_setl_bate : {:?}, xcr_last_bate : {:?}, xcr_high_bate : {:?}, xcr_low_bate : {:?}, xcr_trade_tick_flags: {:?}, xcr_trading_session_date: {:?} }}" , self . xcr_exchange_code , self . xcr_country_code , self . xcr_price_type () , self . XCR_RESERVED_00 () , self . xcr_quals , self . xcr_instrument_status , self . xcr_market_status , self . xcr_short_sale_restricted () , self . XCR_RESERVED_01 () , self . xcr_alternate_id1 , self . xcr_alternate_id2 , self . xcr_currency , self . XCR_RESERVED_07 , self . xcr_bid_tick_flags , self . xcr_expiration , self . xcr_setl_bate () , self . xcr_last_bate () , self . xcr_high_bate () , self . xcr_low_bate () , self . xcr_trade_tick_flags , self . xcr_trading_session_date)
+impl Default for XC_GROUP_COMMODITY_REFRESH_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_COMMODITY_REFRESH_ALL {
@@ -35083,9 +35289,13 @@ impl XC_GROUP_COMMODITY_REFRESH_ALL {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_COMMODITY_REFRESH_WITH_QUALS_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_COMMODITY_REFRESH_WITH_QUALS_ALL {{ xcr_exchange_code: {:?}, xcr_country_code: {:?}, xcr_price_type : {:?}, XCR_RESERVED_00 : {:?}, xcr_quals: {:?}, xcr_instrument_status: {:?}, xcr_market_status: {:?}, xcr_short_sale_restricted : {:?}, XCR_RESERVED_01 : {:?}, xcr_alternate_id1: {:?}, xcr_alternate_id2: {:?}, xcr_currency: {:?}, XCR_RESERVED_07: {:?}, xcr_bid_tick_flags: {:?}, xcr_expiration: {:?}, xcr_setl_bate : {:?}, xcr_last_bate : {:?}, xcr_high_bate : {:?}, xcr_low_bate : {:?}, xcr_trade_tick_flags: {:?}, xcr_trading_session_date: {:?}, xcr_quote_quals: {:?}, xcr_trade_quals: {:?} }}" , self . xcr_exchange_code , self . xcr_country_code , self . xcr_price_type () , self . XCR_RESERVED_00 () , self . xcr_quals , self . xcr_instrument_status , self . xcr_market_status , self . xcr_short_sale_restricted () , self . XCR_RESERVED_01 () , self . xcr_alternate_id1 , self . xcr_alternate_id2 , self . xcr_currency , self . XCR_RESERVED_07 , self . xcr_bid_tick_flags , self . xcr_expiration , self . xcr_setl_bate () , self . xcr_last_bate () , self . xcr_high_bate () , self . xcr_low_bate () , self . xcr_trade_tick_flags , self . xcr_trading_session_date , self . xcr_quote_quals , self . xcr_trade_quals)
+impl Default for XC_GROUP_COMMODITY_REFRESH_WITH_QUALS_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_COMMODITY_REFRESH_WITH_QUALS_ALL {
@@ -35413,9 +35623,13 @@ impl XC_GROUP_COMMODITY_REFRESH_WITH_QUALS_ALL {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_COMMODITY_IMAGE_ALL_WITH_HITIME {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_COMMODITY_IMAGE_ALL_WITH_HITIME {{ xci_exchange_code: {:?}, xci_country_code: {:?}, xci_symbol: {:?}, xci_price_type : {:?}, XCI_RESERVED_00 : {:?}, xci_instrument_status: {:?}, xci_market_status: {:?}, xci_short_sale_restricted : {:?}, XCI_RESERVED_01 : {:?}, xci_alternate_id1: {:?}, xci_alternate_id2: {:?}, xci_currency: {:?}, XCI_RESERVED_08: {:?}, xci_bid_tick_flags: {:?}, xci_expiration: {:?}, xci_setl_bate : {:?}, xci_last_bate : {:?}, xci_high_bate : {:?}, xci_low_bate : {:?}, xci_trade_tick_flags: {:?}, xci_trading_session_date: {:?} }}" , self . xci_exchange_code , self . xci_country_code , self . xci_symbol , self . xci_price_type () , self . XCI_RESERVED_00 () , self . xci_instrument_status , self . xci_market_status , self . xci_short_sale_restricted () , self . XCI_RESERVED_01 () , self . xci_alternate_id1 , self . xci_alternate_id2 , self . xci_currency , self . XCI_RESERVED_08 , self . xci_bid_tick_flags , self . xci_expiration , self . xci_setl_bate () , self . xci_last_bate () , self . xci_high_bate () , self . xci_low_bate () , self . xci_trade_tick_flags , self . xci_trading_session_date)
+impl Default for XC_GROUP_COMMODITY_IMAGE_ALL_WITH_HITIME {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_COMMODITY_IMAGE_ALL_WITH_HITIME {
@@ -35743,9 +35957,13 @@ impl XC_GROUP_COMMODITY_IMAGE_ALL_WITH_HITIME {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_COMMODITY_IMAGE_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_COMMODITY_IMAGE_ALL {{ xci_exchange_code: {:?}, xci_country_code: {:?}, xci_symbol: {:?}, xci_price_type : {:?}, XCI_RESERVED_00 : {:?}, xci_instrument_status: {:?}, xci_market_status: {:?}, xci_short_sale_restricted : {:?}, XCI_RESERVED_01 : {:?}, xci_alternate_id1: {:?}, xci_alternate_id2: {:?}, xci_currency: {:?}, XCI_RESERVED_08: {:?}, xci_bid_tick_flags: {:?}, xci_expiration: {:?}, xci_setl_bate : {:?}, xci_last_bate : {:?}, xci_high_bate : {:?}, xci_low_bate : {:?}, xci_trade_tick_flags: {:?}, xci_trading_session_date: {:?} }}" , self . xci_exchange_code , self . xci_country_code , self . xci_symbol , self . xci_price_type () , self . XCI_RESERVED_00 () , self . xci_instrument_status , self . xci_market_status , self . xci_short_sale_restricted () , self . XCI_RESERVED_01 () , self . xci_alternate_id1 , self . xci_alternate_id2 , self . xci_currency , self . XCI_RESERVED_08 , self . xci_bid_tick_flags , self . xci_expiration , self . xci_setl_bate () , self . xci_last_bate () , self . xci_high_bate () , self . xci_low_bate () , self . xci_trade_tick_flags , self . xci_trading_session_date)
+impl Default for XC_GROUP_COMMODITY_IMAGE_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_COMMODITY_IMAGE_ALL {
@@ -36073,9 +36291,13 @@ impl XC_GROUP_COMMODITY_IMAGE_ALL {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_COMMODITY_IMAGE_WITH_QUALS_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_COMMODITY_IMAGE_WITH_QUALS_ALL {{ xci_exchange_code: {:?}, xci_country_code: {:?}, xci_symbol: {:?}, xci_price_type : {:?}, XCI_RESERVED_00 : {:?}, xci_instrument_status: {:?}, xci_market_status: {:?}, xci_short_sale_restricted : {:?}, XCI_RESERVED_01 : {:?}, xci_alternate_id1: {:?}, xci_alternate_id2: {:?}, xci_currency: {:?}, XCI_RESERVED_08: {:?}, xci_bid_tick_flags: {:?}, xci_expiration: {:?}, xci_setl_bate : {:?}, xci_last_bate : {:?}, xci_high_bate : {:?}, xci_low_bate : {:?}, xci_trade_tick_flags: {:?}, xci_trading_session_date: {:?}, xci_quote_quals: {:?}, xci_trade_quals: {:?} }}" , self . xci_exchange_code , self . xci_country_code , self . xci_symbol , self . xci_price_type () , self . XCI_RESERVED_00 () , self . xci_instrument_status , self . xci_market_status , self . xci_short_sale_restricted () , self . XCI_RESERVED_01 () , self . xci_alternate_id1 , self . xci_alternate_id2 , self . xci_currency , self . XCI_RESERVED_08 , self . xci_bid_tick_flags , self . xci_expiration , self . xci_setl_bate () , self . xci_last_bate () , self . xci_high_bate () , self . xci_low_bate () , self . xci_trade_tick_flags , self . xci_trading_session_date , self . xci_quote_quals , self . xci_trade_quals)
+impl Default for XC_GROUP_COMMODITY_IMAGE_WITH_QUALS_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_COMMODITY_IMAGE_WITH_QUALS_ALL {
@@ -36403,9 +36625,13 @@ impl XC_GROUP_COMMODITY_IMAGE_WITH_QUALS_ALL {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_ORDER_BOOK_ENTRY {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_ORDER_BOOK_ENTRY {{ xob_implied : {:?}, xob_pre_market : {:?}, xob_open_market : {:?}, xob_post_market : {:?}, XOB_RESERVED_00 : {:?}, xob_mmid: {:?}, xob_order_quals: {:?}, xob_order_ref: {:?}, xob_exch: {:?}, xob_country: {:?} }}" , self . xob_implied () , self . xob_pre_market () , self . xob_open_market () , self . xob_post_market () , self . XOB_RESERVED_00 () , self . xob_mmid , self . xob_order_quals , self . xob_order_ref , self . xob_exch , self . xob_country)
+impl Default for XC_GROUP_ORDER_BOOK_ENTRY {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_ORDER_BOOK_ENTRY {
@@ -36606,9 +36832,13 @@ impl XC_GROUP_ORDER_BOOK_ENTRY {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_ORDER_BOOK_ENTRY_WITH_PRIORITY {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_ORDER_BOOK_ENTRY_WITH_PRIORITY {{ xob_implied : {:?}, xob_pre_market : {:?}, xob_open_market : {:?}, xob_post_market : {:?}, XOB_RESERVED_00 : {:?}, xob_mmid: {:?}, xob_order_quals: {:?}, xob_order_ref: {:?}, xob_exch: {:?}, xob_country: {:?} }}" , self . xob_implied () , self . xob_pre_market () , self . xob_open_market () , self . xob_post_market () , self . XOB_RESERVED_00 () , self . xob_mmid , self . xob_order_quals , self . xob_order_ref , self . xob_exch , self . xob_country)
+impl Default for XC_GROUP_ORDER_BOOK_ENTRY_WITH_PRIORITY {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_ORDER_BOOK_ENTRY_WITH_PRIORITY {
@@ -37373,9 +37603,13 @@ impl XC_GROUP_PRICE_BOOK_LEVEL_WITH_CPMVOL {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_ORDER_BOOK_UPDATE {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_ORDER_BOOK_UPDATE {{ XOBU_RESERVED_00 : {:?}, xobu_ask_side : {:?}, xobu_update_type : {:?}, XOBU_RESERVED_01 : {:?}, xobu_transaction_type : {:?}, xobu_implied : {:?}, xobu_pre_market : {:?}, xobu_open_market : {:?}, xobu_post_market : {:?}, XOBU_RESERVED_02 : {:?}, xobu_mmid: {:?}, xobu_order_ref: {:?} }}" , self . XOBU_RESERVED_00 () , self . xobu_ask_side () , self . xobu_update_type () , self . XOBU_RESERVED_01 () , self . xobu_transaction_type () , self . xobu_implied () , self . xobu_pre_market () , self . xobu_open_market () , self . xobu_post_market () , self . XOBU_RESERVED_02 () , self . xobu_mmid , self . xobu_order_ref)
+impl Default for XC_GROUP_ORDER_BOOK_UPDATE {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_ORDER_BOOK_UPDATE {
@@ -37769,9 +38003,13 @@ impl XC_GROUP_ORDER_BOOK_UPDATE {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_ORDER_BOOK_UPDATE_WITH_PRIORITY {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_ORDER_BOOK_UPDATE_WITH_PRIORITY {{ XOBU_RESERVED_00 : {:?}, xobu_ask_side : {:?}, xobu_update_type : {:?}, XOBU_RESERVED_01 : {:?}, xobu_transaction_type : {:?}, xobu_implied : {:?}, xobu_pre_market : {:?}, xobu_open_market : {:?}, xobu_post_market : {:?}, XOBU_RESERVED_02 : {:?}, xobu_mmid: {:?}, xobu_order_ref: {:?} }}" , self . XOBU_RESERVED_00 () , self . xobu_ask_side () , self . xobu_update_type () , self . XOBU_RESERVED_01 () , self . xobu_transaction_type () , self . xobu_implied () , self . xobu_pre_market () , self . xobu_open_market () , self . xobu_post_market () , self . XOBU_RESERVED_02 () , self . xobu_mmid , self . xobu_order_ref)
+impl Default for XC_GROUP_ORDER_BOOK_UPDATE_WITH_PRIORITY {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_ORDER_BOOK_UPDATE_WITH_PRIORITY {
@@ -38165,9 +38403,13 @@ impl XC_GROUP_ORDER_BOOK_UPDATE_WITH_PRIORITY {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_ORDER_BOOK_UPDATE_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_ORDER_BOOK_UPDATE_ALL {{ xobu_exchange_code: {:?}, xobu_country_code: {:?}, xobu_price_type : {:?}, XOBU_RESERVED_00 : {:?}, xobu_quals: {:?}, xobu_instrument_status: {:?}, xobu_market_status: {:?}, xobu_short_sale_restricted : {:?}, XOBU_RESERVED_01 : {:?}, XOBU_RESERVED_03 : {:?}, xobu_ask_side : {:?}, xobu_update_type : {:?}, XOBU_RESERVED_04 : {:?}, xobu_transaction_type : {:?}, xobu_implied : {:?}, xobu_pre_market : {:?}, xobu_open_market : {:?}, xobu_post_market : {:?}, XOBU_RESERVED_05 : {:?}, xobu_mmid: {:?}, xobu_order_ref: {:?} }}" , self . xobu_exchange_code , self . xobu_country_code , self . xobu_price_type () , self . XOBU_RESERVED_00 () , self . xobu_quals , self . xobu_instrument_status , self . xobu_market_status , self . xobu_short_sale_restricted () , self . XOBU_RESERVED_01 () , self . XOBU_RESERVED_03 () , self . xobu_ask_side () , self . xobu_update_type () , self . XOBU_RESERVED_04 () , self . xobu_transaction_type () , self . xobu_implied () , self . xobu_pre_market () , self . xobu_open_market () , self . xobu_post_market () , self . XOBU_RESERVED_05 () , self . xobu_mmid , self . xobu_order_ref)
+impl Default for XC_GROUP_ORDER_BOOK_UPDATE_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_ORDER_BOOK_UPDATE_ALL {
@@ -39117,9 +39359,13 @@ impl XC_GROUP_PRICE_BOOK_UPDATE {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_PRICE_BOOK_UPDATE_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_PRICE_BOOK_UPDATE_ALL {{ xpbu_exchange_code: {:?}, xpbu_country_code: {:?}, xpbu_price_type : {:?}, XPBU_RESERVED_00 : {:?}, xpbu_quals: {:?}, xpbu_instrument_status: {:?}, xpbu_market_status: {:?}, xpbu_short_sale_restricted : {:?}, XPBU_RESERVED_01 : {:?}, xpbu_synthetic : {:?}, xpbu_ask_side : {:?}, xpbu_update_type : {:?}, XPBU_RESERVED_03 : {:?}, xpbu_transaction_type : {:?}, xpbu_implied : {:?}, xpbu_pre_market : {:?}, xpbu_open_market : {:?}, xpbu_post_market : {:?}, XPBU_RESERVED_04 : {:?} }}" , self . xpbu_exchange_code , self . xpbu_country_code , self . xpbu_price_type () , self . XPBU_RESERVED_00 () , self . xpbu_quals , self . xpbu_instrument_status , self . xpbu_market_status , self . xpbu_short_sale_restricted () , self . XPBU_RESERVED_01 () , self . xpbu_synthetic () , self . xpbu_ask_side () , self . xpbu_update_type () , self . XPBU_RESERVED_03 () , self . xpbu_transaction_type () , self . xpbu_implied () , self . xpbu_pre_market () , self . xpbu_open_market () , self . xpbu_post_market () , self . XPBU_RESERVED_04 ())
+impl Default for XC_GROUP_PRICE_BOOK_UPDATE_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_PRICE_BOOK_UPDATE_ALL {
@@ -39678,9 +39924,13 @@ impl XC_GROUP_PRICE_BOOK_UPDATE_ALL {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_PRICE_BOOK_UPDATE_WITH_CPMVOL_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_PRICE_BOOK_UPDATE_WITH_CPMVOL_ALL {{ xpbu_exchange_code: {:?}, xpbu_country_code: {:?}, xpbu_price_type : {:?}, XPBU_RESERVED_00 : {:?}, xpbu_quals: {:?}, xpbu_instrument_status: {:?}, xpbu_market_status: {:?}, xpbu_short_sale_restricted : {:?}, XPBU_RESERVED_01 : {:?}, xpbu_synthetic : {:?}, xpbu_ask_side : {:?}, xpbu_update_type : {:?}, XPBU_RESERVED_03 : {:?}, xpbu_transaction_type : {:?}, xpbu_implied : {:?}, xpbu_pre_market : {:?}, xpbu_open_market : {:?}, xpbu_post_market : {:?}, XPBU_RESERVED_04 : {:?} }}" , self . xpbu_exchange_code , self . xpbu_country_code , self . xpbu_price_type () , self . XPBU_RESERVED_00 () , self . xpbu_quals , self . xpbu_instrument_status , self . xpbu_market_status , self . xpbu_short_sale_restricted () , self . XPBU_RESERVED_01 () , self . xpbu_synthetic () , self . xpbu_ask_side () , self . xpbu_update_type () , self . XPBU_RESERVED_03 () , self . xpbu_transaction_type () , self . xpbu_implied () , self . xpbu_pre_market () , self . xpbu_open_market () , self . xpbu_post_market () , self . XPBU_RESERVED_04 ())
+impl Default for XC_GROUP_PRICE_BOOK_UPDATE_WITH_CPMVOL_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_PRICE_BOOK_UPDATE_WITH_CPMVOL_ALL {
@@ -40630,9 +40880,13 @@ impl XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_ALL {{ xpbu_exchange_code: {:?}, xpbu_country_code: {:?}, xpbu_price_type : {:?}, XPBU_RESERVED_00 : {:?}, xpbu_quals: {:?}, xpbu_instrument_status: {:?}, xpbu_market_status: {:?}, xpbu_short_sale_restricted : {:?}, XPBU_RESERVED_01 : {:?}, xpbu_synthetic : {:?}, xpbu_ask_side : {:?}, xpbu_update_type : {:?}, XPBU_RESERVED_03 : {:?}, xpbu_transaction_type : {:?}, xpbu_implied : {:?}, xpbu_pre_market : {:?}, xpbu_open_market : {:?}, xpbu_post_market : {:?}, XPBU_RESERVED_04 : {:?} }}" , self . xpbu_exchange_code , self . xpbu_country_code , self . xpbu_price_type () , self . XPBU_RESERVED_00 () , self . xpbu_quals , self . xpbu_instrument_status , self . xpbu_market_status , self . xpbu_short_sale_restricted () , self . XPBU_RESERVED_01 () , self . xpbu_synthetic () , self . xpbu_ask_side () , self . xpbu_update_type () , self . XPBU_RESERVED_03 () , self . xpbu_transaction_type () , self . xpbu_implied () , self . xpbu_pre_market () , self . xpbu_open_market () , self . xpbu_post_market () , self . XPBU_RESERVED_04 ())
+impl Default for XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_ALL {
@@ -41191,9 +41445,13 @@ impl XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_ALL {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL {{ xpbu_exchange_code: {:?}, xpbu_country_code: {:?}, xpbu_price_type : {:?}, XPBU_RESERVED_00 : {:?}, xpbu_quals: {:?}, xpbu_instrument_status: {:?}, xpbu_market_status: {:?}, xpbu_short_sale_restricted : {:?}, XPBU_RESERVED_01 : {:?}, xpbu_synthetic : {:?}, xpbu_ask_side : {:?}, xpbu_update_type : {:?}, XPBU_RESERVED_03 : {:?}, xpbu_transaction_type : {:?}, xpbu_implied : {:?}, xpbu_pre_market : {:?}, xpbu_open_market : {:?}, xpbu_post_market : {:?}, XPBU_RESERVED_04 : {:?} }}" , self . xpbu_exchange_code , self . xpbu_country_code , self . xpbu_price_type () , self . XPBU_RESERVED_00 () , self . xpbu_quals , self . xpbu_instrument_status , self . xpbu_market_status , self . xpbu_short_sale_restricted () , self . XPBU_RESERVED_01 () , self . xpbu_synthetic () , self . xpbu_ask_side () , self . xpbu_update_type () , self . XPBU_RESERVED_03 () , self . xpbu_transaction_type () , self . xpbu_implied () , self . xpbu_pre_market () , self . xpbu_open_market () , self . xpbu_post_market () , self . XPBU_RESERVED_04 ())
+impl Default for XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL {
@@ -41752,9 +42010,13 @@ impl XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_CPMVOL_ALL {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_ORDER_BOOK_ENTRY_WITH_HITIME {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_ORDER_BOOK_ENTRY_WITH_HITIME {{ xob_implied : {:?}, xob_pre_market : {:?}, xob_open_market : {:?}, xob_post_market : {:?}, XOB_RESERVED_00 : {:?}, xob_mmid: {:?}, xob_order_quals: {:?}, xob_order_ref: {:?}, xob_exch: {:?}, xob_country: {:?} }}" , self . xob_implied () , self . xob_pre_market () , self . xob_open_market () , self . xob_post_market () , self . XOB_RESERVED_00 () , self . xob_mmid , self . xob_order_quals , self . xob_order_ref , self . xob_exch , self . xob_country)
+impl Default for XC_GROUP_ORDER_BOOK_ENTRY_WITH_HITIME {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_ORDER_BOOK_ENTRY_WITH_HITIME {
@@ -41955,9 +42217,13 @@ impl XC_GROUP_ORDER_BOOK_ENTRY_WITH_HITIME {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_ORDER_BOOK_ENTRY_WITH_PRIORITY_HITIME {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_ORDER_BOOK_ENTRY_WITH_PRIORITY_HITIME {{ xob_implied : {:?}, xob_pre_market : {:?}, xob_open_market : {:?}, xob_post_market : {:?}, XOB_RESERVED_00 : {:?}, xob_mmid: {:?}, xob_order_quals: {:?}, xob_order_ref: {:?}, xob_exch: {:?}, xob_country: {:?} }}" , self . xob_implied () , self . xob_pre_market () , self . xob_open_market () , self . xob_post_market () , self . XOB_RESERVED_00 () , self . xob_mmid , self . xob_order_quals , self . xob_order_ref , self . xob_exch , self . xob_country)
+impl Default for XC_GROUP_ORDER_BOOK_ENTRY_WITH_PRIORITY_HITIME {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_ORDER_BOOK_ENTRY_WITH_PRIORITY_HITIME {
@@ -42722,9 +42988,13 @@ impl XC_GROUP_PRICE_BOOK_LEVEL_WITH_CPMVOL_HITIME {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_ORDER_BOOK_UPDATE_WITH_HITIME {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_ORDER_BOOK_UPDATE_WITH_HITIME {{ XOBU_RESERVED_00 : {:?}, xobu_ask_side : {:?}, xobu_update_type : {:?}, XOBU_RESERVED_01 : {:?}, xobu_transaction_type : {:?}, xobu_implied : {:?}, xobu_pre_market : {:?}, xobu_open_market : {:?}, xobu_post_market : {:?}, XOBU_RESERVED_02 : {:?}, xobu_mmid: {:?}, xobu_order_ref: {:?} }}" , self . XOBU_RESERVED_00 () , self . xobu_ask_side () , self . xobu_update_type () , self . XOBU_RESERVED_01 () , self . xobu_transaction_type () , self . xobu_implied () , self . xobu_pre_market () , self . xobu_open_market () , self . xobu_post_market () , self . XOBU_RESERVED_02 () , self . xobu_mmid , self . xobu_order_ref)
+impl Default for XC_GROUP_ORDER_BOOK_UPDATE_WITH_HITIME {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_ORDER_BOOK_UPDATE_WITH_HITIME {
@@ -43118,9 +43388,13 @@ impl XC_GROUP_ORDER_BOOK_UPDATE_WITH_HITIME {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_ORDER_BOOK_UPDATE_WITH_PRIORITY_HITIME {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_ORDER_BOOK_UPDATE_WITH_PRIORITY_HITIME {{ XOBU_RESERVED_00 : {:?}, xobu_ask_side : {:?}, xobu_update_type : {:?}, XOBU_RESERVED_01 : {:?}, xobu_transaction_type : {:?}, xobu_implied : {:?}, xobu_pre_market : {:?}, xobu_open_market : {:?}, xobu_post_market : {:?}, XOBU_RESERVED_02 : {:?}, xobu_mmid: {:?}, xobu_order_ref: {:?} }}" , self . XOBU_RESERVED_00 () , self . xobu_ask_side () , self . xobu_update_type () , self . XOBU_RESERVED_01 () , self . xobu_transaction_type () , self . xobu_implied () , self . xobu_pre_market () , self . xobu_open_market () , self . xobu_post_market () , self . XOBU_RESERVED_02 () , self . xobu_mmid , self . xobu_order_ref)
+impl Default for XC_GROUP_ORDER_BOOK_UPDATE_WITH_PRIORITY_HITIME {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_ORDER_BOOK_UPDATE_WITH_PRIORITY_HITIME {
@@ -44296,9 +44570,13 @@ impl XC_GROUP_PRICE_BOOK_UPDATE_WITH_ROW_LEVEL_HITIME {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_ORDER_EXECUTION_V3_1_7 {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_ORDER_EXECUTION_V3_1_7 {{ xoex_side_attr : {:?}, XOEX_RESERVED_01 : {:?}, XOEX_RESERVED_02: {:?}, xoex_trade_ref: {:?}, xoex_order_ref: {:?} }}" , self . xoex_side_attr () , self . XOEX_RESERVED_01 () , self . XOEX_RESERVED_02 , self . xoex_trade_ref , self . xoex_order_ref)
+impl Default for XC_GROUP_ORDER_EXECUTION_V3_1_7 {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_ORDER_EXECUTION_V3_1_7 {
@@ -44385,9 +44663,13 @@ impl XC_GROUP_ORDER_EXECUTION_V3_1_7 {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_ORDER_EXECUTION {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_ORDER_EXECUTION {{ xoex_side_attr : {:?}, XOEX_RESERVED_01 : {:?}, XOEX_RESERVED_02 : {:?}, xoex_trade_thru_exempt : {:?}, xoex_trade_ref: {:?}, xoex_order_ref: {:?}, xoex_sub_market: {:?}, xoex_bid_order_ref: {:?}, xoex_ask_order_ref: {:?}, xoex_bid_mmid: {:?}, xoex_ask_mmid: {:?} }}" , self . xoex_side_attr () , self . XOEX_RESERVED_01 () , self . XOEX_RESERVED_02 () , self . xoex_trade_thru_exempt () , self . xoex_trade_ref , self . xoex_order_ref , self . xoex_sub_market , self . xoex_bid_order_ref , self . xoex_ask_order_ref , self . xoex_bid_mmid , self . xoex_ask_mmid)
+impl Default for XC_GROUP_ORDER_EXECUTION {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_ORDER_EXECUTION {
@@ -44557,9 +44839,13 @@ impl XC_GROUP_ORDER_EXECUTION {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_ORDER_EXECUTION_ALL_V3_1_7 {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_ORDER_EXECUTION_ALL_V3_1_7 {{ xoex_exchange_code: {:?}, xoex_country_code: {:?}, xoex_price_type : {:?}, XOEX_RESERVED_00 : {:?}, xoex_quals: {:?}, xoex_instrument_status: {:?}, xoex_market_status: {:?}, xoex_short_sale_restricted : {:?}, XOEX_RESERVED_01 : {:?}, xoex_side_attr : {:?}, XOEX_RESERVED_04 : {:?}, XOEX_RESERVED_05: {:?}, xoex_trade_ref: {:?}, xoex_order_ref: {:?} }}" , self . xoex_exchange_code , self . xoex_country_code , self . xoex_price_type () , self . XOEX_RESERVED_00 () , self . xoex_quals , self . xoex_instrument_status , self . xoex_market_status , self . xoex_short_sale_restricted () , self . XOEX_RESERVED_01 () , self . xoex_side_attr () , self . XOEX_RESERVED_04 () , self . XOEX_RESERVED_05 , self . xoex_trade_ref , self . xoex_order_ref)
+impl Default for XC_GROUP_ORDER_EXECUTION_ALL_V3_1_7 {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_ORDER_EXECUTION_ALL_V3_1_7 {
@@ -44811,9 +45097,13 @@ impl XC_GROUP_ORDER_EXECUTION_ALL_V3_1_7 {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_ORDER_EXECUTION_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_ORDER_EXECUTION_ALL {{ xoex_exchange_code: {:?}, xoex_country_code: {:?}, xoex_price_type : {:?}, XOEX_RESERVED_00 : {:?}, xoex_quals: {:?}, xoex_instrument_status: {:?}, xoex_market_status: {:?}, xoex_short_sale_restricted : {:?}, XOEX_RESERVED_01 : {:?}, xoex_side_attr : {:?}, XOEX_RESERVED_04 : {:?}, XOEX_RESERVED_05 : {:?}, xoex_trade_thru_exempt : {:?}, xoex_trade_ref: {:?}, xoex_order_ref: {:?}, xoex_sub_market: {:?}, xoex_bid_order_ref: {:?}, xoex_ask_order_ref: {:?}, xoex_bid_mmid: {:?}, xoex_ask_mmid: {:?} }}" , self . xoex_exchange_code , self . xoex_country_code , self . xoex_price_type () , self . XOEX_RESERVED_00 () , self . xoex_quals , self . xoex_instrument_status , self . xoex_market_status , self . xoex_short_sale_restricted () , self . XOEX_RESERVED_01 () , self . xoex_side_attr () , self . XOEX_RESERVED_04 () , self . XOEX_RESERVED_05 () , self . xoex_trade_thru_exempt () , self . xoex_trade_ref , self . xoex_order_ref , self . xoex_sub_market , self . xoex_bid_order_ref , self . xoex_ask_order_ref , self . xoex_bid_mmid , self . xoex_ask_mmid)
+impl Default for XC_GROUP_ORDER_EXECUTION_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_ORDER_EXECUTION_ALL {
@@ -45148,9 +45438,13 @@ impl XC_GROUP_ORDER_EXECUTION_ALL {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_ORDER_IMBALANCE_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_ORDER_IMBALANCE_ALL {{ xoimb_exchange_code: {:?}, xoimb_country_code: {:?}, xoimb_price_type : {:?}, XOIMB_RESERVED_00 : {:?}, xoimb_quals: {:?}, xoimb_instrument_status: {:?}, xoimb_market_status: {:?}, xoimb_short_sale_restricted : {:?}, XOIMB_RESERVED_01 : {:?} }}" , self . xoimb_exchange_code , self . xoimb_country_code , self . xoimb_price_type () , self . XOIMB_RESERVED_00 () , self . xoimb_quals , self . xoimb_instrument_status , self . xoimb_market_status , self . xoimb_short_sale_restricted () , self . XOIMB_RESERVED_01 ())
+impl Default for XC_GROUP_ORDER_IMBALANCE_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_ORDER_IMBALANCE_ALL {
@@ -45320,19 +45614,31 @@ impl XC_GROUP_ORDER_IMBALANCE_ALL {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_ORDER_IMBALANCE_AUCTION {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_ORDER_IMBALANCE_AUCTION {{ XOIMB_RESERVED_00: {:?}, xoimb_imbalance_quals: {:?}, XOIMB_RESERVED_01: {:?}, xoimb_imbalance_auction_id: {:?}, xoimb_imbalance_auction_owner: {:?} }}" , self . XOIMB_RESERVED_00 , self . xoimb_imbalance_quals , self . XOIMB_RESERVED_01 , self . xoimb_imbalance_auction_id , self . xoimb_imbalance_auction_owner)
+impl Default for XC_GROUP_ORDER_IMBALANCE_AUCTION {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED {{ XOIMB_RESERVED_00: {:?}, xoimb_imbalance_quals: {:?}, XOIMB_RESERVED_01: {:?}, xoimb_imbalance_auction_id: {:?}, xoimb_imbalance_auction_owner: {:?} }}" , self . XOIMB_RESERVED_00 , self . xoimb_imbalance_quals , self . XOIMB_RESERVED_01 , self . xoimb_imbalance_auction_id , self . xoimb_imbalance_auction_owner)
+impl Default for XC_GROUP_ORDER_IMBALANCE_AUCTION_WITH_UNPAIRED {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_INDICATION_OF_INTEREST {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_INDICATION_OF_INTEREST {{ ioi_ioi_bid_quals: {:?}, ioi_ioi_ask_quals: {:?}, ioi_ioi_bid_order_ref: {:?}, ioi_ioi_ask_order_ref: {:?}, ioi_ioi_offset_price_type : {:?}, IOI_RESERVED_00 : {:?}, IOI_RESERVED_01: {:?} }}" , self . ioi_ioi_bid_quals , self . ioi_ioi_ask_quals , self . ioi_ioi_bid_order_ref , self . ioi_ioi_ask_order_ref , self . ioi_ioi_offset_price_type () , self . IOI_RESERVED_00 () , self . IOI_RESERVED_01)
+impl Default for XC_GROUP_INDICATION_OF_INTEREST {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_INDICATION_OF_INTEREST {
@@ -45420,9 +45726,13 @@ impl XC_GROUP_INDICATION_OF_INTEREST {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_MARKET_DIRECTORY_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_MARKET_DIRECTORY_ALL {{ xmd_exchange_code: {:?}, xmd_country_code: {:?}, xmd_price_type : {:?}, XMD_RESERVED_00 : {:?}, xmd_quals: {:?}, xmd_instrument_status: {:?}, xmd_market_status: {:?}, xmd_short_sale_restricted : {:?}, XMD_RESERVED_01 : {:?}, xmd_financial_status: {:?}, xmd_prime_exch: {:?} }}" , self . xmd_exchange_code , self . xmd_country_code , self . xmd_price_type () , self . XMD_RESERVED_00 () , self . xmd_quals , self . xmd_instrument_status , self . xmd_market_status , self . xmd_short_sale_restricted () , self . XMD_RESERVED_01 () , self . xmd_financial_status , self . xmd_prime_exch)
+impl Default for XC_GROUP_MARKET_DIRECTORY_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_MARKET_DIRECTORY_ALL {
@@ -45676,9 +45986,13 @@ impl XC_GROUP_REQUEST_FOR_QUOTE {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_REQUEST_FOR_QUOTE_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_REQUEST_FOR_QUOTE_ALL {{ xrfq_exchange_code: {:?}, xrfq_country_code: {:?}, xrfq_price_type : {:?}, XRFQ_RESERVED_00 : {:?}, xrfq_quals: {:?}, xrfq_instrument_status: {:?}, xrfq_market_status: {:?}, xrfq_short_sale_restricted : {:?}, XRFQ_RESERVED_01 : {:?}, xrfq_side_attribution : {:?}, XRFQ_RESERVED_03 : {:?}, XRFQ_RESERVED_04: {:?}, xrfq_quote_request_id: {:?} }}" , self . xrfq_exchange_code , self . xrfq_country_code , self . xrfq_price_type () , self . XRFQ_RESERVED_00 () , self . xrfq_quals , self . xrfq_instrument_status , self . xrfq_market_status , self . xrfq_short_sale_restricted () , self . XRFQ_RESERVED_01 () , self . xrfq_side_attribution () , self . XRFQ_RESERVED_03 () , self . XRFQ_RESERVED_04 , self . xrfq_quote_request_id)
+impl Default for XC_GROUP_REQUEST_FOR_QUOTE_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_REQUEST_FOR_QUOTE_ALL {
@@ -45930,9 +46244,13 @@ impl XC_GROUP_REQUEST_FOR_QUOTE_ALL {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_TRADING_ACTION_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_TRADING_ACTION_ALL {{ xta_exchange_code: {:?}, xta_country_code: {:?}, xta_price_type : {:?}, XTA_RESERVED_00 : {:?}, xta_quals: {:?}, xta_instrument_status: {:?}, xta_market_status: {:?}, xta_short_sale_restricted : {:?}, XTA_RESERVED_01 : {:?} }}" , self . xta_exchange_code , self . xta_country_code , self . xta_price_type () , self . XTA_RESERVED_00 () , self . xta_quals , self . xta_instrument_status , self . xta_market_status , self . xta_short_sale_restricted () , self . XTA_RESERVED_01 ())
+impl Default for XC_GROUP_TRADING_ACTION_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_TRADING_ACTION_ALL {
@@ -46102,9 +46420,13 @@ impl XC_GROUP_TRADING_ACTION_ALL {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_TRADING_ACTION_WITH_LULD_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_TRADING_ACTION_WITH_LULD_ALL {{ xta_exchange_code: {:?}, xta_country_code: {:?}, xta_price_type : {:?}, XTA_RESERVED_00 : {:?}, xta_quals: {:?}, xta_instrument_status: {:?}, xta_market_status: {:?}, xta_short_sale_restricted : {:?}, XTA_RESERVED_01 : {:?} }}" , self . xta_exchange_code , self . xta_country_code , self . xta_price_type () , self . XTA_RESERVED_00 () , self . xta_quals , self . xta_instrument_status , self . xta_market_status , self . xta_short_sale_restricted () , self . XTA_RESERVED_01 ())
+impl Default for XC_GROUP_TRADING_ACTION_WITH_LULD_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_TRADING_ACTION_WITH_LULD_ALL {
@@ -46358,6 +46680,15 @@ impl XC_GROUP_NAV_UPDATE_ALL {
         __bindgen_bitfield_unit
     }
 }
+impl Default for XC_GROUP_BASKET_CONSTITUENT {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
 impl XC_GROUP_BASKET_CONSTITUENT {
     #[inline]
     pub fn bskc_price_type(&self) -> XC_PRICE_TYPE {
@@ -46564,32 +46895,40 @@ impl XC_GROUP_BASKET_CONSTITUENT_INFO {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_BASKET_CATALOG_UPDATE_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(
-            f,
-            "XC_GROUP_BASKET_CATALOG_UPDATE_ALL {{ blu_key_string: {:?}, blu_update_info: {:?} }}",
-            self.blu_key_string, self.blu_update_info
-        )
+impl Default for XC_GROUP_BASKET_CATALOG_UPDATE_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_KEYLIST_HEADER {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(
-            f,
-            "XC_GROUP_KEYLIST_HEADER {{ klh_update_date: {:?}, klh_description: {:?} }}",
-            self.klh_update_date, self.klh_description
-        )
+impl Default for XC_GROUP_KEYLIST_HEADER {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_KEYLIST_CATALOG_ITEM {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_KEYLIST_CATALOG_ITEM {{ klci_key: {:?}, klci_update_date: {:?}, klci_description: {:?}, klci_update_info: {:?} }}" , self . klci_key , self . klci_update_date , self . klci_description , self . klci_update_info)
+impl Default for XC_GROUP_KEYLIST_CATALOG_ITEM {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_LINE_STATS {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_LINE_STATS {{ lst_state : {:?}, LST_RESERVED_00 : {:?}, lst_on_schedule : {:?}, lst_test : {:?}, lst_connected : {:?}, lst_logged_in : {:?}, lst_alarm : {:?}, lst_aborted : {:?}, lst_pending_down : {:?}, LST_RESERVED_01 : {:?}, lst_name: {:?}, lst_feed_id: {:?}, lst_handler_name: {:?}, lst_handler_version: {:?} }}" , self . lst_state () , self . LST_RESERVED_00 () , self . lst_on_schedule () , self . lst_test () , self . lst_connected () , self . lst_logged_in () , self . lst_alarm () , self . lst_aborted () , self . lst_pending_down () , self . LST_RESERVED_01 () , self . lst_name , self . lst_feed_id , self . lst_handler_name , self . lst_handler_version)
+impl Default for XC_GROUP_LINE_STATS {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_LINE_STATS {
@@ -46980,19 +47319,31 @@ impl XC_GROUP_LINE_STATS {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_SOCKET_STATS {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_SOCKET_STATS {{ sst_line_name: {:?}, sst_connection_type: {:?}, sst_feed_address: {:?}, sst_feed_multicast: {:?}, sst_appliance_address: {:?} }}" , self . sst_line_name , self . sst_connection_type , self . sst_feed_address , self . sst_feed_multicast , self . sst_appliance_address)
+impl Default for XC_GROUP_SOCKET_STATS {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_LINE_GAP_LINE_INFO {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_LINE_GAP_LINE_INFO {{ LGINF_RESERVED_00: {:?}, lginf_feed_id: {:?}, lginf_line_name: {:?} }}" , self . LGINF_RESERVED_00 , self . lginf_feed_id , self . lginf_line_name)
+impl Default for XC_GROUP_LINE_GAP_LINE_INFO {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_FEED_INFO {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_FEED_INFO {{ fi_feed_id: {:?}, fi_country_code: {:?}, fi_exchange_code: {:?}, fi_market_status: {:?}, fi_userbbo_member : {:?}, FI_RESERVED_00 : {:?}, fi_exchange_label: {:?}, fi_feed_label: {:?}, fi_feed_handler_name: {:?}, fi_feed_handler_version: {:?}, fi_nominal_open: {:?}, fi_nominal_close: {:?}, fi_timezone: {:?}, fi_update_info: {:?} }}" , self . fi_feed_id , self . fi_country_code , self . fi_exchange_code , self . fi_market_status , self . fi_userbbo_member () , self . FI_RESERVED_00 () , self . fi_exchange_label , self . fi_feed_label , self . fi_feed_handler_name , self . fi_feed_handler_version , self . fi_nominal_open , self . fi_nominal_close , self . fi_timezone , self . fi_update_info)
+impl Default for XC_GROUP_FEED_INFO {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_FEED_INFO {
@@ -47163,9 +47514,13 @@ impl XC_GROUP_MWCB {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_DERIVATIVE_REFERENCE_V3_8 {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_DERIVATIVE_REFERENCE_V3_8 {{ drc_primary_mmid: {:?}, drc_parent_market_segment_id: {:?}, drc_market_segment_status: {:?}, DRC_RESERVED_01: {:?}, drc_maturity_date: {:?}, drc_strike_currency: {:?}, drc_instrument_status: {:?}, drc_call : {:?}, drc_american_exercise : {:?}, DRC_RESERVED_02 : {:?}, drc_contract_root_string: {:?}, drc_strike_price_type : {:?}, DRC_RESERVED_04 : {:?}, DRC_RESERVED_05: {:?} }}" , self . drc_primary_mmid , self . drc_parent_market_segment_id , self . drc_market_segment_status , self . DRC_RESERVED_01 , self . drc_maturity_date , self . drc_strike_currency , self . drc_instrument_status , self . drc_call () , self . drc_american_exercise () , self . DRC_RESERVED_02 () , self . drc_contract_root_string , self . drc_strike_price_type () , self . DRC_RESERVED_04 () , self . DRC_RESERVED_05)
+impl Default for XC_GROUP_DERIVATIVE_REFERENCE_V3_8 {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_DERIVATIVE_REFERENCE_V3_8 {
@@ -47370,6 +47725,15 @@ impl XC_GROUP_DERIVATIVE_REFERENCE_V3_8 {
             DRC_RESERVED_04 as u64
         });
         __bindgen_bitfield_unit
+    }
+}
+impl Default for XC_GROUP_DERIVATIVE_REFERENCE {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_DERIVATIVE_REFERENCE {
@@ -47660,6 +48024,15 @@ impl XC_GROUP_DERIVATIVE_REFERENCE {
         __bindgen_bitfield_unit
     }
 }
+impl Default for XC_GROUP_DERIVATIVE_REFERENCE_INSTRUMENT {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
 impl XC_GROUP_DERIVATIVE_REFERENCE_INSTRUMENT {
     #[inline]
     pub fn dri_call(&self) -> xbool {
@@ -47946,6 +48319,15 @@ impl XC_GROUP_DERIVATIVE_REFERENCE_INSTRUMENT {
             dri_original_strike_price_type as u64
         });
         __bindgen_bitfield_unit
+    }
+}
+impl Default for XC_GROUP_DERIVATIVE_REFERENCE_PRODUCT {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_DERIVATIVE_REFERENCE_TICK {
@@ -48241,6 +48623,24 @@ impl XC_GROUP_DERIVATIVE_REFERENCE_DELIVERABLE {
         __bindgen_bitfield_unit
     }
 }
+impl Default for XC_GROUP_DERIVATIVE_REFERENCE_AUCTION {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
+impl Default for XC_GROUP_DERIVATIVE_REFERENCE_LEG_V3_8 {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
 impl XC_GROUP_DERIVATIVE_REFERENCE_LEG_V3_8 {
     #[inline]
     pub fn drl_leg_ask_side(&self) -> xbool {
@@ -48482,6 +48882,15 @@ impl XC_GROUP_DERIVATIVE_REFERENCE_LEG_V3_8 {
             DRL_RESERVED_02 as u64
         });
         __bindgen_bitfield_unit
+    }
+}
+impl Default for XC_GROUP_DERIVATIVE_REFERENCE_LEG {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_DERIVATIVE_REFERENCE_LEG {
@@ -48804,9 +49213,13 @@ impl XC_GROUP_DERIVATIVE_REFERENCE_LEG {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_ORDER_ON_BOOK_ENTRY {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_ORDER_ON_BOOK_ENTRY {{ oobe_entry_order_quals: {:?}, oobe_entry_order_capacity: {:?}, OOBE_RESERVED_00: {:?}, oobe_entry_ask_side : {:?}, OOBE_RESERVED_01 : {:?}, OOBE_RESERVED_02: {:?} }}" , self . oobe_entry_order_quals , self . oobe_entry_order_capacity , self . OOBE_RESERVED_00 , self . oobe_entry_ask_side () , self . OOBE_RESERVED_01 () , self . OOBE_RESERVED_02)
+impl Default for XC_GROUP_ORDER_ON_BOOK_ENTRY {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 impl XC_GROUP_ORDER_ON_BOOK_ENTRY {
@@ -48893,49 +49306,130 @@ impl XC_GROUP_ORDER_ON_BOOK_ENTRY {
         __bindgen_bitfield_unit
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_CLIENT_STATS {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_CLIENT_STATS {{ clst_username: {:?}, clst_api_build_platform: {:?}, clst_API_BUILD_OS_VERSION: {:?}, clst_connection_date: {:?}, clst_channel_name: {:?}, clst_appliance_hostname: {:?}, clst_appliance_local_interface: {:?}, clst_appliance_local_address: {:?}, clst_client_hostname: {:?}, clst_client_local_address: {:?}, clst_local_ib_key: {:?}, clst_remote_ib_key: {:?} }}" , self . clst_username , self . clst_api_build_platform , self . clst_API_BUILD_OS_VERSION , self . clst_connection_date , self . clst_channel_name , self . clst_appliance_hostname , self . clst_appliance_local_interface , self . clst_appliance_local_address , self . clst_client_hostname , self . clst_client_local_address , self . clst_local_ib_key , self . clst_remote_ib_key)
+impl Default for XC_GROUP_CLIENT_STATS {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_FXSPOT_REFRESH_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_FXSPOT_REFRESH_ALL {{ xgfxsr_request_id: {:?}, xgfxsr_quote_id: {:?}, xgfxsr_setl_date: {:?}, xgfxsr_instrument_status: {:?} }}" , self . xgfxsr_request_id , self . xgfxsr_quote_id , self . xgfxsr_setl_date , self . xgfxsr_instrument_status)
+impl Default for XC_GROUP_FXSPOT_REFRESH_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_FXSPOT_QUOTE_ALL {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_FXSPOT_QUOTE_ALL {{ xgfxsq_request_id: {:?}, xgfxsq_quote_id: {:?}, xgfxsq_setl_date: {:?}, xgfxsq_instrument_status: {:?} }}" , self . xgfxsq_request_id , self . xgfxsq_quote_id , self . xgfxsq_setl_date , self . xgfxsq_instrument_status)
+impl Default for XC_GROUP_FXSPOT_QUOTE_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_SESSIONS {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_SESSIONS {{ SEST_RESERVED_00: {:?}, sest_username: {:?}, sest_api_build_platform: {:?}, sest_api_build_os_version: {:?}, sest_connection_date: {:?}, sest_channel_name: {:?}, sest_appliance_hostname: {:?}, sest_appliance_local_interface: {:?}, sest_appliance_local_address: {:?}, sest_client_hostname: {:?}, sest_client_local_address: {:?}, sest_local_ib_key: {:?}, sest_remote_ib_key: {:?} }}" , self . SEST_RESERVED_00 , self . sest_username , self . sest_api_build_platform , self . sest_api_build_os_version , self . sest_connection_date , self . sest_channel_name , self . sest_appliance_hostname , self . sest_appliance_local_interface , self . sest_appliance_local_address , self . sest_client_hostname , self . sest_client_local_address , self . sest_local_ib_key , self . sest_remote_ib_key)
+impl Default for XC_GROUP_FXFWD_REFRESH_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_INSTRUMENT_GROUP {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_INSTRUMENT_GROUP {{ xig_group_id: {:?}, xig_group_status: {:?}, XIG_RESERVED_00: {:?} }}" , self . xig_group_id , self . xig_group_status , self . XIG_RESERVED_00)
+impl Default for XC_GROUP_FXFWD_QUOTE_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_VOLATILITY_BBO {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_VOLATILITY_BBO {{ xvb_bid_price: {:?}, xvb_ask_price: {:?}, xvb_bid_exchange: {:?}, xvb_ask_exchange: {:?} }}" , self . xvb_bid_price , self . xvb_ask_price , self . xvb_bid_exchange , self . xvb_ask_exchange)
+impl Default for XC_GROUP_FXSWAP_REFRESH_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_VOLATILITY_UNDERLYING {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_VOLATILITY_UNDERLYING {{ xvu_underlying_bid_price: {:?}, xvu_underlying_ask_price: {:?}, xvu_underlying_theoretical_price: {:?}, XVU_RESERVED_00: {:?} }}" , self . xvu_underlying_bid_price , self . xvu_underlying_ask_price , self . xvu_underlying_theoretical_price , self . XVU_RESERVED_00)
+impl Default for XC_GROUP_FXSWAP_QUOTE_ALL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_VOLATILITY_TRADE {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_VOLATILITY_TRADE {{ xvt_eod_price: {:?}, xvt_trade_price: {:?}, xvt_trade_qualifiers: {:?}, xvt_trade_exchange: {:?}, XVT_RESERVED_00: {:?} }}" , self . xvt_eod_price , self . xvt_trade_price , self . xvt_trade_qualifiers , self . xvt_trade_exchange , self . XVT_RESERVED_00)
+impl Default for XC_GROUP_SESSIONS {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
-impl ::std::fmt::Debug for XC_GROUP_VOLATILITY_MISC {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write ! (f , "XC_GROUP_VOLATILITY_MISC {{ xvt_forward_price: {:?}, xvt_borrow_cost: {:?}, xvt_intrinsic_value: {:?}, xvt_time_value: {:?} }}" , self . xvt_forward_price , self . xvt_borrow_cost , self . xvt_intrinsic_value , self . xvt_time_value)
+impl Default for XC_GROUP_INSTRUMENT_GROUP {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
+impl Default for XC_GROUP_VOLATILITY_BBO {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
+impl Default for XC_GROUP_VOLATILITY_UNDERLYING {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
+impl Default for XC_GROUP_VOLATILITY_TRADE {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
+impl Default for XC_GROUP_VOLATILITY_MISC {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
+impl Default for XC_FORMAT_CONTROL {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
     }
 }
 unsafe extern "C" {

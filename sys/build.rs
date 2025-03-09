@@ -1,10 +1,8 @@
 use bindgen::{
     Formatter,
-    callbacks::{DeriveInfo, IntKind, ParseCallbacks},
+    callbacks::{IntKind, ParseCallbacks},
 };
 use std::{cell::RefCell, env, error::Error, path::PathBuf};
-
-const DERIVE_COMMON: [&str; 4] = ["XC_COUNTRY_ID", "XC_EXCHANGE_ID", "XC_KEY", "XC_SYMBOL"];
 
 #[derive(Debug, Default)]
 struct Callbacks {
@@ -14,19 +12,6 @@ struct Callbacks {
 impl ParseCallbacks for Callbacks {
     fn include_file(&self, filename: &str) {
         self.current_file.replace(filename.to_owned());
-    }
-
-    fn add_derives(&self, info: &DeriveInfo<'_>) -> Vec<String> {
-        let mut retval = Vec::default();
-        if DERIVE_COMMON.contains(&info.name) {
-            retval.push("Eq");
-            retval.push("Hash");
-            retval.push("Ord");
-            retval.push("PartialEq");
-            retval.push("PartialOrd");
-        }
-
-        retval.iter().map(ToString::to_string).collect::<Vec<_>>()
     }
 
     fn int_macro(&self, name: &str, _value: i64) -> Option<IntKind> {
@@ -136,16 +121,13 @@ pub fn main() -> Result<(), Box<dyn Error>> {
         .allowlist_file(format!("{}/.*\\.h", xcapi_include_str))
         .formatter(Formatter::Rustfmt)
         .generate_cstr(true)
-        .impl_debug(true)
-        .no_debug("XC_GROUP_DERIVATIVE_REFERENCE")
-        .no_debug("XC_GROUP_DERIVATIVE_REFERENCE_INSTRUMENT")
-        .no_debug("XC_GROUP_DERIVATIVE_REFERENCE_PRODUCT")
-        .no_debug("XC_GROUP_DERIVATIVE_REFERENCE_LEG_V3_8")
-        .no_debug("XC_GROUP_DERIVATIVE_REFERENCE_LEG")
-        .no_debug("XC_GROUP_FXFWD_REFRESH_ALL")
-        .no_debug("XC_GROUP_FXFWD_QUOTE_ALL")
-        .no_debug("XC_GROUP_FXSWAP_REFRESH_ALL")
-        .no_debug("XC_GROUP_FXSWAP_QUOTE_ALL")
+        .derive_debug(true)
+        .derive_default(true)
+        .derive_eq(true)
+        .derive_hash(true)
+        .derive_ord(true)
+        .derive_partialeq(true)
+        .derive_partialord(true)
         .sort_semantically(true)
         .generate()?
         .write_to_file(&path)?;
