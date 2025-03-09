@@ -8,6 +8,10 @@ use std::{
     string::FromUtf8Error,
 };
 
+/// A local result type used to encapsulate a result and an FFI error.
+pub type Result<T> = StdResult<T, Error>;
+
+/// An enumeration of errors in this crate
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
     /// An error created by the XCAPI library
@@ -74,9 +78,6 @@ impl From<FromBytesUntilNulError> for Error {
         Self::NoNullTerm
     }
 }
-
-/// A local result type used to encapsulate a result and an FFI error.
-pub type Result<T> = std::result::Result<T, Error>;
 
 /// An enumeration of errors which can be encountered in this crate.
 #[derive(Debug, thiserror::Error)]
@@ -490,7 +491,7 @@ impl TryFrom<u32> for ExegyError {
 #[non_exhaustive]
 pub enum Success {
     /// Generic success
-    Success = rxegy_sys::XSUCCESS,
+    Generic = rxegy_sys::XSUCCESS,
     /// Item Found
     Found = rxegy_sys::XFOUND,
     /// Search completed, item not found
@@ -502,7 +503,7 @@ pub enum Success {
     /// Result returned, but (other) data was modified
     Modified = rxegy_sys::XMODIFIED,
     /// Some aspects of operation were successful, but others were not
-    PartialSuccess = rxegy_sys::XPARTIALSUCCESS,
+    Partial = rxegy_sys::XPARTIALSUCCESS,
     /// Data returned is in between boundary events
     InterBoundary = rxegy_sys::XINTERBOUNDARY,
     /// Normal processing has resumed
@@ -516,13 +517,13 @@ impl TryFrom<u32> for Success {
 
     fn try_from(value: u32) -> std::result::Result<Self, Self::Error> {
         match value {
-            rxegy_sys::XSUCCESS => Ok(Success::Success),
+            rxegy_sys::XSUCCESS => Ok(Success::Generic),
             rxegy_sys::XFOUND => Ok(Success::Found),
             rxegy_sys::XCOMPLETE => Ok(Success::Complete),
             rxegy_sys::XMOREDATA => Ok(Success::MoreData),
             rxegy_sys::XAPPROXIMATE => Ok(Success::Approximate),
             rxegy_sys::XMODIFIED => Ok(Success::Modified),
-            rxegy_sys::XPARTIALSUCCESS => Ok(Success::PartialSuccess),
+            rxegy_sys::XPARTIALSUCCESS => Ok(Success::Partial),
             rxegy_sys::XINTERBOUNDARY => Ok(Success::InterBoundary),
             rxegy_sys::XRESUMED => Ok(Success::Resumed),
             rxegy_sys::XNOCHANGE => Ok(Success::NoChange),

@@ -6,7 +6,7 @@ use crate::{
     group::{Group, Id as GroupId},
 };
 use ref_cast::RefCast;
-use rxegy_sys::XC_FORMAT_CONTROL;
+use rxegy_sys::{XC_FORMAT_CONTROL, XC_KEY, XC_SYMBOL};
 use std::{
     ffi::CStr,
     fmt::{Display, Error as FmtError, Formatter, Result as FmtResult},
@@ -15,9 +15,14 @@ use std::{
 /// A wrapper for an Exegy key
 #[derive(Clone, Eq, Hash, PartialEq, PartialOrd, Ord, RefCast)]
 #[repr(transparent)]
-pub struct Key(rxegy_sys::XC_KEY);
+pub struct Key(XC_KEY);
 
 impl Key {
+    /// Wrap a new key
+    pub(crate) fn new(inner: XC_KEY) -> Key {
+        Key(inner)
+    }
+
     /// Retrieve a reference to the exchange ID in this key
     pub fn feed_id(&self) -> &FeedId {
         FeedId::ref_cast(&self.0.xk_exchange)
@@ -62,7 +67,7 @@ impl Display for Key {
 /// Exegy symbol data.
 #[derive(Clone, Eq, Hash, PartialEq, PartialOrd, Ord, RefCast)]
 #[repr(transparent)]
-pub struct Symbol(rxegy_sys::XC_SYMBOL);
+pub struct Symbol(XC_SYMBOL);
 
 impl Display for Symbol {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
