@@ -97,5 +97,6 @@ jobs:
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{ matrix.rust }}
+          components: miri,rustc-src
       - uses: r7kamura/rust-problem-matchers@v1
       - run: cargo +${{ matrix.rust }} miri test
