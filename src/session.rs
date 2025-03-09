@@ -2,18 +2,19 @@
 
 use crate::{
     error::{Error, ExegyError, Result, Success},
-    event::CommonEvent,
+    event::Common,
     field::{self, Field as FieldTrait},
-    object::Kind as ObjectKind,
+    impl_wrapper_on_newtype,
+    object::{Kind as ObjectKind, Wrapper},
 };
 use rxegy_sys::{xerr, xhandle};
 use secrecy::{ExposeSecret, SecretString};
 use std::{
-    ffi::CString,
+    ffi::{CString, c_void},
     fmt::{Display, Formatter, Result as FmtResult},
     net::{SocketAddr, ToSocketAddrs},
-    os::raw::c_void,
     path::{Path, PathBuf},
+    process,
     ptr::{self, NonNull},
     result::Result as StdResult,
 };
@@ -23,62 +24,46 @@ use std::{
 #[repr(transparent)]
 pub struct StatusEvent(NonNull<c_void>);
 
-impl AsRef<NonNull<c_void>> for StatusEvent {
-    fn as_ref(&self) -> &NonNull<c_void> {
-        &self.0
-    }
-}
+impl_wrapper_on_newtype!(StatusEvent, ObjectKind::EventSessionStatus);
 
-impl CommonEvent for StatusEvent {}
+impl Common for StatusEvent {}
 
-/// Session objects
+/// The ticker session object
 #[derive(Debug)]
-pub enum Session {
-    /// A ticker plant session
-    TickerPlant(NonNull<c_void>),
-    /// A monitoring session
-    Monitor(NonNull<c_void>),
-}
+pub struct TickerSession(NonNull<c_void>);
 
-impl AsRef<NonNull<c_void>> for Session {
-    fn as_ref(&self) -> &NonNull<c_void> {
-        match self {
-            Self::TickerPlant(value) => value,
-            Self::Monitor(value) => value,
-        }
-    }
-}
+impl_wrapper_on_newtype!(TickerSession, ObjectKind::SessionTicker);
 
-impl TryFrom<xhandle> for Session {
-    type Error = Error;
+impl Session for TickerSession {}
 
-    fn try_from(value: xhandle) -> StdResult<Self, Self::Error> {
-        let handle = NonNull::new(value).ok_or(Error::NullObject)?;
-        let session_type = field::get_u16(handle, rxegy_sys::XC_SESSION, Field::Type)?;
-        let kind = Kind::try_from(session_type)?;
-        Session::new(kind, handle)
-    }
-}
-
-impl Session {
-    /// Create a new session object
-    fn new(kind: Kind, handle: NonNull<c_void>) -> Result<Session> {
-        match kind {
-            Kind::Ticker => Ok(Session::TickerPlant(handle)),
-            Kind::TickerMonitoring => Ok(Session::Monitor(handle)),
-        }
-    }
-
-    /// Create a new object from the given kind and handle
-    fn from_handle(kind: Kind, handle: xhandle) -> Result<Session> {
-        let handle = NonNull::new(handle).ok_or(Error::NullObject)?;
-        Session::new(kind, handle)
-    }
-
+impl TickerSession {
     /// Retrieve the turnkey value of this session
     #[allow(dead_code)]
     fn turnkey(&self) -> Result<u64> {
-        field::get_u64(*self.as_ref(), rxegy_sys::XC_SESSION, Field::Turnkey)
+        field::get_u64(self, rxegy_sys::XC_SESSION, Field::Turnkey)
+    }
+
+    /// Retrieve the maximum depth of price-book containers created on this session.
+    pub fn max_pricebook_depth(&self) -> Result<u16> {
+        field::get_u16(self, rxegy_sys::XC_SESSION, TickerField::MaxPriceBookDepth)
+    }
+
+    /// Retrieve the maximum number of rows for price-book update events.
+    pub fn max_pricebook_row_level(&self) -> Result<u16> {
+        field::get_u16(
+            self,
+            rxegy_sys::XC_SESSION,
+            TickerField::MaxPriceBookRowLevel,
+        )
+    }
+}
+
+/// Interfaces common to both tickerplant and monitoring sessions.
+#[allow(private_bounds)]
+pub trait Session: Wrapper {
+    /// Retrieve the session type of this object
+    fn session_type(&self) -> Result<u16> {
+        field::get_u16(self, rxegy_sys::XC_SESSION, Field::Type)
     }
 
     /// Retrieve the status of this session.
@@ -94,165 +79,118 @@ impl Session {
     ///     Error  // This error will be set if the status could not be read from the session object
     /// >
     /// ```
-    pub fn status(&self) -> Result<StdResult<Success, ExegyError>> {
-        Ok(Success::try_from(field::get_u32(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::Status,
-        )?))
+    fn status(&self) -> Result<StdResult<Success, ExegyError>> {
+        field::get_u32(self, rxegy_sys::XC_SESSION, Field::Status).map(Success::try_from)
     }
 
     /// Retrieve the client version string
-    pub fn client_version(&self) -> Result<String> {
-        field::get_string(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::ClientVersionString,
-        )
+    fn client_version(&self) -> Result<String> {
+        field::get_string(self, rxegy_sys::XC_SESSION, Field::ClientVersionString)
     }
 
     /// Retrieve the client major version
-    pub fn client_major_version(&self) -> Result<u32> {
-        field::get_u32(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::ClientMajorVersion,
-        )
+    fn client_major_version(&self) -> Result<u32> {
+        field::get_u32(self, rxegy_sys::XC_SESSION, Field::ClientMajorVersion)
     }
 
     /// Retrieve the client minor version
-    pub fn client_minor_version(&self) -> Result<u32> {
-        field::get_u32(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::ClientMinorVersion,
-        )
+    fn client_minor_version(&self) -> Result<u32> {
+        field::get_u32(self, rxegy_sys::XC_SESSION, Field::ClientMinorVersion)
     }
 
     /// Retrieve the client version revision
-    pub fn client_revision(&self) -> Result<u32> {
-        field::get_u32(*self.as_ref(), rxegy_sys::XC_SESSION, Field::ClientRevision)
+    fn client_revision(&self) -> Result<u32> {
+        field::get_u32(self, rxegy_sys::XC_SESSION, Field::ClientRevision)
     }
 
     /// Retrieve the client version build
-    pub fn client_build(&self) -> Result<u32> {
-        field::get_u32(*self.as_ref(), rxegy_sys::XC_SESSION, Field::ClientBuild)
+    fn client_build(&self) -> Result<u32> {
+        field::get_u32(self, rxegy_sys::XC_SESSION, Field::ClientBuild)
     }
 
     /// Retrieve the client CPU count.
-    pub fn client_cpu_count(&self) -> Result<u32> {
-        field::get_u32(*self.as_ref(), rxegy_sys::XC_SESSION, Field::ClientCpuCount)
+    fn client_cpu_count(&self) -> Result<u32> {
+        field::get_u32(self, rxegy_sys::XC_SESSION, Field::ClientCpuCount)
     }
 
     /// Retrieve the affinity mask for the callback thread on this session
-    pub fn callback_affinity(&self) -> Result<u64> {
-        field::get_u64(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::ClientAffinityMask,
-        )
+    fn callback_affinity(&self) -> Result<u64> {
+        field::get_u64(self, rxegy_sys::XC_SESSION, Field::ClientAffinityMask)
     }
 
     /// Retrieve the affinity mask for the callback thread on this session
-    pub fn callback_priority(&self) -> Result<u32> {
-        field::get_u32(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::ClientThreadPriority,
-        )
+    fn callback_priority(&self) -> Result<u32> {
+        field::get_u32(self, rxegy_sys::XC_SESSION, Field::ClientThreadPriority)
     }
 
     /// Retrieve CPU affinity mask for the background thread.
-    pub fn background_affinity(&self) -> Result<u64> {
+    fn background_affinity(&self) -> Result<u64> {
         field::get_u64(
-            *self.as_ref(),
+            self,
             rxegy_sys::XC_SESSION,
             Field::ClientBgThreadAffinityMask,
         )
     }
 
     /// Retrieve CPU affinity mask for the background thread
-    pub fn background_priority(&self) -> Result<u32> {
-        field::get_u32(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::ClientBgThreadPriority,
-        )
+    fn background_priority(&self) -> Result<u32> {
+        field::get_u32(self, rxegy_sys::XC_SESSION, Field::ClientBgThreadPriority)
     }
 
     /// Retrieve CPU affinity mask for the timing thread.
-    pub fn timing_affinity(&self) -> Result<u64> {
+    fn timing_affinity(&self) -> Result<u64> {
         field::get_u64(
-            *self.as_ref(),
+            self,
             rxegy_sys::XC_SESSION,
             Field::ClientHbThreadAffinityMask,
         )
     }
 
     /// Retrieve priority for the timing thread.
-    pub fn hearatbeat_priority(&self) -> Result<u32> {
-        field::get_u32(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::ClientHbThreadPriority,
-        )
+    fn hearatbeat_priority(&self) -> Result<u32> {
+        field::get_u32(self, rxegy_sys::XC_SESSION, Field::ClientHbThreadPriority)
     }
 
     /// Retrieve the name of the server this session is connected to.
-    pub fn server_name(&self) -> Result<String> {
-        field::get_string(*self.as_ref(), rxegy_sys::XC_SESSION, Field::ServerName)
+    fn server_name(&self) -> Result<String> {
+        field::get_string(self, rxegy_sys::XC_SESSION, Field::ServerName)
     }
 
     /// Retrieve the version string of the server this session is connected to.
-    pub fn server_version(&self) -> Result<String> {
-        field::get_string(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::ServerVersionString,
-        )
+    fn server_version(&self) -> Result<String> {
+        field::get_string(self, rxegy_sys::XC_SESSION, Field::ServerVersionString)
     }
 
     /// Retrieve the major version of the code running on the appliance
-    pub fn server_major_version(&self) -> Result<u8> {
-        field::get_u8(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::ServerMajorVersion,
-        )
+    fn server_major_version(&self) -> Result<u8> {
+        field::get_u8(self, rxegy_sys::XC_SESSION, Field::ServerMajorVersion)
     }
 
     /// Retrieve the minor version of the code running on the appliance
-    pub fn server_minor_version(&self) -> Result<u8> {
-        field::get_u8(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::ServerMinorVersion,
-        )
+    fn server_minor_version(&self) -> Result<u8> {
+        field::get_u8(self, rxegy_sys::XC_SESSION, Field::ServerMinorVersion)
     }
 
     /// Retrieve the software revision (patch) of the code running on the appliance
-    pub fn server_revision(&self) -> Result<u8> {
-        field::get_u8(*self.as_ref(), rxegy_sys::XC_SESSION, Field::ServerRevision)
+    fn server_revision(&self) -> Result<u8> {
+        field::get_u8(self, rxegy_sys::XC_SESSION, Field::ServerRevision)
     }
 
     /// Retrieve the build of the code running on the appliance
-    pub fn server_build(&self) -> Result<u32> {
-        field::get_u32(*self.as_ref(), rxegy_sys::XC_SESSION, Field::ServerBuild)
+    fn server_build(&self) -> Result<u32> {
+        field::get_u32(self, rxegy_sys::XC_SESSION, Field::ServerBuild)
     }
 
     /// Retrieve whether reconnection is enabled
-    pub fn reconnect_enabled(&self) -> Result<bool> {
-        Ok(field::get_u8(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::DisableReconnect,
-        )? == 0)
+    fn reconnect_enabled(&self) -> Result<bool> {
+        field::get_u8(self, rxegy_sys::XC_SESSION, Field::DisableReconnect)
+            .map(|v| v == false as u8)
     }
 
     /// Enable reconnection
-    pub fn enable_reconnect(&self) -> Result<()> {
+    fn enable_reconnect(&self) -> Result<()> {
         field::set_u8(
-            *self.as_ref(),
+            self,
             rxegy_sys::XC_SESSION,
             Field::DisableReconnect,
             false as u8,
@@ -260,9 +198,9 @@ impl Session {
     }
 
     /// Disable reconnection
-    pub fn disable_reconnect(&self) -> Result<()> {
+    fn disable_reconnect(&self) -> Result<()> {
         field::set_u8(
-            *self.as_ref(),
+            self,
             rxegy_sys::XC_SESSION,
             Field::DisableReconnect,
             true as u8,
@@ -270,43 +208,29 @@ impl Session {
     }
 
     /// Get whether the replay has been started
-    pub fn replay_start(&self) -> Result<bool> {
-        Ok(field::get_u8(*self.as_ref(), rxegy_sys::XC_SESSION, Field::ReplayStart)? == 0)
+    fn replay_start(&self) -> Result<bool> {
+        field::get_u8(self, rxegy_sys::XC_SESSION, Field::ReplayStart).map(|v| v != false as u8)
     }
 
     /// Start a replay session
-    pub fn start_replay(&self) -> Result<()> {
-        field::set_u8(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::ReplayStart,
-            true as u8,
-        )
+    fn start_replay(&self) -> Result<()> {
+        field::set_u8(self, rxegy_sys::XC_SESSION, Field::ReplayStart, true as u8)
     }
 
     /// Stop a replay session
-    pub fn stop_replay(&self) -> Result<()> {
-        field::set_u8(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::ReplayStart,
-            false as u8,
-        )
+    fn stop_replay(&self) -> Result<()> {
+        field::set_u8(self, rxegy_sys::XC_SESSION, Field::ReplayStart, false as u8)
     }
 
     /// Retrieve the user-defined quote montage constituents for replay sessions
-    pub fn replay_quote_montage(&self) -> Result<String> {
-        field::get_string(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::ReplayQuoteMontage,
-        )
+    fn replay_quote_montage(&self) -> Result<String> {
+        field::get_string(self, rxegy_sys::XC_SESSION, Field::ReplayQuoteMontage)
     }
 
     /// Set the user-defined quote montage constituents for replay sessions
-    pub fn set_replay_quote_montage(&self, montage: String) -> Result<()> {
+    fn set_replay_quote_montage(&self, montage: String) -> Result<()> {
         field::set_string(
-            *self.as_ref(),
+            self,
             rxegy_sys::XC_SESSION,
             Field::ReplayQuoteMontage,
             montage,
@@ -314,18 +238,14 @@ impl Session {
     }
 
     /// Retrieve the user-defined consolidated price book constituents for replay sessions
-    pub fn replay_l2_composite(&self) -> Result<String> {
-        field::get_string(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::ReplayL2Composite,
-        )
+    fn replay_l2_composite(&self) -> Result<String> {
+        field::get_string(self, rxegy_sys::XC_SESSION, Field::ReplayL2Composite)
     }
 
     /// Set the user-defined consolidated price book constituents for replay sessions
-    pub fn set_replay_l2_composite(&self, composite: String) -> Result<()> {
+    fn set_replay_l2_composite(&self, composite: String) -> Result<()> {
         field::set_string(
-            *self.as_ref(),
+            self,
             rxegy_sys::XC_SESSION,
             Field::ReplayL2Composite,
             composite,
@@ -333,41 +253,18 @@ impl Session {
     }
 
     /// Retrieve the exchange constituents for user-defined BBO on replay sessions
-    pub fn replay_ubbo(&self) -> Result<String> {
-        field::get_string(*self.as_ref(), rxegy_sys::XC_SESSION, Field::ReplayUbbo)
+    fn replay_ubbo(&self) -> Result<String> {
+        field::get_string(self, rxegy_sys::XC_SESSION, Field::ReplayUbbo)
     }
 
     /// Set the exchange constituents for user-defined BBO on replay sessions.
-    pub fn set_replay_ubbo(&self, ubbo: String) -> Result<()> {
-        field::set_string(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::ReplayUbbo,
-            ubbo,
-        )
-    }
-
-    /// Retrieve the maximum depth of price-book containers created on this session.
-    pub fn max_pricebook_depth(&self) -> Result<u16> {
-        field::get_u16(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::TickerMaxPriceBookDepth,
-        )
-    }
-
-    /// Retrieve the maximum number of rows for price-book update events.
-    pub fn max_pricebook_row_level(&self) -> Result<u16> {
-        field::get_u16(
-            *self.as_ref(),
-            rxegy_sys::XC_SESSION,
-            Field::TickerMaxPriceBookRowLevel,
-        )
+    fn set_replay_ubbo(&self, ubbo: String) -> Result<()> {
+        field::set_string(self, rxegy_sys::XC_SESSION, Field::ReplayUbbo, ubbo)
     }
 }
 
 /// The callback prototype for status events
-pub type StatusEventFn = fn(&Session, &StatusEvent) -> Result<bool>;
+pub type TickerStatusEventFn = fn(&TickerSession, &StatusEvent) -> Result<bool>;
 
 /// A session builder
 #[derive(Default)]
@@ -375,7 +272,6 @@ pub struct Builder {
     server_list: Vec<Server>,
     username: String,
     password: SecretString,
-    on_status_fn: Option<StatusEventFn>,
     cb_affinity: Option<u64>,
     cb_priority: Option<u8>,
     bg_affinity: Option<u64>,
@@ -423,11 +319,6 @@ impl Builder {
         Ok(self)
     }
 
-    pub fn on_status_event(mut self, func: StatusEventFn) -> Self {
-        self.on_status_fn = Some(func);
-        self
-    }
-
     /// Set the CPU affinity mask for the callback thread to the given value.
     pub fn callback_affinity(mut self, affinity: Option<u64>) -> Self {
         self.cb_affinity = affinity;
@@ -465,23 +356,25 @@ impl Builder {
     }
 
     /// Connect to the Exegy appliance and return a ticker plant session.
-    pub fn tickerplant(self, market_events_per_instrument: bool) -> Result<Session> {
+    pub fn tickerplant(
+        self,
+        market_events_per_instrument: bool,
+        status_fn: Option<TickerStatusEventFn>,
+    ) -> Result<TickerSession> {
         tracing::trace!("Starting tickerplant session");
-        self.start_session(Kind::Ticker, Some(market_events_per_instrument))
+        self.start_session(
+            Kind::Ticker,
+            Some(market_events_per_instrument),
+            status_fn.into(),
+        )
     }
-
-    /// Connect to the Exegy appliance and return a monitoring session.
-    pub fn monitor(self) -> Result<Session> {
-        tracing::trace!("Starting monitoring session");
-        self.start_session(Kind::TickerMonitoring, None)
-    }
-
     /// Actually build a session object and start the connection process
-    fn start_session(
+    fn start_session<T: Session>(
         self,
         kind: Kind,
         market_events_per_instrument: Option<bool>,
-    ) -> Result<Session> {
+        status_fn: StatusFn,
+    ) -> Result<T> {
         // Build our parameters
         let server_list = CString::new(
             self.server_list
@@ -495,7 +388,7 @@ impl Builder {
 
         // Make our session context object (used to dispatch callbacks)
         let context = Box::new(Context {
-            status: self.on_status_fn,
+            status: status_fn,
             affinity: self.cb_affinity,
             priority: self.cb_priority.map(|v| v as u32),
             market_events_per_instrument,
@@ -516,66 +409,72 @@ impl Builder {
             );
 
             Success::try_from(status)?;
-            Session::from_handle(kind, handle)?
+            T::from_xhandle_and_type(handle, kind as u16)?
         };
 
         if let Some(affin) = self.bg_affinity {
-            field::set_u64(
-                *retval.as_ref(),
+            tracing::debug!(affinity = affin, "Setting background thread affinity");
+            if let Err(e) = field::set_u64(
+                &retval,
                 rxegy_sys::XC_SESSION,
                 Field::ClientBgThreadAffinityMask,
                 affin,
-            )?;
-        }
-
-        if let Some(prio) = self.bg_priority {
-            field::set_u32(
-                *retval.as_ref(),
-                rxegy_sys::XC_SESSION,
-                Field::ClientBgThreadPriority,
-                prio as u32,
-            )?;
+            ) {
+                tracing::warn!("Could not set background thread affinity: {}", e);
+            }
         }
 
         if let Some(affin) = self.hb_affinity {
-            field::set_u64(
-                *retval.as_ref(),
+            tracing::debug!(affinity = affin, "Setting heartbeat thread affinity");
+            if let Err(e) = field::set_u64(
+                &retval,
                 rxegy_sys::XC_SESSION,
                 Field::ClientHbThreadAffinityMask,
                 affin,
-            )?;
+            ) {
+                tracing::warn!("Could not set background thread affinity: {}", e);
+            }
+        }
+
+        if let Some(prio) = self.bg_priority {
+            tracing::debug!(priority = prio, "Setting background thread priority");
+            if let Err(e) = field::set_u32(
+                &retval,
+                rxegy_sys::XC_SESSION,
+                Field::ClientBgThreadPriority,
+                prio as u32,
+            ) {
+                tracing::warn!("Could not set background thread affinity: {}", e);
+            }
         }
 
         if let Some(prio) = self.hb_priority {
-            field::set_u32(
-                *retval.as_ref(),
+            tracing::debug!(priority = prio, "Setting heartbeat thread priority");
+            if let Err(e) = field::set_u32(
+                &retval,
                 rxegy_sys::XC_SESSION,
                 Field::ClientHbThreadPriority,
                 prio as u32,
-            )?;
+            ) {
+                tracing::warn!("Could not set background thread affinity: {}", e);
+            }
         }
 
         Ok(retval)
     }
 }
 
-/// An enumeration of session event objects
-enum Event {
-    /// A status event
-    Status(StatusEvent),
+/// An enumeration of status event callbacks for ticker sessions vs ticker monitoring sessions.
+enum StatusFn {
+    Ticker(TickerStatusEventFn),
+    None,
 }
 
-impl Event {
-    pub fn new(event_type: u16, handle: xhandle) -> Result<Event> {
-        tracing::trace!(event.type = event_type, "Trying to find event kind");
-
-        let obj = NonNull::new(handle).ok_or(Error::NullObject)?;
-        let kind = EventKind::try_from(event_type)?;
-
-        tracing::trace!(event.kind = format!("{:?}", kind), "Event kind found!");
-
-        match kind {
-            EventKind::Status => Ok(Event::Status(StatusEvent(obj))),
+impl From<Option<TickerStatusEventFn>> for StatusFn {
+    fn from(value: Option<TickerStatusEventFn>) -> Self {
+        match value {
+            Some(func) => Self::Ticker(func),
+            None => StatusFn::None,
         }
     }
 }
@@ -650,12 +549,23 @@ enum Field {
     ReplayQuoteMontage = rxegy_sys::XFLD_SESS_REPLAY_QUOTE_MONTAGE,
     ReplayL2Composite = rxegy_sys::XFLD_SESS_REPLAY_L2_COMPOSITE,
     ReplayUbbo = rxegy_sys::XFLD_SESS_REPLAY_UBBO,
-    TickerMaxPriceBookDepth = rxegy_sys::XFLD_SESS_TKR_MAX_PRICE_BOOK_DEPTH,
-    TickerMarketStatusCallbacks = rxegy_sys::XFLD_SESS_TKR_MARKET_STATUS_CALLBACKS,
-    TickerMaxPriceBookRowLevel = rxegy_sys::XFLD_SESS_TKR_MAX_PB_ROW_LEVEL,
 }
 
 impl FieldTrait for Field {
+    fn to_u64(&self) -> u64 {
+        *self as u64
+    }
+}
+
+#[derive(Clone, Copy, Debug)]
+#[repr(u64)]
+enum TickerField {
+    MaxPriceBookDepth = rxegy_sys::XFLD_SESS_TKR_MAX_PRICE_BOOK_DEPTH,
+    MarketStatusCallbacks = rxegy_sys::XFLD_SESS_TKR_MARKET_STATUS_CALLBACKS,
+    MaxPriceBookRowLevel = rxegy_sys::XFLD_SESS_TKR_MAX_PB_ROW_LEVEL,
+}
+
+impl FieldTrait for TickerField {
     fn to_u64(&self) -> u64 {
         *self as u64
     }
@@ -691,7 +601,7 @@ impl Display for Server {
 
 struct Context {
     /// The callback to fire for status events
-    status: Option<StatusEventFn>,
+    status: StatusFn,
     /// The CPU affinity mask to be set when the callback is fired
     affinity: Option<u64>,
     /// The thread proiority to be set when the callback is fired
@@ -717,50 +627,65 @@ impl Context {
         tracing::trace_span!("rxegy::session::Context::dispatch");
 
         // Grab the session handle
-        let session = Session::try_from(handle)?;
+        // TODO: support monitoring sessions
+        let session = TickerSession::from_xhandle(handle)?;
 
         tracing::trace!("Session = {:?}", session);
 
         // Check the event status
         if Success::try_from(status).is_ok() {
             if let Some(affinity) = self.affinity {
-                tracing::debug!("Setting callback thread affinity");
-                field::set_u64(
-                    *session.as_ref(),
+                tracing::debug!(affinity = affinity, "Setting callback thread affinity");
+                if let Err(e) = field::set_u64(
+                    &session,
                     rxegy_sys::XC_SESSION,
                     Field::ClientAffinityMask,
                     affinity,
-                )?;
+                ) {
+                    tracing::warn!("Could not set callback thread affinity: {}", e);
+                }
             }
 
             if let Some(prio) = self.priority {
-                tracing::debug!("Setting callback thread priority");
-                field::set_u32(
-                    *session.as_ref(),
+                tracing::debug!(priority = prio, "Setting callback thread priority");
+                if let Err(e) = field::set_u32(
+                    &session,
                     rxegy_sys::XC_SESSION,
                     Field::ClientThreadPriority,
                     prio,
-                )?;
+                ) {
+                    tracing::warn!("Could not set callback thread priority: {}", e);
+                }
             }
 
             if let Some(enable) = self.market_events_per_instrument {
-                field::set_u8(
-                    *session.as_ref(),
+                tracing::debug!(
+                    market_events_per_instrument = enable,
+                    "Configuring market events per instrument"
+                );
+                if let Err(e) = field::set_u8(
+                    &session,
                     rxegy_sys::XC_SESSION,
-                    Field::TickerMarketStatusCallbacks,
+                    TickerField::MarketStatusCallbacks,
                     enable as u8,
-                )?;
+                ) {
+                    tracing::warn!("Could not configure market events per instrument: {}", e);
+                }
             }
         }
 
-        let event = Event::new(event_type, event_handle)?;
-
-        tracing::trace_span!("rxegy::session::Context::dispatch::user");
-        match event {
-            Event::Status(status_event) => {
-                if let Some(func) = self.status.as_ref() {
-                    func(&session, &status_event)?;
+        match event_type {
+            val if val == EventKind::Status as u16 => {
+                let event = StatusEvent::from_xhandle_and_type(event_handle, event_type)?;
+                match self.status {
+                    StatusFn::Ticker(func) => {
+                        let _value = func(&session, &event)?;
+                    }
+                    StatusFn::None => {}
                 }
+            }
+            _ => {
+                tracing::warn!(exegy.event.type = event_type, "Unknown/unhandled event type");
             }
         };
 
@@ -777,24 +702,30 @@ unsafe extern "C" fn _rxegy_session_callback(
     turnkey: u64,
     status: xerr,
 ) {
+    // Get our context outside the panic handler
+    let context = if let Ok(ctx) = std::panic::catch_unwind(|| unsafe {
+        let ptr = turnkey as *mut Context;
+        Box::from_raw(ptr)
+    }) {
+        ctx
+    } else {
+        tracing::error!("Panic while retrieving context, halting application");
+        process::abort();
+    };
+
     if let Err(_e) = std::panic::catch_unwind(|| {
         tracing::trace_span!("rxegy::session::_rxegy_session_callback");
-
-        // Get our context
-        let context = unsafe {
-            let ptr = turnkey as *mut Context;
-            Box::from_raw(ptr)
-        };
 
         tracing::trace!("Dispatching to user callbacks...");
         if let Err(error) = context.dispatch(handle, event_handle, event_type, status) {
             tracing::debug!("Callback returned an error: {}", error);
         }
-
-        let _leaked = Box::into_raw(context);
     }) {
         tracing::error!(
-            "Panic at the callback, allowing the application to continue, but user locks may be poisoined..."
+            "Panic at the callback, allowing the application to continue, but user locks may be poisoined, and the context ..."
         );
     }
+
+    // leak our context so it isn't freed
+    let _leaked = Box::into_raw(context);
 }

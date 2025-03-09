@@ -3,74 +3,73 @@
 use crate::{
     error::{ExegyError, Result, Success},
     field::{self, Field as FieldTrait},
+    impl_wrapper_on_newtype,
     key::Key,
+    object::{Kind as ObjectKind, Wrapper},
     timing::EventTiming,
 };
 use std::{ffi::c_void, ptr::NonNull, result::Result as StdResult};
 
-/// Fields common to every Exegy event.
-pub trait CommonEvent: AsRef<NonNull<c_void>> {
+/// An XCAPI object containg a subscribe event.
+#[repr(transparent)]
+pub struct Subscribe(NonNull<c_void>);
+
+impl_wrapper_on_newtype!(Subscribe, ObjectKind::EventSubscribe);
+
+impl Common for Subscribe {}
+
+/// Field accessors common to every Exegy event.
+#[allow(private_bounds)]
+pub trait Common: Wrapper {
     /// Retrieve the status code from the event
     fn status(&self) -> Result<StdResult<Success, ExegyError>> {
-        Ok(Success::try_from(field::get_u32(
-            *self.as_ref(),
-            rxegy_sys::XC_EVENT,
-            Field::Status,
-        )?))
+        field::get_u32(self, rxegy_sys::XC_EVENT, Field::Status).map(Success::try_from)
     }
 
     /// Retrieve the key of the item (channel) this event refers to
     fn item_key(&self) -> Result<Key> {
-        field::get_key(*self.as_ref(), rxegy_sys::XC_EVENT, Field::ItemKey)
+        field::get_xc_key(self, rxegy_sys::XC_EVENT, Field::ItemKey).map(Key::new)
     }
 
     /// Retrieve the key string of the item (channel) this event refers to
     fn item_key_string(&self) -> Result<String> {
-        field::get_fixedstring(
-            *self.as_ref(),
-            rxegy_sys::XC_EVENT,
-            Field::ItemKeyString,
-            80,
-        )
+        field::get_fixedstring(self, rxegy_sys::XC_EVENT, Field::ItemKeyString, 80)
     }
 
     /// Retrieve the line ID the event was received from.
     fn line_id(&self) -> Result<u16> {
-        field::get_u16(*self.as_ref(), rxegy_sys::XC_EVENT, Field::LineId)
+        field::get_u16(self, rxegy_sys::XC_EVENT, Field::LineId)
     }
 
     /// Retreive the time the event was received by Exegy
     fn receive_time(&self) -> Result<u64> {
-        field::get_u64(*self.as_ref(), rxegy_sys::XC_EVENT, Field::ReceiveTime)
+        field::get_u64(self, rxegy_sys::XC_EVENT, Field::ReceiveTime)
     }
 
     /// Retrieve the time the event was transmitted by Exegy
     fn transmit_time(&self) -> Result<u64> {
-        field::get_u64(*self.as_ref(), rxegy_sys::XC_EVENT, Field::TransmitTime)
+        field::get_u64(self, rxegy_sys::XC_EVENT, Field::TransmitTime)
     }
 
     /// Retrieve the time the event was received by Exegy
     fn xcapi_receive_timestamp(&self) -> Result<u64> {
-        field::get_u64(*self.as_ref(), rxegy_sys::XC_EVENT, Field::XcapiReceiveTime)
+        field::get_u64(self, rxegy_sys::XC_EVENT, Field::XcapiReceiveTime)
     }
 
     /// Retrieve the timestamp the callback was fired
     fn xcapi_callback_timestamp(&self) -> Result<u64> {
-        field::get_u64(
-            *self.as_ref(),
-            rxegy_sys::XC_EVENT,
-            Field::XcapiCallbackTime,
-        )
+        field::get_u64(self, rxegy_sys::XC_EVENT, Field::XcapiCallbackTime)
     }
 
     /// Retrieve the exchange sequence number of the event
     fn exchange_sequence(&self) -> Result<u64> {
-        field::get_u64(*self.as_ref(), rxegy_sys::XC_EVENT, Field::ExchangeSequence)
+        field::get_u64(self, rxegy_sys::XC_EVENT, Field::ExchangeSequence)
     }
 
     /// Retrieve the timings of this event
     fn timing(&self) -> Result<EventTiming> {
-        field::get_eventtiming(*self.as_ref(), rxegy_sys::XC_EVENT, Field::TimingGroup)
+        field::get_xc_group_event_timing(self, rxegy_sys::XC_EVENT, Field::TimingGroup)
+            .map(EventTiming::new)
     }
 }
 

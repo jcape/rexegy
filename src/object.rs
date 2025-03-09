@@ -1,5 +1,9 @@
 //! Exegy object support
 
+use crate::error::{Error, Result, Success};
+use rxegy_sys::xhandle;
+use std::{ffi::c_void, ptr::NonNull};
+
 /// An enumeration of Exegy object types
 #[derive(Copy, Clone, Eq, Hash, PartialEq, PartialOrd, Ord)]
 #[repr(u16)]
@@ -546,5 +550,50 @@ impl From<u16> for Kind {
 
             _ => Kind::Invalid,
         }
+    }
+}
+
+pub(crate) trait Wrapper: Sized {
+    /// The Exegy object type this wrapper will encapsulate.
+    const KIND: Kind;
+
+    /// Create from a safe pointer without checking tye type.
+    fn from_ptr_unchecked(non_null: NonNull<c_void>) -> Self;
+
+    /// Get the inner pointer contained in this object as a raw handle.
+    fn as_xhandle(&self) -> xhandle;
+
+    /// Create from a raw pointer without retrieving the type.
+    fn from_xhandle_and_type(ptr: xhandle, object_type: u16) -> Result<Self> {
+        if Self::KIND as u16 == object_type {
+            Ok(Self::from_ptr_unchecked(
+                NonNull::new(ptr).ok_or(Error::NullObject)?,
+            ))
+        } else {
+            Err(Error::UnexpectedKind)
+        }
+    }
+
+    /// Create from a non-null pointer.
+    ///
+    /// This will verify the pointer contains an exegy object of the expected type.
+    fn from_ptr(ptr: NonNull<c_void>) -> Result<Self> {
+        let mut actual = 0;
+        let status = unsafe { rxegy_sys::xcObjectType(ptr.as_ptr(), &mut actual) };
+
+        Success::try_from(status)?;
+
+        if Self::KIND as u16 == actual {
+            Ok(Self::from_ptr_unchecked(ptr))
+        } else {
+            Err(Error::ObjectUnknown)
+        }
+    }
+
+    /// Create from a raw pointer.
+    ///
+    /// This will verify the pointer is non-null, and is of the expected type.
+    fn from_xhandle(handle: xhandle) -> Result<Self> {
+        Self::from_ptr(NonNull::new(handle).ok_or(Error::NullObject)?)
     }
 }

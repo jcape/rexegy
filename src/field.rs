@@ -2,13 +2,10 @@
 
 use crate::{
     error::{Result, Success},
-    key::Key,
-    timing::EventTiming,
+    object::Wrapper,
 };
-use std::{
-    ffi::{CStr, CString, c_void},
-    ptr::NonNull,
-};
+use rxegy_sys::{XC_GROUP_EVENT_TIMING, XC_KEY};
+use std::ffi::{CStr, CString};
 
 /// A marker trait for field types
 pub trait Field {
@@ -16,105 +13,67 @@ pub trait Field {
     fn to_u64(&self) -> u64;
 }
 
-macro_rules! impl_struct_group {
-    ($value:ty) => {
-        paste::item! {
-            /// Update a field of type `$value`
-            #[allow(dead_code)]
-            pub(crate) fn [< set_ $value:lower >]<F: $crate::field::Field>(object: std::ptr::NonNull<std::ffi::c_void>, slot: u32, field: F, value: &$value) -> $crate::error::Result<()> {
-                const IBUFSIZ: usize = std::mem::size_of::<$value>();
-                let status = unsafe {
-                    let ibuf = std::mem::transmute_copy::<$value, [u8; IBUFSIZ]>(value);
-                    rxegy_sys::xcSetFieldGroup(
-                        object.as_ptr(),
-                        slot,
-                        field.to_u64(),
-                        ibuf.as_ptr() as *const c_void,
-                        IBUFSIZ as u32,
-                    )
-                };
+macro_rules! impl_getter {
+    ($value:ty, $funcname:ident, $xcfunc:ident) => {
+        /// Retrieve the contents of the given field of type `$value`
+        pub(crate) fn $funcname<O: $crate::object::Wrapper, F: $crate::field::Field>(
+            object: &O,
+            slot: u32,
+            field: F,
+        ) -> $crate::error::Result<$value> {
+            let mut obuf = <$value as Default>::default();
+            let status = unsafe {
+                rxegy_sys::$xcfunc(
+                    object.as_xhandle(),
+                    slot,
+                    field.to_u64(),
+                    &mut obuf as *mut $value as *mut _,
+                    ::std::mem::size_of::<$value>() as u32,
+                )
+            };
 
-                $crate::error::Success::try_from(status)?;
+            $crate::error::Success::try_from(status)?;
 
-                Ok(())
-            }
-
-            /// Retrieve the contents of the given field of type `$value`
-            #[allow(dead_code)]
-            pub(crate) fn [< get_ $value:lower >]<F: $crate::field::Field>(object: std::ptr::NonNull<std::ffi::c_void>, slot: u32, field: F) -> $crate::error::Result<$value> {
-                const OBUFSIZ: usize = std::mem::size_of::<$value>();
-                let mut obuf = [0u8; OBUFSIZ];
-                let status = unsafe {
-                    rxegy_sys::xcGetFieldGroup(
-                        object.as_ptr(),
-                        slot,
-                        field.to_u64(),
-                        obuf.as_mut_ptr() as *mut c_void,
-                        OBUFSIZ as u32,
-                    )
-                };
-
-                $crate::error::Success::try_from(status)?;
-
-                Ok(unsafe { std::mem::transmute::<[u8; OBUFSIZ], $value>(obuf)})
-            }
+            Ok(obuf)
         }
     };
 }
 
-macro_rules! impl_scalar {
-    ($value:ty) => {
-        paste::item! {
-            /// Update a field of type `$value`
-            #[allow(dead_code)]
-            pub(crate) fn [< set_ $value >]<F: $crate::field::Field>(object: std::ptr::NonNull<std::ffi::c_void>, slot: u32, field: F, value: $value) -> Result<()> {
-                let ibuf = value.to_le_bytes();
-                let status = unsafe {
-                    rxegy_sys::xcSetField(
-                        object.as_ptr(),
-                        slot,
-                        field.to_u64(),
-                        ibuf.as_ptr() as *const c_void,
-                        ibuf.len() as u32,
-                    )
-                };
+macro_rules! impl_setter {
+    ($value:ty, $funcname:ident, $xcfunc:ident) => {
+        /// Retrieve the contents of the given field of type `$value`
+        pub(crate) fn $funcname<O: $crate::object::Wrapper, F: $crate::field::Field>(
+            object: &O,
+            slot: u32,
+            field: F,
+            ibuf: $value,
+        ) -> Result<()> {
+            let status = unsafe {
+                rxegy_sys::$xcfunc(
+                    object.as_xhandle(),
+                    slot,
+                    field.to_u64(),
+                    &ibuf as *const $value as *const _,
+                    ::std::mem::size_of::<$value>() as u32,
+                )
+            };
 
-                $crate::error::Success::try_from(status)?;
+            $crate::error::Success::try_from(status)?;
 
-                Ok(())
-            }
-
-            /// Retrieve the contents of the given field of type `$value`
-            #[allow(dead_code)]
-            pub(crate) fn [< get_ $value >]<F: $crate::field::Field>(object: std::ptr::NonNull<c_void>, slot: u32, field: F) -> Result<$value> {
-                let mut obuf = $value::default().to_le_bytes();
-                let status = unsafe {
-                    rxegy_sys::xcGetField(
-                        object.as_ptr(),
-                        slot,
-                        field.to_u64(),
-                        obuf.as_mut_ptr() as *mut c_void,
-                        obuf.len() as u32,
-                    )
-                };
-
-                $crate::error::Success::try_from(status)?;
-
-                Ok($value::from_le_bytes(obuf))
-            }
+            Ok(())
         }
     };
 }
 
 /// Retrieve the contents of the given field ID as a UTF-8 string
-pub fn get_string<F: Field>(object: NonNull<c_void>, slot: u32, field: F) -> Result<String> {
+pub fn get_string<O: Wrapper, F: Field>(object: &O, slot: u32, field: F) -> Result<String> {
     let mut obuf = [0u8; 512];
     let status = unsafe {
         rxegy_sys::xcGetField(
-            object.as_ptr(),
+            object.as_xhandle(),
             slot,
             field.to_u64(),
-            obuf.as_mut_ptr() as *mut c_void,
+            obuf.as_mut_ptr() as *mut _,
             obuf.len() as u32,
         )
     };
@@ -127,8 +86,8 @@ pub fn get_string<F: Field>(object: NonNull<c_void>, slot: u32, field: F) -> Res
 }
 
 /// Set the contents of a field value to the given string
-pub fn set_string<F: Field>(
-    object: NonNull<c_void>,
+pub fn set_string<O: Wrapper, F: Field>(
+    object: &O,
     slot: u32,
     field: F,
     value: String,
@@ -136,10 +95,10 @@ pub fn set_string<F: Field>(
     let ibuf = CString::new(value)?;
     let status = unsafe {
         rxegy_sys::xcSetField(
-            object.as_ptr(),
+            object.as_xhandle(),
             slot,
             field.to_u64(),
-            ibuf.as_ptr() as *const c_void,
+            ibuf.as_ptr() as *const _,
             ibuf.as_bytes().len() as u32,
         )
     };
@@ -149,8 +108,8 @@ pub fn set_string<F: Field>(
 }
 
 /// Get the contents of a non-nul-terminated fixed length string
-pub fn get_fixedstring<F: Field>(
-    object: NonNull<c_void>,
+pub fn get_fixedstring<O: Wrapper, F: Field>(
+    object: &O,
     slot: u32,
     field: F,
     length: usize,
@@ -158,10 +117,10 @@ pub fn get_fixedstring<F: Field>(
     let mut obuf = vec![0u8; length];
     let status = unsafe {
         rxegy_sys::xcGetField(
-            object.as_ptr(),
+            object.as_xhandle(),
             slot,
             field.to_u64(),
-            obuf.as_mut_ptr() as *mut c_void,
+            obuf.as_mut_ptr() as *mut _,
             obuf.len() as u32,
         )
     };
@@ -171,9 +130,20 @@ pub fn get_fixedstring<F: Field>(
     Ok(String::from_utf8(obuf)?)
 }
 
-impl_scalar!(u8);
-impl_scalar!(u16);
-impl_scalar!(u32);
-impl_scalar!(u64);
-impl_struct_group!(EventTiming);
-impl_struct_group!(Key);
+impl_getter!(u8, get_u8, xcGetField);
+impl_setter!(u8, set_u8, xcSetField);
+
+impl_getter!(u16, get_u16, xcGetField);
+
+impl_getter!(u32, get_u32, xcGetField);
+impl_setter!(u32, set_u32, xcSetField);
+
+impl_getter!(u64, get_u64, xcGetField);
+impl_setter!(u64, set_u64, xcSetField);
+
+impl_getter!(XC_KEY, get_xc_key, xcGetField);
+impl_getter!(
+    XC_GROUP_EVENT_TIMING,
+    get_xc_group_event_timing,
+    xcGetFieldGroup
+);

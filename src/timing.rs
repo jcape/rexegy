@@ -8,6 +8,11 @@ use rxegy_sys::XC_GROUP_EVENT_TIMING;
 pub struct EventTiming(XC_GROUP_EVENT_TIMING);
 
 impl EventTiming {
+    /// Create a new event timing object.
+    pub(crate) fn new(inner: XC_GROUP_EVENT_TIMING) -> Self {
+        Self(inner)
+    }
+
     /// The exchange sequence number of the corresponding event.
     pub fn exchange_sequence(&self) -> Option<u64> {
         wrap_in_option(self.0.xtev_sequence)

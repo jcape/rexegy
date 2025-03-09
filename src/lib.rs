@@ -1,6 +1,5 @@
 //! Unofficial Exegy Rust Binding
 
-pub mod error;
 pub mod event;
 pub mod feed;
 pub mod group;
@@ -11,4 +10,6 @@ pub mod object;
 pub mod session;
 pub mod timing;
 
+mod error;
 mod field;
+mod macros;
