@@ -1,4 +1,21 @@
-//! Event Object Support
+//! Event Objects
+
+mod equity;
+mod exchange_statistics;
+mod order_imbalance;
+mod trade_summary;
+mod trading_action;
+
+pub use self::{
+    equity::{
+        Cancel as EquityCancel, Correction as EquityCorrection, Quote as EquityQuote,
+        Refresh as EquityRefresh, Trade as EquityTrade,
+    },
+    exchange_statistics::Event as ExchangeStatistics,
+    order_imbalance::Event as OrderImbalance,
+    trade_summary::Event as TradeSummary,
+    trading_action::Event as TradingAction,
+};
 
 use crate::{
     error::{ExegyError, Result, Success},

@@ -1,3 +1,5 @@
 //! Containers for use with top-of-book Equity and Equity Options data
 
-pub mod stream;
+pub use self::stream::{Builder as StreamBuilder, Stream};
+
+mod stream;

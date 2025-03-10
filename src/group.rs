@@ -1,11 +1,12 @@
 //! Exegy "Country" Code (feed group) support
 
 use ref_cast::RefCast;
+use rxegy_sys::XC_COUNTRY_ID;
 
 /// Exegy "country" code -- actually a feed ID group
 #[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd, RefCast)]
 #[repr(transparent)]
-pub struct Id(rxegy_sys::XC_COUNTRY_ID);
+pub struct Id(XC_COUNTRY_ID);
 
 /// A group of feeds
 #[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
