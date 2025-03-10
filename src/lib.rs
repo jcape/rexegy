@@ -2,9 +2,11 @@
 
 pub use self::{
     error::{Error, ExegyError, Result},
-    feed::{Feed, Id as FeedId},
+    feed::{Feed, Id as FeedId, Internal as InternalFeed, Us as UsFeed},
     group::{Corporate, Country, Group, Id as GroupId},
-    key::{Key, Symbol},
+    key::{AlternateId, Key, Symbol},
+    misc::TradeVenue,
+    status::{Instrument as InstrumentStatus, Market as MarketStatus},
     timing::EventTiming,
 };
 
@@ -20,4 +22,6 @@ mod group;
 mod key;
 mod line;
 mod macros;
+mod misc;
+mod status;
 mod timing;

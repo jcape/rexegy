@@ -16,10 +16,10 @@ pub(crate) trait RealTime: Wrapper {}
 /// Common fields used by containers
 #[allow(private_bounds)]
 pub trait Common: Wrapper {
-    /// The type ID of the container
+    /// The object type of the container.
     fn container_type(&self) -> Result<u16>;
 
-    /// Retreive the number of slots configured on this container
+    /// The number of slots in the container.
     fn slot_count(&self) -> Result<u32>;
 }
 

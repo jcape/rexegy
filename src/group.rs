@@ -8,6 +8,13 @@ use rxegy_sys::XC_COUNTRY_ID;
 #[repr(transparent)]
 pub struct Id(XC_COUNTRY_ID);
 
+impl Id {
+    #[inline(always)]
+    pub(crate) fn new(inner: XC_COUNTRY_ID) -> Self {
+        Self(inner)
+    }
+}
+
 /// A group of feeds
 #[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub enum Group {

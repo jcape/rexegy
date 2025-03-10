@@ -6,7 +6,7 @@ use crate::{
     group::{Group, Id as GroupId},
 };
 use ref_cast::RefCast;
-use rxegy_sys::{XC_FORMAT_CONTROL, XC_KEY, XC_SYMBOL};
+use rxegy_sys::{XC_ALTERNATE_ID, XC_FORMAT_CONTROL, XC_KEY, XC_SYMBOL};
 use std::{
     ffi::CStr,
     fmt::{Display, Error as FmtError, Formatter, Result as FmtResult},
@@ -86,5 +86,16 @@ impl Display for Symbol {
         let outbuf = unsafe { CStr::from_ptr(outbuf.as_mut_ptr()) };
 
         write!(f, "{}", outbuf.to_str().map_err(|_e| FmtError)?)
+    }
+}
+
+#[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd, RefCast)]
+#[repr(transparent)]
+pub struct AlternateId(XC_ALTERNATE_ID);
+
+impl AlternateId {
+    #[inline(always)]
+    pub(crate) fn new(inner: XC_ALTERNATE_ID) -> Self {
+        AlternateId(inner)
     }
 }

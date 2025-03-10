@@ -2,6 +2,7 @@
 
 mod equity;
 mod exchange_statistics;
+mod indicative_price;
 mod order_imbalance;
 mod trade_summary;
 mod trading_action;
@@ -12,6 +13,7 @@ pub use self::{
         Refresh as EquityRefresh, Trade as EquityTrade,
     },
     exchange_statistics::Event as ExchangeStatistics,
+    indicative_price::Event as IndicativePrice,
     order_imbalance::Event as OrderImbalance,
     trade_summary::Event as TradeSummary,
     trading_action::Event as TradingAction,

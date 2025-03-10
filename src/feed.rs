@@ -1,15 +1,25 @@
 //! Exegy Feed Identifiers
 
+pub use self::{us::Feed as Us, xx::Feed as Internal};
+
+mod us;
+mod xx;
+
 use crate::group::Group;
 use ref_cast::RefCast;
-
-pub mod us;
-pub mod xx;
+use rxegy_sys::XC_EXCHANGE_ID;
 
 /// Exegy Feed ID
-#[derive(Clone, Eq, Hash, PartialEq, PartialOrd, Ord, RefCast)]
+#[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd, RefCast)]
 #[repr(transparent)]
-pub struct Id(rxegy_sys::XC_EXCHANGE_ID);
+pub struct Id(XC_EXCHANGE_ID);
+
+impl Id {
+    #[inline(always)]
+    pub(crate) fn new(inner: XC_EXCHANGE_ID) -> Self {
+        Self(inner)
+    }
+}
 
 /// A trait for group-specific feeds to retrieve
 pub trait Feed {
