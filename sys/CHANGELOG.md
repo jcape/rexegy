@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.7](https://github.com/jcape/rxegy/compare/rxegy-sys-v0.0.6...rxegy-sys-v0.0.7) - 2025-03-10
+
+### Added
+
+- add equity stream field accessors, docs updates.
+- [**breaking**] derive core traits from bindgen
+- support xcapi include and libdir, minor cleanup
+
+### Fixed
+
+- [**breaking**] fix integer representation of symbol type and ref id type
+
 ## [0.0.5](https://github.com/jcape/rxegy/compare/rxegy-sys-v0.0.4...rxegy-sys-v0.0.5) - 2025-03-03
 
 ### Added
