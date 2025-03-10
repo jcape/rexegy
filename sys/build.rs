@@ -17,7 +17,11 @@ impl ParseCallbacks for Callbacks {
     fn int_macro(&self, name: &str, _value: i64) -> Option<IntKind> {
         if name.ends_with("_XINT8") {
             Some(IntKind::I8)
-        } else if name == "XPT_DEFAULT" || name.ends_with("_XUINT8") {
+        } else if name.starts_with("XPT_")
+            || name.starts_with("XSYMTYP_")
+            || name.starts_with("XOIDT_")
+            || name.ends_with("_XUINT8")
+        {
             Some(IntKind::U8)
         } else if name.ends_with("_XINT16") {
             Some(IntKind::I16)
