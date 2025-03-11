@@ -35,7 +35,7 @@ macro_rules! impl_common_for_union {
         impl std::fmt::Debug for $name {
             fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                 write!(f, "{} {{ u8_: {:?} }}", stringify!($name), unsafe {
-                    self.u8_
+                    self.$member
                 })
             }
         }
@@ -69,3 +69,5 @@ macro_rules! impl_common_for_union {
 }
 
 impl_common_for_union!(XC_TRADING_STATE, u8_);
+impl_common_for_union!(XC_DATE, xdt_raw);
+impl_common_for_union!(XC_REFRESH_QUALS, xrq_u32);

@@ -5,8 +5,8 @@ use crate::{
     object::Wrapper,
 };
 use rxegy_sys::{
-    XC_ALTERNATE_ID, XC_COUNTRY_ID, XC_EXCHANGE_ID, XC_GROUP_EVENT_TIMING, XC_KEY, XC_TRADE_VENUE,
-    XC_TRADING_STATE,
+    XC_ALTERNATE_ID, XC_COUNTRY_ID, XC_CURRENCY_ID, XC_EXCHANGE_ID, XC_GROUP_EVENT_TIMING, XC_KEY,
+    XC_REFRESH_QUALS, XC_TRADE_VENUE, XC_TRADING_STATE,
 };
 use std::ffi::{CStr, CString};
 
@@ -144,8 +144,11 @@ impl_setter!(u32, set_u32, xcSetField);
 impl_getter!(u64, get_u64, xcGetField);
 impl_setter!(u64, set_u64, xcSetField);
 
+impl_getter!(i32, get_i32, xcGetField);
+
 impl_getter!(XC_ALTERNATE_ID, get_xc_alternate_id, xcGetField);
 impl_getter!(XC_COUNTRY_ID, get_xc_country_id, xcGetField);
+impl_getter!(XC_CURRENCY_ID, get_xc_currency_id, xcGetField);
 impl_getter!(XC_EXCHANGE_ID, get_xc_exchange_id, xcGetField);
 impl_getter!(
     XC_GROUP_EVENT_TIMING,
@@ -153,5 +156,6 @@ impl_getter!(
     xcGetFieldGroup
 );
 impl_getter!(XC_KEY, get_xc_key, xcGetField);
+impl_getter!(XC_REFRESH_QUALS, get_xc_refresh_quals, xcGetField);
 impl_getter!(XC_TRADE_VENUE, get_xc_trade_venue, xcGetField);
 impl_getter!(XC_TRADING_STATE, get_xc_trading_state, xcGetField);

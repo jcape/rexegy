@@ -69,6 +69,10 @@ pub enum Error {
     /// The type value is unknown in the current context
     #[error("The type is unknown in the current context")]
     KindUnknown,
+
+    /// The exponent/price-type value is unknown
+    #[error("The exponent/price-type value is unknown")]
+    InvalidExponent,
 }
 
 impl From<FromUtf8Error> for Error {

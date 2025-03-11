@@ -123,3 +123,31 @@ impl FieldTrait for Field {
         *self as u64
     }
 }
+
+#[macro_export]
+macro_rules! impl_event_fields {
+    ($event:ident => $($doc:literal, $name:ident, $value:expr, $accessor:ident, $getter:ident, $result:ty$(, $map:expr)?;)*) => {
+        #[derive(Clone, Copy, Debug)]
+        #[repr(u64)]
+        enum Field {
+            $(
+                $name = $value,
+            )*
+        }
+
+        impl $crate::field::Field for Field {
+            fn to_u64(&self) -> u64 {
+                *self as u64
+            }
+        }
+
+        impl $event {
+        $(
+            #[doc=$doc]
+            pub fn $accessor(&self) -> $crate::Result<$result> {
+                $crate::field::$getter(self, ::rxegy_sys::XC_EVENT, Field::$name)$(.map($map))?
+            }
+        )*
+        }
+    };
+}
