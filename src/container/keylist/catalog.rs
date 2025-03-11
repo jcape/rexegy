@@ -6,7 +6,7 @@ use crate::{
         callbacks::{KeylistCatalogRefreshFn, KeylistCatalogSubscribeFn, KeylistCatalogUpdateFn},
     },
     error::{Error, Result, Success},
-    event::{KeylistCatalogRefresh, KeylistCatalogUpdate, Subscribe as SubscribeEvent},
+    event::{KeylistCatalogRefresh, KeylistCatalogUpdate, Subscribe},
     impl_wrapper_on_newtype,
     object::{Kind as ObjectKind, Wrapper},
     session::TickerSession,
@@ -131,15 +131,13 @@ impl Builder {
         &self,
         catalog: &Catalog,
         _slot: u32,
-        event_handle: xhandle,
-        event_type: u16,
+        event: Event,
         user_data: Option<&Box<dyn Any>>,
         _status: xerr,
     ) -> Result<()> {
-        match EventKind::try_from(event_type)? {
-            EventKind::Subscribe => {
+        match event {
+            Event::Subscribe(event) => {
                 if let Some(func) = self.subscribe {
-                    let event = SubscribeEvent::from_xhandle_and_type(event_handle, event_type)?;
                     if let Some(user_data) = user_data {
                         func(catalog, &event, Some(user_data.as_ref()))?;
                     } else {
@@ -147,10 +145,8 @@ impl Builder {
                     }
                 }
             }
-            EventKind::Refresh => {
+            Event::Refresh(event) => {
                 if let Some(func) = self.refresh {
-                    let event =
-                        KeylistCatalogRefresh::from_xhandle_and_type(event_handle, event_type)?;
                     if let Some(user_data) = user_data {
                         func(catalog, &event, Some(user_data.as_ref()))?;
                     } else {
@@ -158,10 +154,8 @@ impl Builder {
                     }
                 }
             }
-            EventKind::Update => {
+            Event::Update(event) => {
                 if let Some(func) = self.update {
-                    let event =
-                        KeylistCatalogUpdate::from_xhandle_and_type(event_handle, event_type)?;
                     if let Some(user_data) = user_data {
                         func(catalog, &event, Some(user_data.as_ref()))?;
                     } else {
@@ -176,27 +170,6 @@ impl Builder {
 }
 
 type Context = Builder;
-
-#[derive(Clone, Copy, Debug)]
-#[repr(u16)]
-enum EventKind {
-    Subscribe = SubscribeEvent::KIND as u16,
-    Refresh = KeylistCatalogRefresh::KIND as u16,
-    Update = KeylistCatalogUpdate::KIND as u16,
-}
-
-impl TryFrom<u16> for EventKind {
-    type Error = Error;
-
-    fn try_from(value: u16) -> Result<Self> {
-        match value {
-            rxegy_sys::XOBJ_EVENT_SUBSCRIBE => Ok(Self::Subscribe),
-            rxegy_sys::XOBJ_EVENT_KEYLIST_CATALOG_REFRESH => Ok(Self::Refresh),
-            rxegy_sys::XOBJ_EVENT_KEYLIST_CATALOG_UPDATE => Ok(Self::Update),
-            _ => Err(Error::ObjectUnknown),
-        }
-    }
-}
 
 #[unsafe(no_mangle)]
 unsafe extern "C" fn _rxegy_catalog_callback(
@@ -217,6 +190,14 @@ unsafe extern "C" fn _rxegy_catalog_callback(
                     "Could not read catalog from handle in catalog callback: {}",
                     e
                 );
+                return;
+            }
+        };
+
+        let event = match Event::from_xhandle_and_type(event_handle, event_type) {
+            Ok(evt) => evt,
+            Err(e) => {
+                tracing::error!("Could not read keylist catalog event: {}", e);
                 return;
             }
         };
@@ -251,14 +232,7 @@ unsafe extern "C" fn _rxegy_catalog_callback(
             Some(unsafe { Box::from_raw(user_data_thin_raw) })
         };
 
-        if let Err(e) = context.dispatch(
-            &catalog,
-            slot,
-            event_handle,
-            event_type,
-            user_data.as_deref(),
-            status,
-        ) {
+        if let Err(e) = context.dispatch(&catalog, slot, event, user_data.as_deref(), status) {
             tracing::error!("The callback returned an error: {}", e);
         }
 
@@ -272,5 +246,27 @@ unsafe extern "C" fn _rxegy_catalog_callback(
     }) {
         tracing::error!("Panic in Keylist Catalog callback, aborting...");
         process::abort()
+    }
+}
+
+#[derive(Debug)]
+#[repr(u16)]
+enum Event {
+    Subscribe(Subscribe) = Subscribe::KIND as u16,
+    Refresh(KeylistCatalogRefresh) = KeylistCatalogRefresh::KIND as u16,
+    Update(KeylistCatalogUpdate) = KeylistCatalogUpdate::KIND as u16,
+}
+
+impl Event {
+    fn from_xhandle_and_type(ptr: xhandle, object_type: u16) -> Result<Self> {
+        if let Ok(evt) = Subscribe::from_xhandle_and_type(ptr, object_type) {
+            Ok(Self::Subscribe(evt))
+        } else if let Ok(evt) = KeylistCatalogRefresh::from_xhandle_and_type(ptr, object_type) {
+            Ok(Self::Refresh(evt))
+        } else if let Ok(evt) = KeylistCatalogUpdate::from_xhandle_and_type(ptr, object_type) {
+            Ok(Self::Update(evt))
+        } else {
+            Err(Error::KindUnknown)
+        }
     }
 }
