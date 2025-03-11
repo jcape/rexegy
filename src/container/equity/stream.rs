@@ -254,7 +254,7 @@ impl Builder {
     /// - When value-added fields (e.g., the day's high price) are updated by the exchange
     /// - At start of day to populate the initial data image
     /// - During a disconnect/reconnect scenario (as XCAPI automatically repopulates previously
-    /// existing subscriptions).
+    ///   existing subscriptions).
     pub fn on_refresh(mut self, func: EquityStreamRefreshFn) -> Self {
         self.refresh = Some(func);
         self
