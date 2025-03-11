@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1](https://github.com/jcape/rxegy/compare/rxegy-sys-v0.1.0...rxegy-sys-v0.1.1) - 2025-03-11
+
+### Added
+
+- start filling in refresh event field accessors
+
 ## [0.0.5](https://github.com/jcape/rxegy/compare/rxegy-sys-v0.0.4...rxegy-sys-v0.0.5) - 2025-03-03
 
 ### Added
