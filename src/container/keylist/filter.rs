@@ -1,8 +1,7 @@
 //! Keylist Filters
 
 use crate::{
-    container::Common as CommonContainer, container::RealTime as RealTimeContainer,
-    impl_wrapper_on_newtype, object::Kind as ObjectKind,
+    container::RealTime as RealTimeContainer, impl_wrapper_on_newtype, object::Kind as ObjectKind,
 };
 use std::{ffi::c_void, ptr::NonNull};
 

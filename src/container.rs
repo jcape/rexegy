@@ -1,8 +1,17 @@
 //! Container Objects
 
-pub use self::equity::{Stream as EquityStream, StreamBuilder as EquityStreamBuilder};
+pub mod callbacks;
+
+pub use self::{
+    equity::{Stream as EquityStream, StreamBuilder as EquityStreamBuilder},
+    keylist::{
+        Catalog as KeylistCatalog, CatalogBuilder as KeylistCatalogBuilder,
+        Filter as KeylistFilter, FilterBuilder as KeylistFilterBuilder,
+    },
+};
 
 mod equity;
+mod keylist;
 
 use crate::{
     error::Result,
@@ -33,9 +42,21 @@ impl<T: RealTime> Common for T {
     }
 }
 
+/// A trait used to retrieve the turnkey fro a container
+pub(crate) trait InnerCommon: Wrapper {
+    /// The turnkey value set on the container's creation.
+    fn turnkey(&self) -> Result<u64>;
+}
+
+impl<T: RealTime> InnerCommon for T {
+    fn turnkey(&self) -> Result<u64> {
+        field::get_u64(self, rxegy_sys::XC_CONTAINER, RealTimeField::Turnkey)
+    }
+}
+
+/// An enumeration of realtime fields.
 #[derive(Clone, Copy, Debug)]
 #[repr(u64)]
-#[allow(dead_code)]
 enum RealTimeField {
     /// The number of slots configured on this container
     SlotCount = rxegy_sys::XFLD_RT_SLOT_COUNT,

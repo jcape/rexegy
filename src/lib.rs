@@ -1,11 +1,11 @@
 //! Unofficial Exegy Rust Bindings
 
 pub use self::{
-    error::{Error, ExegyError, Result},
+    error::{Error, ExegyError, Result, Success},
     feed::{Feed, Id as FeedId, Internal as InternalFeed, Us as UsFeed},
     group::{Corporate, Country, Group, Id as GroupId},
     key::{AlternateId, Key, Symbol},
-    misc::TradeVenue,
+    misc::{HiTime, TradeVenue},
     status::{Instrument as InstrumentStatus, Market as MarketStatus},
     timing::EventTiming,
 };

@@ -64,7 +64,11 @@ pub enum Error {
 
     /// The object pointed at by the XCAPI object handle is of an unexpected kind
     #[error("The object pointed at by the XCAPI object handle is of an unexpected kind")]
-    UnexpectedKind,
+    InvalidObject,
+
+    /// The type value is unknown in the current context
+    #[error("The type is unknown in the current context")]
+    KindUnknown,
 }
 
 impl From<FromUtf8Error> for Error {

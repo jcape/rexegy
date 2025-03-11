@@ -1,36 +1,23 @@
 //! Support for the Exegy Keylist Catalog
 
 use crate::{
+    container::{
+        InnerCommon, RealTime,
+        callbacks::{KeylistCatalogRefreshFn, KeylistCatalogSubscribeFn, KeylistCatalogUpdateFn},
+    },
     error::{Error, Result, Success},
-    event::{Common as CommonEvent, Subscribe as SubscribeEvent},
+    event::{KeylistCatalogRefresh, KeylistCatalogUpdate, Subscribe as SubscribeEvent},
     impl_wrapper_on_newtype,
     object::{Kind as ObjectKind, Wrapper},
     session::TickerSession,
 };
 use rxegy_sys::{xerr, xhandle};
 use std::{
-    ffi::c_void,
+    any::Any,
+    ffi::{CStr, c_void},
     process,
     ptr::{self, NonNull},
 };
-
-/// An XCAPI object containing a refresh event.
-#[derive(Debug, Eq, Hash, PartialEq, PartialOrd, Ord)]
-#[repr(transparent)]
-pub struct RefreshEvent(NonNull<c_void>);
-
-impl_wrapper_on_newtype!(RefreshEvent, ObjectKind::EventKeylistCatalogRefresh);
-
-impl CommonEvent for RefreshEvent {}
-
-/// An XCAPI object containg an update event.
-#[derive(Debug, Eq, Hash, PartialEq, PartialOrd, Ord)]
-#[repr(transparent)]
-pub struct UpdateEvent(NonNull<c_void>);
-
-impl_wrapper_on_newtype!(UpdateEvent, ObjectKind::EventKeylistCatalogUpdate);
-
-impl CommonEvent for UpdateEvent {}
 
 /// An XCAPI object containing a keylist catalog
 #[derive(Debug, Eq, Hash, PartialEq, PartialOrd, Ord)]
@@ -39,45 +26,58 @@ pub struct Catalog(NonNull<c_void>);
 
 impl_wrapper_on_newtype!(Catalog, ObjectKind::RealtimeKeylistCatalog);
 
-/// A callback signature for subscription event handlers.
-pub type SubscribeFn = fn(catalog: &Catalog, event: &SubscribeEvent) -> Result<()>;
-
-/// A callback signature for catalog refresh event handlers.
-pub type RefreshFn = fn(catalog: &Catalog, event: &RefreshEvent) -> Result<()>;
-
-/// A callback signature for catalog update event handlers.
-pub type UpdateFn = fn(catalog: &Catalog, event: &UpdateEvent) -> Result<()>;
+impl RealTime for Catalog {}
 
 /// A builder for constructing a keylist catalog
 #[derive(Default)]
 pub struct Builder {
-    subscribe: Option<SubscribeFn>,
-    refresh: Option<RefreshFn>,
-    update: Option<UpdateFn>,
+    subscribe: Option<KeylistCatalogSubscribeFn>,
+    refresh: Option<KeylistCatalogRefreshFn>,
+    update: Option<KeylistCatalogUpdateFn>,
 }
 
 impl Builder {
     /// Set the callback to be fired when a subscribe event is received
-    pub fn on_subscribe(mut self, func: SubscribeFn) -> Self {
+    pub fn on_subscribe(mut self, func: KeylistCatalogSubscribeFn) -> Self {
         self.subscribe = Some(func);
         self
     }
 
     /// Set the callback to be fired when a refresh event is received
-    pub fn on_refresh(mut self, func: RefreshFn) -> Self {
+    pub fn on_refresh(mut self, func: KeylistCatalogRefreshFn) -> Self {
         self.refresh = Some(func);
         self
     }
 
     /// Set the callback to be fired when an update event is received
-    pub fn on_update(mut self, func: UpdateFn) -> Self {
+    pub fn on_update(mut self, func: KeylistCatalogUpdateFn) -> Self {
         self.update = Some(func);
         self
     }
 
-    pub fn build(self, session: &TickerSession) -> Result<Catalog> {
-        let context = Box::new(self);
-        let turnkey = Box::into_raw(context) as u64;
+    /// Build a new keylist catalog using the given session, and supplying the given user data to callbacks.
+    pub fn build(
+        self,
+        session: &TickerSession,
+        user_data: Option<Box<dyn Any>>,
+    ) -> Result<Catalog> {
+        let catalog = self.create_catalog(session)?;
+
+        if let Err(e) = Self::subscribe(&catalog, user_data) {
+            let mut object = catalog.as_xhandle();
+            let status = unsafe { rxegy_sys::xcDestroyObject(&mut object) };
+            Success::try_from(status)?;
+            return Err(e);
+        }
+
+        Ok(catalog)
+    }
+
+    /// Create the catalog object, consuming ourseles in the process.
+    fn create_catalog(self, session: &TickerSession) -> Result<Catalog> {
+        let context = Box::new(self) as Box<dyn Any>;
+        let thin_ptr = Box::new(context);
+        let turnkey = Box::into_raw(thin_ptr) as u64;
         let mut object = ptr::null_mut();
 
         let status = unsafe {
@@ -91,32 +91,82 @@ impl Builder {
             )
         };
 
-        Success::try_from(status)?;
+        if let Err(e) = Success::try_from(status) {
+            // Don't leak the builder if we failed to create the catalog
+            let _context = unsafe { Box::from_raw(turnkey as *mut Builder) };
+            return Err(e.into());
+        };
 
         Catalog::from_xhandle(object)
     }
 
-    /// Dispatch the event
-    fn dispatch(&self, handle: xhandle, event_handle: xhandle, event_type: u16) -> Result<()> {
-        let catalog = Catalog::from_xhandle(handle)?;
+    /// Static helper function to subscribe to the empty string and start the catalog sync process.
+    fn subscribe(catalog: &Catalog, user_data: Option<Box<dyn Any>>) -> Result<()> {
+        let turnkey = if let Some(fat) = user_data {
+            let thin = Box::new(fat);
+            Box::into_raw(thin) as u64
+        } else {
+            0u64
+        };
 
+        let mut slot = rxegy_sys::XC_NEXT_AVAILABLE_SLOT;
+        let key_string = CStr::from_bytes_until_nul(b"")?;
+
+        let status = unsafe {
+            rxegy_sys::xcRequestItemByString(
+                catalog.as_xhandle(),
+                key_string.as_ptr(),
+                turnkey,
+                &mut slot,
+            )
+        };
+
+        Success::try_from(status)?;
+
+        Ok(())
+    }
+
+    /// Dispatch the event
+    fn dispatch(
+        &self,
+        catalog: &Catalog,
+        _slot: u32,
+        event_handle: xhandle,
+        event_type: u16,
+        user_data: Option<&Box<dyn Any>>,
+        _status: xerr,
+    ) -> Result<()> {
         match EventKind::try_from(event_type)? {
             EventKind::Subscribe => {
                 if let Some(func) = self.subscribe {
                     let event = SubscribeEvent::from_xhandle_and_type(event_handle, event_type)?;
-                    return func(&catalog, &event);
+                    if let Some(user_data) = user_data {
+                        func(catalog, &event, Some(user_data.as_ref()))?;
+                    } else {
+                        func(catalog, &event, None)?;
+                    }
                 }
             }
             EventKind::Refresh => {
                 if let Some(func) = self.refresh {
-                    let event = RefreshEvent::from_xhandle_and_type(event_handle, event_type)?;
-                    return func(&catalog, &event);
+                    let event =
+                        KeylistCatalogRefresh::from_xhandle_and_type(event_handle, event_type)?;
+                    if let Some(user_data) = user_data {
+                        func(catalog, &event, Some(user_data.as_ref()))?;
+                    } else {
+                        func(catalog, &event, None)?;
+                    }
                 }
             }
             EventKind::Update => {
                 if let Some(func) = self.update {
-                    let event = UpdateEvent::from_xhandle_and_type(event_handle, event_type)?;
-                    return func(&catalog, &event);
+                    let event =
+                        KeylistCatalogUpdate::from_xhandle_and_type(event_handle, event_type)?;
+                    if let Some(user_data) = user_data {
+                        func(catalog, &event, Some(user_data.as_ref()))?;
+                    } else {
+                        func(catalog, &event, None)?;
+                    }
                 }
             }
         }
@@ -150,35 +200,76 @@ impl TryFrom<u16> for EventKind {
 #[unsafe(no_mangle)]
 unsafe extern "C" fn _rxegy_catalog_callback(
     handle: xhandle,
-    _slot: u32,
+    slot: u32,
     event_handle: xhandle,
     event_type: u16,
     turnkey: u64,
-    _status: xerr,
+    status: xerr,
 ) {
-    // Get our context outside the panic handler
-    let context = if let Ok(ctx) = std::panic::catch_unwind(|| unsafe {
-        let ptr = turnkey as *mut Context;
-        Box::from_raw(ptr)
-    }) {
-        ctx
-    } else {
-        tracing::error!("Panic while retrieving context, halting application");
-        process::abort();
-    };
-
     if let Err(_e) = std::panic::catch_unwind(|| {
-        tracing::trace_span!("rxegy::keylist::catalog::_rxegy_catalog_callback");
+        tracing::trace_span!("_rxegy_catalog_callback");
 
-        if let Err(e) = context.dispatch(handle, event_handle, event_type) {
+        let catalog = match Catalog::from_xhandle(handle) {
+            Ok(c) => c,
+            Err(e) => {
+                tracing::error!(
+                    "Could not read catalog from handle in catalog callback: {}",
+                    e
+                );
+                return;
+            }
+        };
+
+        let context_turnkey = match catalog.turnkey() {
+            Ok(ctk) => ctk,
+            Err(e) => {
+                tracing::error!("Could not read catalog turnkey to get context: {}", e);
+                return;
+            }
+        };
+
+        let context_thin_raw = context_turnkey as *mut Box<dyn Any>;
+        if context_thin_raw.is_null() {
+            tracing::error!("Catalog turnkey was null");
+            return;
+        }
+
+        let context_thin = unsafe { Box::from_raw(context_thin_raw) };
+        let context = match (**context_thin).downcast_ref::<Context>() {
+            Some(ctx) => ctx,
+            None => {
+                tracing::error!("Could not downcast the catalog context from a thin pointer");
+                return;
+            }
+        };
+
+        let user_data = if turnkey == 0 {
+            None
+        } else {
+            let user_data_thin_raw = turnkey as *mut Box<dyn Any>;
+            Some(unsafe { Box::from_raw(user_data_thin_raw) })
+        };
+
+        if let Err(e) = context.dispatch(
+            &catalog,
+            slot,
+            event_handle,
+            event_type,
+            user_data.as_deref(),
+            status,
+        ) {
             tracing::error!("The callback returned an error: {}", e);
         }
-    }) {
-        tracing::error!(
-            "Panic at the callback, allowing the application to continue, but user locks may be poisoined, and the context"
-        );
-    }
 
-    // leak our context so it isn't freed
-    let _leaked = Box::into_raw(context);
+        // Release the user data pointer
+        if let Some(user_data) = user_data {
+            let _leaked = Box::into_raw(user_data);
+        }
+
+        // Release the context pointer
+        let _leaked = Box::into_raw(context_thin);
+    }) {
+        tracing::error!("Panic in Keylist Catalog callback, aborting...");
+        process::abort()
+    }
 }

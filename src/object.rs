@@ -570,7 +570,7 @@ pub(crate) trait Wrapper: Sized {
                 NonNull::new(ptr).ok_or(Error::NullObject)?,
             ))
         } else {
-            Err(Error::UnexpectedKind)
+            Err(Error::InvalidObject)
         }
     }
 

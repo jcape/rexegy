@@ -1,12 +1,5 @@
 //! Event Objects
 
-mod equity;
-mod exchange_statistics;
-mod indicative_price;
-mod order_imbalance;
-mod trade_summary;
-mod trading_action;
-
 pub use self::{
     equity::{
         Cancel as EquityCancel, Correction as EquityCorrection, Quote as EquityQuote,
@@ -14,10 +7,19 @@ pub use self::{
     },
     exchange_statistics::Event as ExchangeStatistics,
     indicative_price::Event as IndicativePrice,
+    keylist::{CatalogRefresh as KeylistCatalogRefresh, CatalogUpdate as KeylistCatalogUpdate},
     order_imbalance::Event as OrderImbalance,
     trade_summary::Event as TradeSummary,
     trading_action::Event as TradingAction,
 };
+
+mod equity;
+mod exchange_statistics;
+mod indicative_price;
+mod keylist;
+mod order_imbalance;
+mod trade_summary;
+mod trading_action;
 
 use crate::{
     error::{ExegyError, Result, Success},
