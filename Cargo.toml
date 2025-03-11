@@ -32,7 +32,7 @@ rpath = true
 
 [package]
 name = "rxegy"
-version = "0.1.0"
+version = "0.2.0"
 authors.workspace = true
 description = "Unofficial Exegy XCAPI in Rust"
 edition.workspace = true
@@ -44,7 +44,7 @@ rust-version.workspace = true
 [dependencies]
 displaydoc = "0.2.1"
 ref-cast = "1"
-rxegy-sys = { path = "./sys", version = "0.1.0" }
+rxegy-sys = { path = "./sys", version = "0.1.1" }
 secrecy = "0.10"
 thiserror = "2"
 tracing = "0.1"
