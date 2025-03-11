@@ -5,6 +5,7 @@ if [ -d "/workspaces/rxegy/.cache/cargo/bin" ]; then
     rm -rf /workspaces/rxegy/.cache/cargo/bin
 fi
 ln -sf /usr/local/cargo/bin /workspaces/rxegy/.cache/cargo/
+ln -sf /usr/local/cargo/env /workspaces/rxegy/.cache/cargo/
 export CARGO_HOME=/workspaces/rxegy/.cache/cargo
 
 cargo install -q cargo-binstall
