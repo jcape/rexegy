@@ -9,6 +9,7 @@ pub use self::{
     indicative_price::Event as IndicativePrice,
     keylist::{CatalogRefresh as KeylistCatalogRefresh, CatalogUpdate as KeylistCatalogUpdate},
     order_imbalance::Event as OrderImbalance,
+    subscribe::Event as Subscribe,
     trade_summary::Event as TradeSummary,
     trading_action::Event as TradingAction,
 };
@@ -18,26 +19,18 @@ mod exchange_statistics;
 mod indicative_price;
 mod keylist;
 mod order_imbalance;
+mod subscribe;
 mod trade_summary;
 mod trading_action;
 
 use crate::{
     error::{ExegyError, Result, Success},
     field::{self, Field as FieldTrait},
-    impl_wrapper_on_newtype,
     key::Key,
-    object::{Kind as ObjectKind, Wrapper},
+    object::Wrapper,
     timing::EventTiming,
 };
-use std::{ffi::c_void, ptr::NonNull, result::Result as StdResult};
-
-/// An XCAPI object containg a subscribe event.
-#[repr(transparent)]
-pub struct Subscribe(NonNull<c_void>);
-
-impl_wrapper_on_newtype!(Subscribe, ObjectKind::EventSubscribe);
-
-impl Common for Subscribe {}
+use std::result::Result as StdResult;
 
 /// Field accessors common to every Exegy event.
 #[allow(private_bounds)]

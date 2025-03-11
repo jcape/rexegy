@@ -1,9 +1,9 @@
 //! Top-of-book Containers for Equity and Equity Options Streams
 
 use crate::{
-    AlternateId, FeedId, GroupId, HiTime, InstrumentStatus, Key, MarketStatus, TradeVenue,
+    AlternateId, Error, FeedId, GroupId, HiTime, InstrumentStatus, Key, MarketStatus, TradeVenue,
     container::{
-        RealTime,
+        InnerCommon, RealTime,
         callbacks::{
             EquityStreamCancelFn, EquityStreamCorrectionFn, EquityStreamExchangeStatisticsFn,
             EquityStreamIndicativePriceFn, EquityStreamOrderImbalanceFn, EquityStreamQuoteFn,
@@ -12,6 +12,11 @@ use crate::{
         },
     },
     error::{Result, Success},
+    event::{
+        EquityCancel, EquityCorrection, EquityQuote, EquityRefresh, EquityTrade,
+        ExchangeStatistics, IndicativePrice, OrderImbalance, Subscribe, TradeSummary,
+        TradingAction,
+    },
     field::{self, Field as FieldTrait},
     impl_wrapper_on_newtype,
     misc::OrderRefIdKind,
@@ -22,6 +27,7 @@ use rxegy_sys::{xerr, xhandle};
 use std::{
     any::Any,
     ffi::{CString, c_void},
+    panic, process,
     ptr::{self, NonNull},
 };
 
@@ -365,17 +371,200 @@ impl Builder {
 
         Stream::from_xhandle(object)
     }
+
+    fn dispatch(
+        &self,
+        stream: &Stream,
+        _slot: u32,
+        event: Event,
+        user_data: Option<&Box<dyn Any>>,
+        _status: xerr,
+    ) -> Result<()> {
+        match event {
+            Event::Subscribe(event) => {
+                if let Some(func) = self.subscribe {
+                    if let Some(user_data) = user_data {
+                        func(stream, &event, Some(user_data.as_ref()))?;
+                    } else {
+                        func(stream, &event, None)?;
+                    }
+                }
+            }
+            Event::Cancel(event) => {
+                if let Some(func) = self.cancel {
+                    if let Some(user_data) = user_data {
+                        func(stream, &event, Some(user_data.as_ref()))?;
+                    } else {
+                        func(stream, &event, None)?;
+                    }
+                }
+            }
+            Event::Correction(event) => {
+                if let Some(func) = self.correction {
+                    if let Some(user_data) = user_data {
+                        func(stream, &event, Some(user_data.as_ref()))?;
+                    } else {
+                        func(stream, &event, None)?;
+                    }
+                }
+            }
+            Event::Quote(event) => {
+                if let Some(func) = self.quote {
+                    if let Some(user_data) = user_data {
+                        func(stream, &event, Some(user_data.as_ref()))?;
+                    } else {
+                        func(stream, &event, None)?;
+                    }
+                }
+            }
+            Event::Refresh(event) => {
+                if let Some(func) = self.refresh {
+                    if let Some(user_data) = user_data {
+                        func(stream, &event, Some(user_data.as_ref()))?;
+                    } else {
+                        func(stream, &event, None)?;
+                    }
+                }
+            }
+            Event::Trade(event) => {
+                if let Some(func) = self.trade {
+                    if let Some(user_data) = user_data {
+                        func(stream, &event, Some(user_data.as_ref()))?;
+                    } else {
+                        func(stream, &event, None)?;
+                    }
+                }
+            }
+            Event::ExchangeStatistics(event) => {
+                if let Some(func) = self.exchange_statistics {
+                    if let Some(user_data) = user_data {
+                        func(stream, &event, Some(user_data.as_ref()))?;
+                    } else {
+                        func(stream, &event, None)?;
+                    }
+                }
+            }
+            Event::IndicativePrice(event) => {
+                if let Some(func) = self.indicative_price {
+                    if let Some(user_data) = user_data {
+                        func(stream, &event, Some(user_data.as_ref()))?;
+                    } else {
+                        func(stream, &event, None)?;
+                    }
+                }
+            }
+            Event::OrderImbalance(event) => {
+                if let Some(func) = self.order_imbalance {
+                    if let Some(user_data) = user_data {
+                        func(stream, &event, Some(user_data.as_ref()))?;
+                    } else {
+                        func(stream, &event, None)?;
+                    }
+                }
+            }
+            Event::TradeSummary(event) => {
+                if let Some(func) = self.trade_summary {
+                    if let Some(user_data) = user_data {
+                        func(stream, &event, Some(user_data.as_ref()))?;
+                    } else {
+                        func(stream, &event, None)?;
+                    }
+                }
+            }
+            Event::TradingAction(event) => {
+                if let Some(func) = self.trading_action {
+                    if let Some(user_data) = user_data {
+                        func(stream, &event, Some(user_data.as_ref()))?;
+                    } else {
+                        func(stream, &event, None)?;
+                    }
+                }
+            }
+        }
+
+        Ok(())
+    }
 }
+
+type Context = Builder;
 
 #[unsafe(no_mangle)]
 unsafe extern "C" fn _rxegy_equity_stream_callback(
-    _handle: xhandle,
-    _slot: u32,
-    _event_handle: xhandle,
-    _event_type: u16,
-    _turnkey: u64,
-    _status: xerr,
+    handle: xhandle,
+    slot: u32,
+    event_handle: xhandle,
+    event_type: u16,
+    turnkey: u64,
+    status: xerr,
 ) {
+    if let Err(_e) = panic::catch_unwind(|| {
+        tracing::trace_span!("_rxegy_equity_stream_callback");
+
+        let stream = match Stream::from_xhandle(handle) {
+            Ok(s) => s,
+            Err(e) => {
+                tracing::error!(
+                    "Could not find equity stream object in callback handle: {}",
+                    e
+                );
+                return;
+            }
+        };
+
+        let event = match Event::from_xhandle_and_type(event_handle, event_type) {
+            Ok(evt) => evt,
+            Err(e) => {
+                tracing::error!(exegy.event.type = event_type, "Unexpected event type in equity stream callback: {}", e);
+                return;
+            }
+        };
+
+        let stream_turnkey = match stream.turnkey() {
+            Ok(stk) => stk,
+            Err(e) => {
+                tracing::error!("Could not retrieve equity stream turnkey: {}", e);
+                return;
+            }
+        };
+
+        let context_thin_raw = stream_turnkey as *mut Box<dyn Any>;
+        if context_thin_raw.is_null() {
+            tracing::error!("Equity stream turnkey was null");
+            return;
+        }
+
+        let context_thin = unsafe { Box::from_raw(context_thin_raw) };
+        let context = match (**context_thin).downcast_ref::<Context>() {
+            Some(ctx) => ctx,
+            None => {
+                tracing::error!("Could not downcast the equity stream context from a thin pointer");
+                let _leaked = Box::into_raw(context_thin);
+                return;
+            }
+        };
+
+        let user_data = if turnkey == 0 {
+            None
+        } else {
+            let user_data_thin_raw = turnkey as *mut Box<dyn Any>;
+            Some(unsafe { Box::from_raw(user_data_thin_raw) })
+        };
+
+        if let Err(e) = context.dispatch(&stream, slot, event, user_data.as_deref(), status) {
+            tracing::error!("The callback returned an error: {}", e);
+        }
+
+        // Leak the user data pointer so it isn't freed
+        if let Some(user_data) = user_data {
+            let _leaked = Box::into_raw(user_data);
+        }
+
+        // Leak the context pointer so it isn't freed
+        let _leaked = Box::into_raw(context_thin);
+    }) {
+        tracing::error!("Equity Stream callback panicked, aboring application");
+        process::abort();
+    }
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -404,5 +593,53 @@ enum Field {
 impl FieldTrait for Field {
     fn to_u64(&self) -> u64 {
         *self as u64
+    }
+}
+
+#[derive(Debug)]
+#[repr(u16)]
+pub enum Event {
+    Subscribe(Subscribe) = Subscribe::KIND as u16,
+    Cancel(EquityCancel) = EquityCancel::KIND as u16,
+    Correction(EquityCorrection) = EquityCorrection::KIND as u16,
+    Quote(EquityQuote) = EquityQuote::KIND as u16,
+    Refresh(EquityRefresh) = EquityRefresh::KIND as u16,
+    Trade(EquityTrade) = EquityTrade::KIND as u16,
+    ExchangeStatistics(ExchangeStatistics) = ExchangeStatistics::KIND as u16,
+    IndicativePrice(IndicativePrice) = IndicativePrice::KIND as u16,
+    OrderImbalance(OrderImbalance) = OrderImbalance::KIND as u16,
+    TradeSummary(TradeSummary) = TradeSummary::KIND as u16,
+    TradingAction(TradingAction) = TradingAction::KIND as u16,
+}
+
+impl Event {
+    fn from_xhandle_and_type(ptr: xhandle, object_type: u16) -> Result<Self> {
+        // This is acceptable because the from_xhandle_and_type is just checking that
+        // `object_type == Event::KIND`
+        if let Ok(evt) = Subscribe::from_xhandle_and_type(ptr, object_type) {
+            Ok(Self::Subscribe(evt))
+        } else if let Ok(evt) = EquityCancel::from_xhandle_and_type(ptr, object_type) {
+            Ok(Self::Cancel(evt))
+        } else if let Ok(evt) = EquityCorrection::from_xhandle_and_type(ptr, object_type) {
+            Ok(Self::Correction(evt))
+        } else if let Ok(evt) = EquityQuote::from_xhandle_and_type(ptr, object_type) {
+            Ok(Self::Quote(evt))
+        } else if let Ok(evt) = EquityRefresh::from_xhandle_and_type(ptr, object_type) {
+            Ok(Self::Refresh(evt))
+        } else if let Ok(evt) = EquityTrade::from_xhandle_and_type(ptr, object_type) {
+            Ok(Self::Trade(evt))
+        } else if let Ok(evt) = ExchangeStatistics::from_xhandle_and_type(ptr, object_type) {
+            Ok(Self::ExchangeStatistics(evt))
+        } else if let Ok(evt) = IndicativePrice::from_xhandle_and_type(ptr, object_type) {
+            Ok(Self::IndicativePrice(evt))
+        } else if let Ok(evt) = OrderImbalance::from_xhandle_and_type(ptr, object_type) {
+            Ok(Self::OrderImbalance(evt))
+        } else if let Ok(evt) = TradeSummary::from_xhandle_and_type(ptr, object_type) {
+            Ok(Self::TradeSummary(evt))
+        } else if let Ok(evt) = TradingAction::from_xhandle_and_type(ptr, object_type) {
+            Ok(Self::TradingAction(evt))
+        } else {
+            Err(Error::ObjectUnknown)
+        }
     }
 }

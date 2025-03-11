@@ -177,11 +177,12 @@ impl Builder {
 
 type Context = Builder;
 
+#[derive(Clone, Copy, Debug)]
 #[repr(u16)]
 enum EventKind {
-    Subscribe = rxegy_sys::XOBJ_EVENT_SUBSCRIBE,
-    Refresh = rxegy_sys::XOBJ_EVENT_KEYLIST_CATALOG_REFRESH,
-    Update = rxegy_sys::XOBJ_EVENT_KEYLIST_CATALOG_UPDATE,
+    Subscribe = SubscribeEvent::KIND as u16,
+    Refresh = KeylistCatalogRefresh::KIND as u16,
+    Update = KeylistCatalogUpdate::KIND as u16,
 }
 
 impl TryFrom<u16> for EventKind {
